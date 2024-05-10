@@ -41,4 +41,7 @@ const authReducer = (state = initial_state, action) => {
         case "LOGOUT_FAIL": {return{...state, isAuthenticated: false}}
         case "LOGOUT_SUCCESS": return initial_state;
     }
+    return state;
 }
+
+export default authReducer;
