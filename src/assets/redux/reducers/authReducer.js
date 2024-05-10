@@ -32,6 +32,8 @@ const authReducer = (state = initial_state, action) => {
         case "LOGIN_FAIL": {return{...state, authenticating: false, isAuthenticated: false}}
         case "LOGIN_SUCCESS": {return{
             ...state,
+            authenticating: false,
+            isAuthenticated: true,
             tokenApp: action.payload.jwt,
             usuario: action.payload.usuario,
             datosUsuario: action.payload.datosUsuario,

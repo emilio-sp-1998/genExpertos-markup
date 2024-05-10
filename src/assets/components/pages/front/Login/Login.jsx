@@ -1,12 +1,14 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Formik, Form, Field } from 'formik'
-import {login} from '../../../../redux/actions/authActions'
-import { useDispatch } from "react-redux";
+import {login, notAuthorized} from '../../../../redux/actions/authActions'
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'
 const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const auth = useSelector((state) => state.auth);
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const formInitialValues = {
         username: "",
         password: "",
@@ -30,11 +32,19 @@ const Login = () => {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            //xd
+            doLoginForm(values, errors)
         }else{
             actions.setSubmitting(false);
         }
     }
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/cargando");
+        } else {
+          dispatch({ type: "CLEAR_AUTH" });
+        }
+    }, [isAuthenticated]);
 
     const doLoginForm = (values, actions) => {
         dispatch(login(values.username, values.password)).then((res) => {
@@ -43,7 +53,29 @@ const Login = () => {
                 actions.setSubmitting(false);
                 return;
             } else if (res.status) {
-                
+                if (res.data.usuario){
+                    if (auth.isAuthenticated) {
+                        navigate("/cargando");
+                    }
+                } else if (
+                    res.status === 403 ||
+                    res.status === 404 ||
+                    res.status === 406 ||
+                    res.status === 500 ||
+                    res.status === 400 ||
+                    res.status === 502
+                  ){
+                    setLoginError(res.data);
+                    if (res.status === 406) {
+                        dispatch(notAuthorized());
+                    } else {
+                        actions.setSubmitting(false);
+                        setLoginError(res.data);
+                    }
+                } else {
+                    setLoginError("Algo salio mal");
+                }
+                actions.setSubmitting(false);
             }
         })
     }
@@ -66,7 +98,7 @@ const Login = () => {
                         <Form onSubmit={handleSubmit}>
                             <div className='mb-3'>
                                 <label htmlFor="username">Username</label>
-                                <input type="text" placeholder='Enter Username' className='form-content' 
+                                <input id="username" name="username" type="text" placeholder='Enter Username' className='form-content' 
                                 value={values.username} onChange={handleChange}/>
                                 {errors.username ? (
                                     <div>
@@ -78,7 +110,7 @@ const Login = () => {
                             </div>
                             <div className='mb-3'>
                                 <label htmlFor="password">Password</label>
-                                <input type="password" placeholder='Enter Password' className='form-content' 
+                                <input id="password" name="password" type="password" placeholder='Enter Password' className='form-content' 
                                 value={values.password} onChange={handleChange}/>
                                 {errors.username ? (
                                     <div>

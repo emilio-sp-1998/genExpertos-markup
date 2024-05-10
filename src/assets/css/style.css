@@ -1,0 +1,79 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.9rem;
+  width: 100%;
+  min-width: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 4px; /* Ancho del scrollbar */
+  border-radius: 2px important!;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color de fondo de la pista del scrollbar */
+  border-radius: 2px important!;
+}
+::-webkit-scrollbar-thumb {
+  background: #014976; /* Color del thumb (barra deslizante) */
+  border-radius: 2px important!;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.protesis {
+    height: 44px;
+    width: 155px;
+}
+.protesis .frame {
+    align-items: center;
+    background: linear-gradient(180deg, rgb(2, 84, 156) 0%, rgb(52, 139, 215) 100%);
+    border: 1px solid;
+    border-color: transparent;
+    border-image: linear-gradient(to bottom, rgb(52, 139, 215), rgb(2, 84, 156)) 1;
+    border-radius: 0px 8px 8px 0px;
+    display: flex;
+    gap: 15px;
+    height: 44px;
+    justify-content: center;
+    padding: 10px 0px 10px 10px;
+    position: relative;
+    transition: all 0.5s ease-in-out;
+    width: 155px;
+}
+.protesis .text-wrapper {
+    color: #FFFFFF;
+    font-family: "Montserrat-SemiBold", Helvetica;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    position: relative;
+    white-space: nowrap;
+    width: fit-content;
+}
+.protesis .shape {
+    height: 28px;
+    margin-bottom: -2px;
+    margin-top: -2px;
+    position: relative;
+    width: 28px;
+}
+.protesis.default {
+    overflow: hidden;
+}
+.protesis.default .frame {
+    left: -111px;
+}
