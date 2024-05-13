@@ -1,0 +1,30 @@
+.myDiv {
+    border: 5px outset red;
+    background-color: lightblue;    
+    text-align: center;
+}
+
+.suggestion{
+    cursor: pointer;
+    background-color: white;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.suggestion:hover {
+    background-color: grey;
+}
+
+.btn1 {
+    display: flex;
+    justify-content: center;
+}
+
+.black-btn {background-color: black; color: white; justify-content: center;
+    align-items: center;}
+
+.buttons-div{
+    display: flex;
+    border: 5px solid;
+}

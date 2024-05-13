@@ -63,6 +63,38 @@ export function logout() {
   }
 }
 
+export function nombreFarmacia(local) {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "NOMBRE_FARMACIA" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/nombreFarmacia",
+          {local},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "NOMBRE_FARMACIA_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "NOMBRE_FARMACIA_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export function notAuthorized() {
   try {
     return function (dispatch) {
