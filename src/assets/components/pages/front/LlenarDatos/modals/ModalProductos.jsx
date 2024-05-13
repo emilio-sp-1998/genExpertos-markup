@@ -16,6 +16,13 @@ export default function ModalProductos({closeModal, productosLista, distribuidor
   const [selectedIdProducto, setSelectedIdProducto] = useState(-1);
   const [suggestionsProducto, setSuggestionsProducto] = useState([]);
 
+  const [productos, setProductos] = useState({})
+
+  const [cantidad, setCantidad] = useState(0);
+  const [porcentaje, setPorcentaje] = useState(0);
+
+  const [subtotal, setSubtotal] = useState(0);
+
   const onChangeHandlerProducto = (producto) => {
     let matches = []
     if(producto.length>0){
@@ -42,12 +49,28 @@ export default function ModalProductos({closeModal, productosLista, distribuidor
     }
   }, [selectedIdProducto])
 
+  useEffect(() => {
+    if(productos){
+      setPorcentaje(cantidad == 1 ? productos.ESCALA_1_UNIDAD: 
+      cantidad == 2 ? productos.ESCALA_2_UNIDAD:
+      parseInt(cantidad) >= 3 && parseInt(cantidad) < 6 ? productos.ESCALA_3_UNIDAD:
+      parseInt(cantidad) >= 6 && parseInt(cantidad) < 11 ? productos.ESCALA_6_UNIDAD:
+      cantidad == 11 ? productos.ESCALA_11_UNIDAD:
+      parseInt(cantidad) >= 12 ? productos.ESCALA_12_UNIDAD:0)
+    }
+    if(porcentaje){
+      setSubtotal(parseFloat((productos.PVP*cantidad)-((productos.PVP*cantidad)*porcentaje)).toFixed(2))
+    }
+    console.log(subtotal)
+  }, [cantidad, porcentaje, subtotal])
+
   const obtenerProductoFunc = () => {
     dispatch(obtenerProducto(distribuidorSeleccionado, selectedIdProducto)).then((res) => {
         if (res.status) {
             if(res.status === 200){
                 const data = res.data
                 console.log(data)
+                setProductos(data)
             }else if(res.status === 401){
                 navigate("/logout");
             }else{
@@ -65,10 +88,11 @@ export default function ModalProductos({closeModal, productosLista, distribuidor
 
   return (
     <div className='fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
-      <div className='bg-white p-5 rounded flex flex-col gap-5' style={{
-          width: 800,
-          height: 800,
+      <div className='bg-white p-5 rounded flex flex-col gap-5 justify-center' style={{
+          width: 600,
+          height: 600,
           backgroundColor: 'steelblue',
+          style: "border: 5px outset red;"
         }}>
         <div className="col-md-6">
           <div className="form-group">
@@ -87,7 +111,40 @@ export default function ModalProductos({closeModal, productosLista, distribuidor
               })}
           </div>
         </div>
-        <button onClick={() => closeModal(false)}>CERRAR</button>
+        <div className="col-md-6 flex">
+          <div className="form-group">
+              <label htmlFor="fecha">CANTIDAD:</label>
+              <input type="text" className="form-control text-center" id="cantidad" name="cantidad" value={cantidad} 
+              onChange={(e) => setCantidad(e.target.value)}
+              disabled={selectedIdProducto === -1}/>
+          </div>
+          <div className="form-group">
+              <label htmlFor="fecha">DESCUENTO:</label>
+              <input type="text" className="form-control text-center" id="descuento" name="descuento" 
+              value={productos ? 
+                  (cantidad == 1 ? (parseInt(productos.ESCALA_1_UNIDAD*100)+ "%"): 
+                   cantidad == 2 ? (parseInt(productos.ESCALA_2_UNIDAD*100)+ "%"):
+                   parseInt(cantidad) >= 3 && parseInt(cantidad) < 6 ? (parseInt(productos.ESCALA_3_UNIDAD*100)+ "%"):
+                   parseInt(cantidad) >= 6 && parseInt(cantidad) < 11 ? (parseInt(productos.ESCALA_6_UNIDAD*100)+ "%"):
+                   cantidad == 11 ? (parseInt(productos.ESCALA_11_UNIDAD*100)+ "%"):
+                   parseInt(cantidad) >= 12 ? (parseInt(productos.ESCALA_12_UNIDAD*100)+ "%"):""): ""
+              } disabled={true}/>
+          </div>
+        </div>
+        <div className="col-md-6 flex">
+          <div className="form-group">
+                <label htmlFor="fecha">PVP (Sin IVA):</label>
+                <input type="text" className="form-control text-center" id="pvp" name="pvp" 
+                value={Object.keys(productos).length !== 0 ? "$"+productos.PVP : ""} disabled={true}/>
+          </div>
+          <div className="form-group">
+                <label htmlFor="fecha">Subtotal:</label>
+                <input type="text" className="form-control text-center" id="subtotal" name="subtotal" 
+                value={cantidad ? "$"+parseFloat((productos.PVP*cantidad)-((productos.PVP*cantidad)*porcentaje)).toFixed(2):""} disabled={true}/>
+          </div>
+        </div>
+        <button className="btn1 btn btn-danger" onClick={() => closeModal(false)}>CERRAR</button>
+        <button className='btn btn-success' disabled={subtotal == 0 ? true : false}>AGREGAR</button>
       </div>
     </div>
   )

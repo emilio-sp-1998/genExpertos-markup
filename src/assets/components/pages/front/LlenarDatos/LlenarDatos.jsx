@@ -4,6 +4,7 @@ import "./LlenarDatos.css"
 import { nombreFarmacia } from '../../../../redux/actions/authActions';
 import { obtenerFarmacia, obtenerVendedor, listarProductos } from '../../../../redux/actions/pedidosActions';
 import NotificationAlert from '../../../common/notifications/NotificationAlert'
+import DataTable from 'react-data-table-component';
 import ModalProductos from './modals/ModalProductos';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -12,6 +13,60 @@ import { useState } from 'react';
 const LlenarDatos = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const columnsInsercion = [
+        {
+            name: "Code",
+            selector: row => row.code
+        },
+        {
+            name: "Nombre",
+            selector: row => row.nombre
+        },
+        {
+            name: "Unidades",
+            selector: row => row.unidades
+        },
+        {
+            name: "Margen",
+            selector: row => row.margen
+        },
+        {
+            name: "PVP",
+            selector: row => row.pvp
+        },
+        {
+            name: "PVF Unitario",
+            selector: row => row.pvfunitario
+        },
+        {
+            name: "Subtotal",
+            selector: row => row.subtotal
+        }
+    ]
+
+    const dataInsercion = [
+        {
+            id: 1,
+            code: 1,
+            nombre: "Producto1",
+            unidades: 4,
+            margen: "16%",
+            pvp: "$19.99",
+            pvfunitario: "$18.78",
+            subtotal: "$69.34"
+        },
+        {
+            id: 2,
+            code: 2,
+            nombre: "Producto2",
+            unidades: 1,
+            margen: "4%",
+            pvp: "$19.99",
+            pvfunitario: "$18.78",
+            subtotal: "$17.34"
+        }
+    ]
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertType, setAlertType] = useState(1);
@@ -213,7 +268,7 @@ const LlenarDatos = () => {
             <div className="row">
                 <div className="col text-center mt-5">
                     <h1>Levantamiento de pedidos</h1>
-                    <h2>Proyecto GenExpertos - MarkUP</h2>
+                    <h2>Proyecto GenExpertos 2024 - MarkUP</h2>
                 </div>
             </div>
             <div className="row mt-3">
@@ -300,6 +355,12 @@ const LlenarDatos = () => {
                 <div className="form-group">
                     <button type='button' className='btn btn-dark' disabled={true}>Enviar</button>
                 </div>
+            </div>
+            <div className='container mt-5'>
+                <DataTable
+                    columns={columnsInsercion}
+                    data={dataInsercion}
+                ></DataTable>
             </div>
             <button type="button" className="btn1 btn btn-danger" onClick={() => logout()}>Logout</button>
         </div>
