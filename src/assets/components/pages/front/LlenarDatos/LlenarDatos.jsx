@@ -347,7 +347,7 @@ const LlenarDatos = () => {
                         <div className="form-group">
                             <label htmlFor="fecha">Cod. Farmacia:</label>
                             <input type="text" className="form-control text-center" id="codFarmacia" name="codFarmacia" 
-                                value={selectedIdFarmacia === -1 ? '' : selectedIdFarmacia} disabled={true}/>
+                                value={selectedIdFarmacia === -1 ? "" : selectedIdFarmacia} disabled={true}/>
                         </div>
                     </div>
                     <div className="col-md-6">

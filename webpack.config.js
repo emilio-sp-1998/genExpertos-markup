@@ -7,7 +7,12 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import TerserWebpackPlugin from 'terser-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-const envVars = require('./config/env.json')
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+//const envVars = require('./config/env.json')
 
 export default function (argv, env) {
     console.log('Webpack Environment defined by USER: ' + env.mode)
@@ -37,6 +42,12 @@ export default function (argv, env) {
             },
           },
           {
+            test: /\.m?js$/,
+            resolve: {
+                fullySpecified: false,
+            },
+          },
+          {
             test: /\.css$/,
             use: [
               isProduction ? _loader : 'style-loader',
@@ -45,7 +56,7 @@ export default function (argv, env) {
             ],
           },
           {
-            test: /\.(png|jpg|gif|mp4|ogg|webm)$/i,
+            test: /\.(png|jpg|gif|mp4|ogg|webm|ico)$/i,
             use: {
               loader: 'url-loader',
               options: {
@@ -86,18 +97,18 @@ export default function (argv, env) {
         }),
         ,
         isProduction &&
-          new MiniCssExtractPlugin({
+          new pkg1({
             filename: '[name].[contenthash:8].css',
             chunkFilename: '[name].[contenthash:8].chunk.css',
           }),
         new HtmlWebpackPlugin({
-          template: _resolve(__dirname, 'src/main.html'),
-          favicon: _resolve(__dirname, 'src/favicon.ico'),
-          filename: 'main.html',
+          template: _resolve(__dirname, './index.html'),
+          favicon: _resolve(__dirname, './src/favicon.ico'),
+          filename: 'index.html',
           inject: 'body',
           excludeChunks: ['server'],
         }),
-        new DefinePlugin({
+        new pkg.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify(
             isProduction ? 'production' : 'development'
           ),
@@ -123,7 +134,7 @@ export default function (argv, env) {
               warnings: false,
             },
           }),
-          new MiniCssExtractPlugin({
+          new pkg1({
             filename: `[name].[contenthash].css`,
             chunkFilename: `[id].[contenthash].css`,
           }),

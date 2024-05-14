@@ -1,13 +1,18 @@
-const path = require('path')
-const nodeExternals = require('webpack-node-externals')
+import { join } from 'path'
+import nodeExternals from 'webpack-node-externals'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-module.exports = (env, argv) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default (env, argv) => {
   return ({
     entry: {
       server: './src/server.js',
     },
     output: {
-      path: path.join(__dirname, 'dist'),
+      path: join(__dirname, 'dist'),
       publicPath: '/',
       filename: '[name].js'
     },
