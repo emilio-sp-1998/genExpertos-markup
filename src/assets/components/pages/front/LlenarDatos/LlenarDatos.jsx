@@ -9,6 +9,8 @@ import ModalProductos from './modals/ModalProductos';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
+import logo from '../../../../../favicon.ico'
+import logo2 from '../../../../../genomma-lab.ico'
 
 const LlenarDatos = () => {
     const navigate = useNavigate();
@@ -301,6 +303,12 @@ const LlenarDatos = () => {
                         <option value="quifatex">QUIFATEX</option>
                         <option value="farmaenlace">FARMAENLACE</option>
                     </select>
+                </div>
+                <div className="flex col">
+                    <img src={logo}></img>
+                </div>
+                <div className="flex col">
+                    <img src={logo2}></img>
                 </div>
             </div>
             <div className="row mt-3">
