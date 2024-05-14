@@ -4,7 +4,22 @@ import { obtenerProducto } from '../../../../../redux/actions/pedidosActions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-export default function ModalProductos({closeModal, productosLista, distribuidorSeleccionado}) {
+export default function ModalProductos(
+  {
+    closeModal, 
+    productosLista, 
+    distribuidorSeleccionado, 
+    productos, 
+    setProductos, 
+    porcentaje, 
+    setPorcentaje,
+    subtotal,
+    setSubtotal,
+    cantidad,
+    setCantidad,
+    agregarProductoCola
+  }
+  ) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -15,13 +30,6 @@ export default function ModalProductos({closeModal, productosLista, distribuidor
   const [selectedProducto, setSelectedProducto] = useState('');
   const [selectedIdProducto, setSelectedIdProducto] = useState(-1);
   const [suggestionsProducto, setSuggestionsProducto] = useState([]);
-
-  const [productos, setProductos] = useState({})
-
-  const [cantidad, setCantidad] = useState(0);
-  const [porcentaje, setPorcentaje] = useState(0);
-
-  const [subtotal, setSubtotal] = useState(0);
 
   const onChangeHandlerProducto = (producto) => {
     let matches = []
@@ -96,7 +104,7 @@ export default function ModalProductos({closeModal, productosLista, distribuidor
         }}>
         <div className="col-md-6">
           <div className="form-group">
-            <label htmlFor="fecha">Nombre Farmacia:</label>
+            <label htmlFor="fecha">Nombre Producto:</label>
             <input type='text' className='form-control' 
               onChange={e => onChangeHandlerProducto(e.target.value)}
               value={selectedProducto}></input>
@@ -121,14 +129,7 @@ export default function ModalProductos({closeModal, productosLista, distribuidor
           <div className="form-group">
               <label htmlFor="fecha">DESCUENTO:</label>
               <input type="text" className="form-control text-center" id="descuento" name="descuento" 
-              value={productos ? 
-                  (cantidad == 1 ? (parseInt(productos.ESCALA_1_UNIDAD*100)+ "%"): 
-                   cantidad == 2 ? (parseInt(productos.ESCALA_2_UNIDAD*100)+ "%"):
-                   parseInt(cantidad) >= 3 && parseInt(cantidad) < 6 ? (parseInt(productos.ESCALA_3_UNIDAD*100)+ "%"):
-                   parseInt(cantidad) >= 6 && parseInt(cantidad) < 11 ? (parseInt(productos.ESCALA_6_UNIDAD*100)+ "%"):
-                   cantidad == 11 ? (parseInt(productos.ESCALA_11_UNIDAD*100)+ "%"):
-                   parseInt(cantidad) >= 12 ? (parseInt(productos.ESCALA_12_UNIDAD*100)+ "%"):""): ""
-              } disabled={true}/>
+              value={productos ? parseInt(porcentaje*100) + "%" : ""} disabled={true}/>
           </div>
         </div>
         <div className="col-md-6 flex">
@@ -144,7 +145,7 @@ export default function ModalProductos({closeModal, productosLista, distribuidor
           </div>
         </div>
         <button className="btn1 btn btn-danger" onClick={() => closeModal(false)}>CERRAR</button>
-        <button className='btn btn-success' disabled={subtotal == 0 ? true : false}>AGREGAR</button>
+        <button className='btn btn-success' disabled={subtotal == 0 ? true : false} onClick={() => agregarProductoCola()}>AGREGAR</button>
       </div>
     </div>
   )

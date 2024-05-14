@@ -45,7 +45,7 @@ const LlenarDatos = () => {
         }
     ]
 
-    const dataInsercion = [
+    const dataInsercionPruebas = [
         {
             id: 1,
             code: 1,
@@ -67,6 +67,7 @@ const LlenarDatos = () => {
             subtotal: "$17.34"
         }
     ]
+    const [dataInsercion, setDataInsercion] = useState([])
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertType, setAlertType] = useState(1);
@@ -84,6 +85,11 @@ const LlenarDatos = () => {
     const [ruc, setRuc] = useState('')
     const [direccion, setDireccion] = useState('')
     const [provincia, setProvincia] = useState('')
+
+    const [producto, setProducto] = useState({})
+    const [porcentaje, setPorcentaje] = useState(0)
+    const [subtotal, setSubtotal] = useState(0)
+    const [cantidad, setCantidad] = useState(0);
 
     const [fecha, setFecha] = useState('');
 
@@ -256,6 +262,20 @@ const LlenarDatos = () => {
         setSuggestionsFarmacias([])
     }
 
+    const agregarProductoCola = () => {
+        let json = {
+            id: dataInsercion.length+1,
+            code: producto.SAP,
+            nombre: producto.DESCRIPCION,
+            unidades: cantidad,
+            margen: parseInt(porcentaje*100) + "%",
+            pvp: "$"+producto.PVP,
+            pvfunitario: "$"+parseFloat(producto.PVP - (producto.PVP*producto.ESCALA_1_UNIDAD)).toFixed(2),
+            subtotal: subtotal
+        }
+        setDataInsercion([...dataInsercion, json])
+    }
+
     return(
         <>
         {/* <NotificationAlert
@@ -353,7 +373,7 @@ const LlenarDatos = () => {
                         onClick={() => setOpenModal(true)}>Nuevo</button>
                 </div>
                 <div className="form-group">
-                    <button type='button' className='btn btn-dark' disabled={true}>Enviar</button>
+                    <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0}>Enviar</button>
                 </div>
             </div>
             <div className='container mt-5'>
@@ -364,7 +384,19 @@ const LlenarDatos = () => {
             </div>
             <button type="button" className="btn1 btn btn-danger" onClick={() => logout()}>Logout</button>
         </div>
-        {openModal && <ModalProductos closeModal={setOpenModal} productosLista={productos} distribuidorSeleccionado={distribuidorSeleccionado}/>}
+        {openModal && <ModalProductos 
+            closeModal={setOpenModal} 
+            productosLista={productos} 
+            distribuidorSeleccionado={distribuidorSeleccionado}
+            productos={producto}
+            setProductos={setProducto}
+            porcentaje={porcentaje}
+            setPorcentaje={setPorcentaje}
+            subtotal={subtotal}
+            setSubtotal={setSubtotal}
+            cantidad={cantidad}
+            setCantidad={setCantidad}
+            agregarProductoCola={agregarProductoCola}/>}
         </>
     )
 }
