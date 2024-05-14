@@ -190,7 +190,7 @@ const LlenarDatos = () => {
             if (res.status) {
                 if(res.status === 200){
                     const data = res.data
-                    setRuc(data.RUC)
+                    setRuc(data.RUC.length === 13 ? data.RUC : "0"+data.RUC)
                     setDireccion(data.DIRECCION)
                     setProvincia(data.PROVINCIA)
                 }else if(res.status === 401){
@@ -274,6 +274,7 @@ const LlenarDatos = () => {
             subtotal: subtotal
         }
         setDataInsercion([...dataInsercion, json])
+        setOpenModal(false)
     }
 
     return(
@@ -287,8 +288,8 @@ const LlenarDatos = () => {
         <div className="container">
             <div className="row">
                 <div className="col text-center mt-5">
-                    <h1>Levantamiento de pedidos</h1>
-                    <h2>Proyecto GenExpertos 2024 - MarkUP</h2>
+                    <h1 className='tituloGrande'>Levantamiento de pedidos</h1>
+                    <h2 className='tituloGrande'>Proyecto GenExpertos 2024 - MarkUP</h2>
                 </div>
             </div>
             <div className="row mt-3">
@@ -373,7 +374,7 @@ const LlenarDatos = () => {
                         onClick={() => setOpenModal(true)}>Nuevo</button>
                 </div>
                 <div className="form-group">
-                    <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0}>Enviar</button>
+                    <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => setDataInsercion([])}>Enviar</button>
                 </div>
             </div>
             <div className='container mt-5'>
