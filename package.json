@@ -10,7 +10,8 @@
     "build-linux": "echo 'NODE_ENV=production' > dist/.env && cp src/server.js dist/",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node ./dist/server.js"
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
