@@ -139,6 +139,7 @@ const LlenarDatos = () => {
             if(res.status){
                 if(res.status === 200){
                     const data = res.data;
+                    console.log(data)
                     setVendedor(data.vendedor)
                 }else if(res.status === 401){
                     navigate("/logout");
