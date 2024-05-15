@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "./LlenarDatos.css"
 import { nombreFarmacia } from '../../../../redux/actions/authActions';
-import { obtenerFarmacia, obtenerVendedor, listarProductos } from '../../../../redux/actions/pedidosActions';
+import { obtenerFarmacia, obtenerVendedor, listarProductos, enviarMailFormulario } from '../../../../redux/actions/pedidosActions';
 import NotificationAlert from '../../../common/notifications/NotificationAlert'
 import DataTable from 'react-data-table-component';
 import ModalProductos from './modals/ModalProductos';
@@ -93,6 +93,8 @@ const LlenarDatos = () => {
     const [subtotal, setSubtotal] = useState(0)
     const [cantidad, setCantidad] = useState(0);
 
+    const [total, setTotal] = useState(0.0);
+
     const [fecha, setFecha] = useState('');
 
     const [openModal, setOpenModal] = useState(false);
@@ -139,7 +141,6 @@ const LlenarDatos = () => {
             if(res.status){
                 if(res.status === 200){
                     const data = res.data;
-                    console.log(data)
                     setVendedor(data.vendedor)
                 }else if(res.status === 401){
                     navigate("/logout");
@@ -227,8 +228,6 @@ const LlenarDatos = () => {
                         agregarFarmacia.push(json)
                     })
 
-                    console.log(agregarFarmacia)
-
                     setFarmacias(agregarFarmacia)
                 }else if(res.status === 401){
                     navigate("/logout");
@@ -254,7 +253,6 @@ const LlenarDatos = () => {
             })
         }
         matches = matches.slice(0, 10)
-        console.log('matches', matches)
         setSuggestionsFarmacias(matches)
         setSelectedFarmacia(farmacia)
     }
@@ -276,8 +274,56 @@ const LlenarDatos = () => {
             pvfunitario: "$"+parseFloat(producto.PVP - (producto.PVP*producto.ESCALA_1_UNIDAD)).toFixed(2),
             subtotal: subtotal
         }
+        let subTotalConvertido = parseFloat(subtotal)
+        let asignarTotal = total + subTotalConvertido;
+        setTotal(asignarTotal);
         setDataInsercion([...dataInsercion, json])
         setOpenModal(false)
+    }
+
+    const enviarFormularioACorreo = () => {
+        const asunto = `Fwd: Pedido de transferencia ${vendedor} GenommaLab ${distribuidorSeleccionado}/ `
+        const cuerpo = `
+        Estimado distribuidor.
+        <br>
+        El siguiente correo es automatizado y corresponde a una solicitud de trasferencia con los datos indicados en el cuerpo del correo.
+        <br>
+        <br>
+        Pedido de transferencia
+        <br>
+        <br>
+        <br>
+        <br>
+        Distribuidor: ${distribuidorSeleccionado}
+        <br>
+        Fecha de Pedido: ${fecha}
+        <br>
+        Nombre Farmacia: ${selectedFarmacia}
+        <br>
+        Cód. Farmacia: ${selectedIdFarmacia}
+        <br>
+        RUC: ${ruc}
+        <br>
+        Dirección Farmacia: ${direccion}
+        <br>
+        Provincia: ${provincia}
+        <br>
+        Vendedor: ${vendedor}
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        Saludos.
+        Equipo de Automatización MarkUP / Genomma
+        Para dudas respecto a la información del correo contactar a Edwin Cepeda 098 9824 751 o responder al correo edwin.cepeda@markup.ws .
+        `
+        dispatch(enviarMailFormulario(asunto, "jemilio_s@hotmail.com", cuerpo))
+        setDataInsercion([])
+        setTotal(0);
     }
 
     return(
@@ -383,7 +429,7 @@ const LlenarDatos = () => {
                         onClick={() => setOpenModal(true)}>Nuevo</button>
                 </div>
                 <div className="form-group">
-                    <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => setDataInsercion([])}>Enviar</button>
+                    <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => enviarFormularioACorreo()}>Enviar</button>
                 </div>
             </div>
             <div className='container mt-5'>
@@ -391,6 +437,12 @@ const LlenarDatos = () => {
                     columns={columnsInsercion}
                     data={dataInsercion}
                 ></DataTable>
+            </div>
+            <div class="container1">
+                <div class="subtotal-container">
+                    <span class="label">Total:</span>
+                    <span class="amount">${total}</span>
+                </div>
             </div>
             <button type="button" className="btn1 btn btn-danger" onClick={() => logout()}>Logout</button>
         </div>

@@ -163,3 +163,35 @@ export function obtenerVendedor(local) {
       console.log(e);
     }
 }
+
+export function enviarMailFormulario(asunto, correodest, cuerpo) {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "ENVIAR_MAIL" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/enviarMailFormulario",
+          {asunto, correodest, cuerpo},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "ENVIAR_MAIL_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "ENVIAR_MAIL_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}

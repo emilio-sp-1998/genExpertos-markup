@@ -69,7 +69,6 @@ export default function ModalProductos(
     if(porcentaje){
       setSubtotal(parseFloat((productos.PVP*cantidad)-((productos.PVP*cantidad)*porcentaje)).toFixed(2))
     }
-    console.log(subtotal)
   }, [cantidad, porcentaje, subtotal])
 
   const obtenerProductoFunc = () => {

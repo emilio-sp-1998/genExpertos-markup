@@ -31,4 +31,19 @@
 
 .tituloGrande {
     font-size: 36px; /* Puedes ajustar el tamaño según tu preferencia */
-  }
+}
+
+.container1 {
+    width: 50%; /* El contenedor ocupa la mitad del ancho de la pantalla */
+    max-width: 400px; /* Ajusta el tamaño máximo para evitar que se extienda demasiado en pantallas grandes */
+}
+
+.subtotal-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
