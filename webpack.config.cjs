@@ -1,20 +1,15 @@
-import pkg from 'webpack';
-const { DefinePlugin } = pkg;
-import { resolve as _resolve } from 'path'
-import pkg1 from 'mini-css-extract-plugin';
-const { loader: _loader } = pkg1;
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import TerserWebpackPlugin from 'terser-webpack-plugin'
-import ProgressBarPlugin from 'progress-bar-webpack-plugin'
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const webpack = require('webpack')
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const TerserWebpackPlugin = require('terser-webpack-plugin')
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const envVars = require('./config/env.json')
 //const envVars = require('./config/env.json')
 
-export default function (argv, env) {
+module.exports = function (argv, env) {
     console.log('Webpack Environment defined by USER: ' + env.mode)
   
     const isProduction = env.mode === 'production'
@@ -22,9 +17,9 @@ export default function (argv, env) {
   
     return {
       devtool: isDevelopment && 'cheap-module-source-map',
-      entry: './src/main.js',
+      entry: './src/index.js',
       output: {
-        path: _resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist'),
         filename: '[name].[contenthash:8].js'
       },
       module: {
@@ -50,7 +45,7 @@ export default function (argv, env) {
           {
             test: /\.css$/,
             use: [
-              isProduction ? _loader : 'style-loader',
+              isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
               'css-loader',
               "postcss-loader"
             ],
@@ -97,18 +92,18 @@ export default function (argv, env) {
         }),
         ,
         isProduction &&
-          new pkg1({
+          new MiniCssExtractPlugin({
             filename: '[name].[contenthash:8].css',
             chunkFilename: '[name].[contenthash:8].chunk.css',
           }),
         new HtmlWebpackPlugin({
-          template: _resolve(__dirname, './index.html'),
-          favicon: _resolve(__dirname, './src/favicon.ico'),
+          template: path.resolve(__dirname, './index.html'),
+          favicon: path.resolve(__dirname, './src/favicon.ico'),
           filename: 'index.html',
           inject: 'body',
           excludeChunks: ['server'],
         }),
-        new pkg.DefinePlugin({
+        new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify(
             isProduction ? 'production' : 'development'
           ),
@@ -134,7 +129,7 @@ export default function (argv, env) {
               warnings: false,
             },
           }),
-          new pkg1({
+          new MiniCssExtractPlugin({
             filename: `[name].[contenthash].css`,
             chunkFilename: `[id].[contenthash].css`,
           }),

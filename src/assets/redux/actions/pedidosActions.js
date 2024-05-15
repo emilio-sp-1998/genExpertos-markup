@@ -1,6 +1,7 @@
 import axios from "axios";
+import GLOBAL from "../../../helpers/globals";
 
-const server = "http://localhost:10000/genExpertosMarkup"
+const server = GLOBAL.server;
 
 export function nombreFarmacia(local) {
     try{

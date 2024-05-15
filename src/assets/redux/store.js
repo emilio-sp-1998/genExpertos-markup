@@ -12,35 +12,24 @@ import {
 } from "redux-persist";
 
 import storage from "redux-persist/lib/storage";
-import { logger } from "redux-logger";
-import thunk from "redux-thunk";
-import promise from "redux-promise-middleware";
-import env from "../../../config/env.json"
 
-const config = {
-  key: "root",
-  storage
+const persistConfig = {
+  key: "root", // clave principal para el almacenamiento local
+  storage: storage, // el motor de almacenamiento, puedes cambiarlo según tus necesidades
 };
 
-const persistedReducer = persistReducer(config, reducer);
+const persistedReducer = persistReducer(persistConfig, reducer);
 
-const rootReducer = (state, action) => {
-    if (action.type === 'LOGOUT') localStorage.clear()
-    console.log(action)
-    return persistedReducer(state, action)
-}
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
 
-export default () => {
-    const store = configureStore({
-      reducer: rootReducer,
-      middleware: (getDefaultMiddleware) =>
-        env.NODE_ENV === 'development' ? getDefaultMiddleware({
-          serializableCheck: {ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]}
-        }).concat(promise, thunk, logger) : getDefaultMiddleware({
-          serializableCheck: {ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]}
-        }).concat(promise, thunk),
-      devTools: env.NODE_ENV === 'development',  
-    })
-    const persistor = persistStore(store)
-    return { persistor, store }
-}
+const persistor = persistStore(store);
+
+export { store, persistor };
