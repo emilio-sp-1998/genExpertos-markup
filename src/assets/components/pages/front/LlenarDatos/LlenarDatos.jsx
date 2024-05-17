@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import logo from '../../../../../favicon.ico'
 import logo2 from '../../../../../genomma-lab.ico'
+import swal from 'sweetalert';
 
 const LlenarDatos = () => {
     const navigate = useNavigate();
@@ -324,6 +325,16 @@ const LlenarDatos = () => {
         dispatch(enviarMailFormulario(asunto, "jemilio_s@hotmail.com", cuerpo))
         setDataInsercion([])
         setTotal(0);
+        mostrarAlerta()
+    }
+
+    const mostrarAlerta = () => {
+        swal({
+          title: "ENVIADO!!!",
+          text: "El formulario ha sido enviado exitosamente!!",
+          icon: "success",
+          buttons: "OK"
+        })
     }
 
     return(
