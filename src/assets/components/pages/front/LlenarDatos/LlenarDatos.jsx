@@ -12,6 +12,8 @@ import { useState } from 'react';
 import logo from '../../../../../favicon.ico'
 import logo2 from '../../../../../genomma-lab.ico'
 import swal from 'sweetalert';
+import {jsPDF} from 'jspdf';
+import 'jspdf-autotable';
 
 const LlenarDatos = () => {
     const navigate = useNavigate();
@@ -21,6 +23,10 @@ const LlenarDatos = () => {
         {
             name: "Code",
             selector: row => row.code
+        },
+        {
+            name: "Id Code",
+            selector: row => row.idCode
         },
         {
             name: "Nombre",
@@ -71,6 +77,8 @@ const LlenarDatos = () => {
         }
     ]
     const [dataInsercion, setDataInsercion] = useState([])
+
+    const [insertarDataBd, setInsertarDataBd] = useState([])
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertType, setAlertType] = useState(1);
@@ -268,6 +276,9 @@ const LlenarDatos = () => {
         let json = {
             id: dataInsercion.length+1,
             code: producto.SAP,
+            idCode: distribuidorSeleccionado === "leterago" ? 
+                producto.IDPROD_LETERAGO : distribuidorSeleccionado === "quifatex" ? 
+                producto.IDPROD_QUIFATEX : producto.IDPROD_FARMAENLACE,
             nombre: producto.DESCRIPCION,
             unidades: cantidad,
             margen: parseInt(porcentaje*100) + "%",
@@ -281,6 +292,60 @@ const LlenarDatos = () => {
         setDataInsercion([...dataInsercion, json])
         setOpenModal(false)
     }
+
+    const conditionalRowStyles = [
+        {
+          when: (row) => true,
+          style: {
+            backgroundColor: 'green',
+            color: 'white',
+            '&:hover': {
+              cursor: 'pointer',
+            },
+          },
+        },
+    ];
+
+    const generarPDF = () => {
+        const doc = new jsPDF()
+
+        doc.text('Productos', 95, 20);
+
+        const columns = ['Code', 'Nombre', 'Unidades', 'Margen', 'Precio Unitario', 'PVF Unitario', 'SubTotal']
+
+        let data = []
+
+        dataInsercion.forEach((item) => {
+            let insertData = [`${item.code}`, `${item.nombre}`, `${item.unidades}`,
+                `${item.margen}`, `${item.pvp}`, `${item.pvfunitario}`, `${item.subtotal}`
+            ]
+            data.push(insertData)
+        })
+
+        doc.autoTable({
+            startY: 30,
+            head: [columns],
+            body: data
+        })
+
+        return doc
+    }
+
+    const funcPruebas = () => {
+        setInsertarDataBd(dataInsercion)
+    }
+
+    const tableCustomStyles = {
+        headCells: {
+          style: {
+            fontSize: '20px',
+            fontWeight: 'bold',
+            paddingLeft: '0 8px',
+            justifyContent: 'center',
+            backgroundColor: '#FFA500'
+          },
+        },
+      }
 
     const enviarFormularioACorreo = () => {
         const asunto = `Fwd: Pedido de transferencia ${vendedor} GenommaLab ${distribuidorSeleccionado}/ `
@@ -322,19 +387,34 @@ const LlenarDatos = () => {
         Equipo de Automatización MarkUP / Genomma
         Para dudas respecto a la información del correo contactar a Edwin Cepeda 098 9824 751 o responder al correo edwin.cepeda@markup.ws .
         `
-        dispatch(enviarMailFormulario(asunto, "jemilio_s@hotmail.com", cuerpo))
+
+        const pdf = generarPDF()
+        const pdfBase64 = pdf.output();
+        dispatch(enviarMailFormulario(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64)).then((res) => {
+            if (!!res.status) if(res.status === 200) {mostrarAlerta(true)} else {mostrarAlerta(false)}
+            else mostrarAlerta(false)
+        })
         setDataInsercion([])
         setTotal(0);
         mostrarAlerta()
     }
 
-    const mostrarAlerta = () => {
-        swal({
-          title: "ENVIADO!!!",
-          text: "El formulario ha sido enviado exitosamente!!",
-          icon: "success",
-          buttons: "OK"
-        })
+    const mostrarAlerta = (bool) => {
+        if(bool){
+            swal({
+                title: "ENVIADO!!!",
+                text: "El formulario ha sido enviado exitosamente!!",
+                icon: "success",
+                buttons: "OK"
+              })
+        }else{
+            swal({
+                title: "UPS!!!",
+                text: "Hubo un inconveniente al enviar la información!!",
+                icon: "error",
+                buttons: "OK"
+              })
+        }
     }
 
     return(
@@ -442,11 +522,15 @@ const LlenarDatos = () => {
                 <div className="form-group">
                     <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => enviarFormularioACorreo()}>Enviar</button>
                 </div>
+                <div className="form-group">
+                    <button type='button' className='btn btn-danger' disabled={dataInsercion.length === 0} onClick={() => console.log(dataInsercion)}>Verificar</button>
+                </div>
             </div>
             <div className='container mt-5'>
                 <DataTable
                     columns={columnsInsercion}
                     data={dataInsercion}
+                    customStyles={tableCustomStyles}
                 ></DataTable>
             </div>
             <div class="container1">

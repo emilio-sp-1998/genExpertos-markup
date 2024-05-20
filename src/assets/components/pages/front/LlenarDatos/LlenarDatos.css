@@ -1,6 +1,6 @@
 .myDiv {
-    border: 5px outset red;
-    background-color: lightblue;    
+    /* border: 5px outset cadetblue; */
+    /* background-color: lightblue; */    
     text-align: center;
 }
 
@@ -26,7 +26,7 @@
 
 .buttons-div{
     display: flex;
-    border: 5px solid;
+    /* border: 5px solid; */
 }
 
 .tituloGrande {
