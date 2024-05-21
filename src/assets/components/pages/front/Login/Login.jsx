@@ -82,7 +82,7 @@ const Login = () => {
 
     return(
         <div className='d-flex vh-100 justify-content-center align-items-center bg-secondary'>
-            <div className='p-3 bg-white w-60'>
+            <div className='p-3 bg-white w-70'>
                 <Formik
                     initialValues={formInitialValues}
                     onSubmit={(values, actions) => {
