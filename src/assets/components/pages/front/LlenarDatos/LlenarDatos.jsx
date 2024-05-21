@@ -427,6 +427,18 @@ const LlenarDatos = () => {
         setInsertarDataBd(dataInsercion)
     }
 
+    const reset = () => {
+        setDataInsercion([])
+        setSelectedFarmacia('')
+        setSelectedIdFarmacia(-1)
+        setRuc('')
+        setDireccion('')
+        setProvincia('')
+
+        setProducto('')
+        setCantidad(0)
+    }
+
     const tableCustomStyles = {
         headCells: {
           style: {
@@ -612,6 +624,9 @@ const LlenarDatos = () => {
                 </div>
                 <div className="form-group">
                     <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => enviarFormularioACorreo()}>Enviar</button>
+                </div>
+                <div className="form-group">
+                    <button type='button' className='btn btn-primary' disabled={false} onClick={() => reset()}>Reset</button>
                 </div>
                 {/* <div className="form-group">
                     <button type='button' className='btn btn-danger' disabled={dataInsercion.length === 0} onClick={() => generarPDFTest()}>Verificar</button>
