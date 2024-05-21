@@ -518,7 +518,7 @@ const LlenarDatos = () => {
                         <option value="">Seleccionar...</option>
                         <option value="leterago">LETERAGO</option>
                         <option value="quifatex">QUIFATEX</option>
-                        <option value="farmaenlace">FARMAENLACE</option>
+                        {/* <option value="farmaenlace">FARMAENLACE</option> */}
                     </select>
                 </div>
                 <div className="flex col">
