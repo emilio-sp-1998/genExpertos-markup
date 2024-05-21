@@ -495,7 +495,7 @@ const LlenarDatos = () => {
 
         const pdf = generarPDF(cod)
         const pdfBase64 = pdf.output();
-        dispatch(enviarMailFormulario(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64)).then((res) => {
+        dispatch(enviarMailFormulario(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
             if (!!res.status) if(res.status === 200) {mostrarAlerta(true, cod)} else {mostrarAlerta(false)}
             else mostrarAlerta(false)
         })
