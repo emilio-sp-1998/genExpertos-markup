@@ -2,14 +2,14 @@ import React, {useEffect} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "./LlenarDatos.css"
 import { nombreFarmacia } from '../../../../redux/actions/authActions';
-import { obtenerFarmacia, obtenerVendedor, listarProductos, enviarMailFormulario } from '../../../../redux/actions/pedidosActions';
+import { obtenerFarmacia, obtenerVendedor, listarProductos, enviarMailFormulario, insertarRegistro } from '../../../../redux/actions/pedidosActions';
 import NotificationAlert from '../../../common/notifications/NotificationAlert'
 import DataTable from 'react-data-table-component';
 import ModalProductos from './modals/ModalProductos';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import logo from '../../../../../favicon.ico'
+import logo from '../../../../../markup.ico'
 import logo2 from '../../../../../genomma-lab.ico'
 import swal from 'sweetalert';
 import {jsPDF} from 'jspdf';
@@ -253,6 +253,21 @@ const LlenarDatos = () => {
         })
     }
 
+    const insertarRegistroFunc = () => {
+        dispatch(insertarRegistro(distribuidorSeleccionado, selectedIdFarmacia, vendedor, dataInsercion)).then((res) => {
+            if(res.status){
+                if(res.status === 200){
+                    console.log("GOOD!!")
+                    mostrarAlerta(true, res.data.code)
+                }else{
+                    console.log("Algo salio mal!!")
+                }
+            }else{
+                console.log("Algo salio mal!!")
+            }
+        })
+    }
+
     const onChangeHandlerFarmacia = (farmacia) => {
         let matches = []
         if(farmacia.length>0){
@@ -311,6 +326,26 @@ const LlenarDatos = () => {
 
         doc.text('Productos', 95, 20);
 
+        doc.setFontSize(12);
+
+        const encabezado = `
+            Distribuidor: ${distribuidorSeleccionado}
+            Fecha de Pedido: ${fecha}
+            Nombre Farmacia: ${selectedFarmacia}
+            Cód. Farmacia: ${selectedIdFarmacia}
+            RUC: ${ruc}
+            Dirección Farmacia: ${direccion}
+            Provincia: ${provincia}
+            Vendedor: ${vendedor}
+            `;
+
+        // Establecer la posición inicial para el texto del encabezado
+        let x = 0;  // Margen izquierdo
+        let y = 30;  // Margen superior
+
+        // Añadir el encabezado al documento
+        doc.text(encabezado, x, y);
+
         const columns = ['Code', 'Nombre', 'Unidades', 'Margen', 'Precio Unitario', 'PVF Unitario', 'SubTotal']
 
         let data = []
@@ -323,12 +358,57 @@ const LlenarDatos = () => {
         })
 
         doc.autoTable({
-            startY: 30,
+            startY: 100,
             head: [columns],
             body: data
         })
 
         return doc
+    }
+
+    const generarPDFTest = () => {
+        const doc = new jsPDF()
+
+        doc.text('Productos', 95, 20);
+
+        doc.setFontSize(12);
+
+        const encabezado = `
+            Distribuidor: ${distribuidorSeleccionado}
+            Fecha de Pedido: ${fecha}
+            Nombre Farmacia: ${selectedFarmacia}
+            Cód. Farmacia: ${selectedIdFarmacia}
+            RUC: ${ruc}
+            Dirección Farmacia: ${direccion}
+            Provincia: ${provincia}
+            Vendedor: ${vendedor}
+            `;
+
+        // Establecer la posición inicial para el texto del encabezado
+        let x = 0;  // Margen izquierdo
+        let y = 30;  // Margen superior
+
+        // Añadir el encabezado al documento
+        doc.text(encabezado, x, y);
+
+        const columns = ['Code', 'Nombre', 'Unidades', 'Margen', 'Precio Unitario', 'PVF Unitario', 'SubTotal']
+
+        let data = []
+
+        dataInsercion.forEach((item) => {
+            let insertData = [`${item.code}`, `${item.nombre}`, `${item.unidades}`,
+                `${item.margen}`, `${item.pvp}`, `${item.pvfunitario}`, `${item.subtotal}`
+            ]
+            data.push(insertData)
+        })
+
+        doc.autoTable({
+            startY: 100,
+            head: [columns],
+            body: data
+        })
+
+        doc.save("Productos.pdf")
     }
 
     const funcPruebas = () => {
@@ -342,7 +422,7 @@ const LlenarDatos = () => {
             fontWeight: 'bold',
             paddingLeft: '0 8px',
             justifyContent: 'center',
-            backgroundColor: '#FFA500'
+            backgroundColor: '#7E82D5'
           },
         },
       }
@@ -391,18 +471,17 @@ const LlenarDatos = () => {
         const pdf = generarPDF()
         const pdfBase64 = pdf.output();
         dispatch(enviarMailFormulario(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64)).then((res) => {
-            if (!!res.status) if(res.status === 200) {mostrarAlerta(true)} else {mostrarAlerta(false)}
+            if (!!res.status) if(res.status === 200) {insertarRegistroFunc()} else {mostrarAlerta(false)}
             else mostrarAlerta(false)
         })
         setDataInsercion([])
         setTotal(0);
-        mostrarAlerta()
     }
 
-    const mostrarAlerta = (bool) => {
+    const mostrarAlerta = (bool, cod) => {
         if(bool){
             swal({
-                title: "ENVIADO!!!",
+                title: `Registro ${cod}`,
                 text: "El formulario ha sido enviado exitosamente!!",
                 icon: "success",
                 buttons: "OK"
@@ -522,9 +601,9 @@ const LlenarDatos = () => {
                 <div className="form-group">
                     <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => enviarFormularioACorreo()}>Enviar</button>
                 </div>
-                <div className="form-group">
-                    <button type='button' className='btn btn-danger' disabled={dataInsercion.length === 0} onClick={() => console.log(dataInsercion)}>Verificar</button>
-                </div>
+                {/* <div className="form-group">
+                    <button type='button' className='btn btn-danger' disabled={dataInsercion.length === 0} onClick={() => generarPDFTest()}>Verificar</button>
+                </div> */}
             </div>
             <div className='container mt-5'>
                 <DataTable

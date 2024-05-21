@@ -195,3 +195,35 @@ export function enviarMailFormulario(asunto, correodest, cuerpo, adjunto) {
     console.log(e);
   }
 }
+
+export function insertarRegistro(local_farmacia, cod_local, vendedor, productos) {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "INSERTAR_REGISTRO" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/insertarRegistro",
+          {local_farmacia, cod_local, vendedor, productos},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "INSERTAR_REGISTRO_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "INSERTAR_REGISTRO_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}

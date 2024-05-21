@@ -32,7 +32,7 @@ const Login = () => {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            doLoginForm(values, errors)
+            doLoginForm(values, actions)
         }else{
             actions.setSubmitting(false);
         }
@@ -81,8 +81,8 @@ const Login = () => {
     }
 
     return(
-        <div className='d-flex vh-100 justify-content-center align-items-center bg-primary'>
-            <div className='p-3 bg-white w-25'>
+        <div className='d-flex vh-100 justify-content-center align-items-center bg-secondary'>
+            <div className='p-3 bg-white w-60'>
                 <Formik
                     initialValues={formInitialValues}
                     onSubmit={(values, actions) => {
