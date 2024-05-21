@@ -258,7 +258,8 @@ const LlenarDatos = () => {
             if(res.status){
                 if(res.status === 200){
                     console.log("GOOD!!")
-                    mostrarAlerta(true, res.data.code)
+                    //mostrarAlerta(true, res.data.code)
+                    enviarFormularioACorreo(res.data.code)
                     setSelectedFarmacia('')
                     setSelectedIdFarmacia(-1)
                     setRuc('')
@@ -329,10 +330,10 @@ const LlenarDatos = () => {
         },
     ];
 
-    const generarPDF = () => {
+    const generarPDF = (cod) => {
         const doc = new jsPDF()
 
-        doc.text('Productos', 95, 20);
+        doc.text(`Información del Registro ${cod}`, 60, 20);
 
         doc.setFontSize(12);
 
@@ -451,8 +452,8 @@ const LlenarDatos = () => {
         },
       }
 
-    const enviarFormularioACorreo = () => {
-        const asunto = `Fwd: Pedido de transferencia ${vendedor} GenommaLab ${distribuidorSeleccionado}/ `
+    const enviarFormularioACorreo = (cod) => {
+        const asunto = `Fwd: Pedido de transferencia ${vendedor} GenommaLab ${distribuidorSeleccionado}/ Registro ${cod}`
         const cuerpo = `
         Estimado distribuidor.
         <br>
@@ -492,10 +493,10 @@ const LlenarDatos = () => {
         Para dudas respecto a la información del correo contactar a Edwin Cepeda 098 9824 751 o responder al correo edwin.cepeda@markup.ws .
         `
 
-        const pdf = generarPDF()
+        const pdf = generarPDF(cod)
         const pdfBase64 = pdf.output();
         dispatch(enviarMailFormulario(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64)).then((res) => {
-            if (!!res.status) if(res.status === 200) {insertarRegistroFunc()} else {mostrarAlerta(false)}
+            if (!!res.status) if(res.status === 200) {mostrarAlerta(true, cod)} else {mostrarAlerta(false)}
             else mostrarAlerta(false)
         })
         setDataInsercion([])
@@ -623,7 +624,7 @@ const LlenarDatos = () => {
                         onClick={() => setOpenModal(true)}>Nuevo</button>
                 </div>
                 <div className="form-group">
-                    <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => enviarFormularioACorreo()}>Enviar</button>
+                    <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => insertarRegistroFunc()}>Enviar</button>
                 </div>
                 <div className="form-group">
                     <button type='button' className='btn btn-primary' disabled={false} onClick={() => reset()}>Reset</button>

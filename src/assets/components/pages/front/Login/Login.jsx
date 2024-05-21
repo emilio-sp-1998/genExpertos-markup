@@ -3,6 +3,9 @@ import { Formik, Form, Field } from 'formik'
 import {login, notAuthorized} from '../../../../redux/actions/authActions'
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+import './Login.css'
+import logo from '../../../../../markup.ico'
+import logo2 from '../../../../../genomma-lab.ico'
 import 'bootstrap/dist/css/bootstrap.min.css'
 const Login = () => {
     const dispatch = useDispatch();
@@ -81,58 +84,69 @@ const Login = () => {
     }
 
     return(
-        <div className='d-flex vh-100 justify-content-center align-items-center bg-secondary'>
-            <div className='p-3 bg-white w-70'>
-                <Formik
-                    initialValues={formInitialValues}
-                    onSubmit={(values, actions) => {
-                        validateErrors(values, actions)
-                    }}
-                >
-                    {({
-                        handleChange,
-                        handleSubmit,
-                        values,
-                        isSubmitting
-                    }) => (
-                        <Form onSubmit={handleSubmit}>
-                            <div className='mb-3'>
-                                <label htmlFor="username">Username</label>
-                                <input id="username" name="username" type="text" placeholder='Enter Username' className='form-content' 
-                                value={values.username} onChange={handleChange}/>
-                                {errors.username ? (
-                                    <div>
-                                        <p className="text-sm font-normal text-red-700 mt-1">
-                                        {errors.username}
-                                        </p>
-                                    </div>
-                                ) : null}
-                            </div>
-                            <div className='mb-3'>
-                                <label htmlFor="password">Password</label>
-                                <input id="password" name="password" type="password" placeholder='Enter Password' className='form-content' 
-                                value={values.password} onChange={handleChange}/>
-                                {errors.username ? (
-                                    <div>
-                                        <p className="text-sm font-normal text-red-700 mt-1">
-                                        {errors.password}
-                                        </p>
-                                    </div>
-                                ) : null}
-                            </div>
-                            <button type="submit" className='btn btn-success' disabled={isSubmitting}>
-                                {isSubmitting ? "Iniciando..." : "Iniciar sesión"}
-                            </button>
-                        </Form>
+        <div className='flex min-h-full flex-col justify-center py-20 px-5 sm:px-2 lg:px-8 bg-lila'>
+            <div className="py-20">
+                <img src={logo} className='mx-auto object-cover text-center w-80'></img>
+            </div>
+            {/* <div className="">
+                    <img src={logo}></img>
+                </div>
+                <div className="">
+                    <img src={logo2}></img>
+                </div> */}
+            <div className='py-16 rounded-lg border border-gray-200 w-full sm:w-8/12 md:w-1/3 mx-auto'>
+                <div className='p-3 bg-white w-70'>
+                    <Formik
+                        initialValues={formInitialValues}
+                        onSubmit={(values, actions) => {
+                            validateErrors(values, actions)
+                        }}
+                    >
+                        {({
+                            handleChange,
+                            handleSubmit,
+                            values,
+                            isSubmitting
+                        }) => (
+                            <Form onSubmit={handleSubmit}>
+                                <div className='mb-3'>
+                                    <label htmlFor="username">Username</label>
+                                    <input id="username" name="username" type="text" placeholder='Enter Username' className='form-content' 
+                                    value={values.username} onChange={handleChange}/>
+                                    {errors.username ? (
+                                        <div>
+                                            <p className="text-sm font-normal text-red-700 mt-1">
+                                            {errors.username}
+                                            </p>
+                                        </div>
+                                    ) : null}
+                                </div>
+                                <div className='mb-3'>
+                                    <label htmlFor="password">Password</label>
+                                    <input id="password" name="password" type="password" placeholder='Enter Password' className='form-content' 
+                                    value={values.password} onChange={handleChange}/>
+                                    {errors.username ? (
+                                        <div>
+                                            <p className="text-sm font-normal text-red-700 mt-1">
+                                            {errors.password}
+                                            </p>
+                                        </div>
+                                    ) : null}
+                                </div>
+                                <button type="submit" className='btn btn-success' disabled={isSubmitting}>
+                                    {isSubmitting ? "Iniciando..." : "Iniciar sesión"}
+                                </button>
+                            </Form>
+                        )}
+                    </Formik>
+                    {loginError && (
+                        <div className="text-center">
+                        <p className="text-sm font-normal text-red-700 mt-4">
+                            {loginError}
+                        </p>
+                        </div>
                     )}
-                </Formik>
-                {loginError && (
-                    <div className="text-center">
-                    <p className="text-sm font-normal text-red-700 mt-4">
-                        {loginError}
-                    </p>
-                    </div>
-                )}
+                </div>
             </div>
         </div>
     )
