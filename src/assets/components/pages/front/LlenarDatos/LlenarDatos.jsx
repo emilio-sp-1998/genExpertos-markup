@@ -259,6 +259,14 @@ const LlenarDatos = () => {
                 if(res.status === 200){
                     console.log("GOOD!!")
                     mostrarAlerta(true, res.data.code)
+                    setSelectedFarmacia('')
+                    setSelectedIdFarmacia(-1)
+                    setRuc('')
+                    setDireccion('')
+                    setProvincia('')
+
+                    setProducto('')
+                    setCantidad(0)
                 }else{
                     console.log("Algo salio mal!!")
                 }
@@ -362,6 +370,10 @@ const LlenarDatos = () => {
             head: [columns],
             body: data
         })
+
+        doc.setFontSize(12);
+
+        doc.text(`Total: ${total}`,20, 140)
 
         return doc
     }
