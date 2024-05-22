@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css'
 import logo from '../../../../../markup.ico'
 import logo2 from '../../../../../genomma-lab.ico'
+import logo3 from '../../../../../markup2.ico'
 import 'bootstrap/dist/css/bootstrap.min.css'
 const Login = () => {
     const dispatch = useDispatch();
@@ -86,7 +87,7 @@ const Login = () => {
     return(
         <div className='flex min-h-full flex-col justify-center py-20 px-5 sm:px-2 lg:px-8 bg-lila'>
             <div className="py-20">
-                <img src={logo} className='mx-auto object-cover text-center w-80'></img>
+                <img src={logo3} className='mx-auto object-cover text-center w-80'></img>
             </div>
             {/* <div className="">
                     <img src={logo}></img>
