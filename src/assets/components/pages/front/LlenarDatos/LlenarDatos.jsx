@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "./LlenarDatos.css"
 import { nombreFarmacia } from '../../../../redux/actions/authActions';
-import { obtenerFarmacia, obtenerVendedor, listarProductos, enviarMailFormulario, insertarRegistro } from '../../../../redux/actions/pedidosActions';
+import { obtenerFarmacia, obtenerVendedor, listarProductos, enviarMailFormulario, insertarRegistro, enviarMailFormulario2 } from '../../../../redux/actions/pedidosActions';
 import NotificationAlert from '../../../common/notifications/NotificationAlert'
 import DataTable from 'react-data-table-component';
 import ModalProductos from './modals/ModalProductos';
@@ -113,6 +113,8 @@ const LlenarDatos = () => {
 
     const [vendedor, setVendedor] = useState('')
 
+    const [observacion, setObservacion] = useState('')
+
     const [ruc, setRuc] = useState('')
     const [direccion, setDireccion] = useState('')
     const [provincia, setProvincia] = useState('')
@@ -164,6 +166,14 @@ const LlenarDatos = () => {
             obtenerFarmaciaFunc();
         }
     }, [selectedIdFarmacia])
+
+    useEffect(() => {
+        if(observacion){
+            console.log("SI!!")
+        }else{
+            console.log("NO!!")
+        }
+    }, [observacion])
     
     const obtenerVendedorFunc = () => {
         dispatch(obtenerVendedor(distribuidorSeleccionado)).then((res) => {
@@ -274,11 +284,12 @@ const LlenarDatos = () => {
     }
 
     const insertarRegistroFunc = () => {
-        dispatch(insertarRegistro(distribuidorSeleccionado, selectedIdFarmacia, vendedor, dataInsercion)).then((res) => {
+        dispatch(insertarRegistro(distribuidorSeleccionado, selectedIdFarmacia, vendedor, dataInsercion, observacion)).then((res) => {
             if(res.status){
                 if(res.status === 200){
                     console.log("GOOD!!")
                     //mostrarAlerta(true, res.data.code)
+                    setObservacion('')
                     enviarFormularioACorreo(res.data.code)
                     setSelectedFarmacia('')
                     setSelectedIdFarmacia(-1)
@@ -449,6 +460,7 @@ const LlenarDatos = () => {
     }
 
     const reset = () => {
+        setObservacion('')
         setDataInsercion([])
         setSelectedFarmacia('')
         setSelectedIdFarmacia(-1)
@@ -504,13 +516,18 @@ const LlenarDatos = () => {
         <br>
         <br>
         <br>
+        ${observacion ? 
+            `<br>
+                Observacion: ${observacion}
+             <br>` : ''
+        }
         <br>
         <br>
         <br>
         <br>
         Saludos.
         Equipo de Automatización MarkUP / Genomma
-        Para dudas respecto a la información del correo contactar a Edwin Cepeda 098 9824 751 o responder al correo edwin.cepeda@markup.ws .
+        Para dudas respecto a la información del correo contactar a Veronica Navarrete 098 0780 407 o responder al correo veronica.navarrete@markup.ws .
         `
 
         const pdf = generarPDF(cod)
@@ -519,6 +536,33 @@ const LlenarDatos = () => {
             if (!!res.status) if(res.status === 200) {mostrarAlerta(true, cod)} else {mostrarAlerta(false)}
             else mostrarAlerta(false)
         })
+        if(distribuidorSeleccionado === "leterago"){
+            dispatch(enviarMailFormulario2(asunto, "operaciones@innovaservgroup.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            })
+            dispatch(enviarMailFormulario2(asunto, "krey@leterago.com.ec", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            })
+            /* dispatch(enviarMailFormulario2(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            }) */
+        }else{
+            dispatch(enviarMailFormulario2(asunto, "transferencias@quifatex.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            })
+            dispatch(enviarMailFormulario2(asunto, "mauro.noboa@quifatex.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            })
+            /* dispatch(enviarMailFormulario2(asunto, "subzerovega45@gmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            }) */
+        }
         setDataInsercion([])
         setTotal(0);
     }
@@ -639,6 +683,15 @@ const LlenarDatos = () => {
                             <input type="text" className="form-control text-center" id="vendedor" name="vendedor" value={vendedor} disabled={true}/>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div className="col-md-6">
+                <div className="form-group">
+                    <label htmlFor="fecha">Observacion:</label>
+                    <textarea className="form-control" rows="4" cols="50" id="observacion" name="observacion"
+                        onChange={(e) => setObservacion(e.target.value)} disabled={selectedIdFarmacia === -1}
+                        value={observacion}
+                    />
                 </div>
             </div>
             <div className='buttons-div'>

@@ -196,7 +196,39 @@ export function enviarMailFormulario(asunto, correodest, cuerpo, adjunto, filena
   }
 }
 
-export function insertarRegistro(local_farmacia, cod_local, vendedor, productos) {
+export function enviarMailFormulario2(asunto, correodest, cuerpo, adjunto, filename) {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "ENVIAR_MAIL_2" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/enviarMailFormulario2",
+          {asunto, correodest, cuerpo, adjunto, filename},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "ENVIAR_MAIL_2_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "ENVIAR_MAIL_2_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function insertarRegistro(local_farmacia, cod_local, vendedor, productos, observacion) {
   try{
     return async function (dispatch) {
       let token = localStorage.getItem("token");
@@ -204,7 +236,7 @@ export function insertarRegistro(local_farmacia, cod_local, vendedor, productos)
       try{
         const res = await axios.post(
           server + "/pedidos/insertarRegistro",
-          {local_farmacia, cod_local, vendedor, productos},
+          {local_farmacia, cod_local, vendedor, productos, observacion},
           {
             headers: {
               Authorization: "Bearer " + token,
