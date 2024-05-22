@@ -12,6 +12,7 @@ import { useState } from 'react';
 import logo from '../../../../../markup.ico'
 import logo2 from '../../../../../genomma-lab.ico'
 import swal from 'sweetalert';
+import { FaTrash } from 'react-icons/fa';
 import {jsPDF} from 'jspdf';
 import 'jspdf-autotable';
 
@@ -51,8 +52,23 @@ const LlenarDatos = () => {
         {
             name: "Subtotal",
             selector: row => row.subtotal
+        },
+        {
+            name: "Acciones",
+            cell: row => (
+                <button onClick={() => borrarInsercion(row.id)}>
+                    <FaTrash />
+                </button>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
         }
     ]
+
+    const borrarInsercion = (id) => {
+        setDataInsercion(p => p.filter(prod => prod.id !== id))
+    }
 
     const dataInsercionPruebas = [
         {
@@ -77,6 +93,10 @@ const LlenarDatos = () => {
         }
     ]
     const [dataInsercion, setDataInsercion] = useState([])
+
+    useEffect(() => {
+        console.log(dataInsercion)
+    }, [dataInsercion])
 
     const [insertarDataBd, setInsertarDataBd] = useState([])
 
@@ -552,6 +572,9 @@ const LlenarDatos = () => {
                 <div className="flex col">
                     <img src={logo2}></img>
                 </div>
+                <div className="form-group">
+                    <button type="button" className="btn1 btn btn-danger" onClick={() => logout()}>Logout</button>
+                </div>
             </div>
             <div className="row mt-3">
                 <div className="col">
@@ -623,9 +646,9 @@ const LlenarDatos = () => {
                     <button type='button' className='btn btn-success' disabled={selectedIdFarmacia === -1}
                         onClick={() => setOpenModal(true)}>Nuevo</button>
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                     <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => insertarRegistroFunc()}>Enviar</button>
-                </div>
+                </div> */}
                 <div className="form-group">
                     <button type='button' className='btn btn-primary' disabled={false} onClick={() => reset()}>Reset</button>
                 </div>
@@ -646,7 +669,7 @@ const LlenarDatos = () => {
                     <span class="amount">${total}</span>
                 </div>
             </div>
-            <button type="button" className="btn1 btn btn-danger" onClick={() => logout()}>Logout</button>
+            <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => insertarRegistroFunc()}>Enviar</button>
         </div>
         {openModal && <ModalProductos 
             closeModal={setOpenModal} 
