@@ -46,8 +46,8 @@ const LlenarDatos = () => {
             selector: row => row.pvp
         },
         {
-            name: "PVF Unitario",
-            selector: row => row.pvfunitario
+            name: "PVP Sin IVA",
+            selector: row => row.pvpsiniva
         },
         {
             name: "Subtotal",
@@ -339,6 +339,7 @@ const LlenarDatos = () => {
             margen: parseInt(porcentaje*100) + "%",
             pvp: "$"+producto.PVP,
             pvfunitario: "$"+parseFloat(producto.PVP - (producto.PVP*producto.ESCALA_1_UNIDAD)).toFixed(2),
+            pvpsiniva: "$"+producto.PVP_SIN_IVA,
             subtotal: subtotal
         }
         let subTotalConvertido = parseFloat(subtotal)
@@ -386,13 +387,13 @@ const LlenarDatos = () => {
         // Añadir el encabezado al documento
         doc.text(encabezado, x, y);
 
-        const columns = ['Code', 'Nombre', 'Unidades', 'Margen', 'Precio Unitario', 'PVF Unitario', 'SubTotal']
+        const columns = ['Code', 'Nombre', 'Unidades', 'Margen', 'Precio Unitario', 'PVP Sin IVA', 'SubTotal']
 
         let data = []
 
         dataInsercion.forEach((item) => {
             let insertData = [`${item.code}`, `${item.nombre}`, `${item.unidades}`,
-                `${item.margen}`, `${item.pvp}`, `${item.pvfunitario}`, `${item.subtotal}`
+                `${item.margen}`, `${item.pvp}`, `${item.pvpsiniva}`, `${item.subtotal}`
             ]
             data.push(insertData)
         })
