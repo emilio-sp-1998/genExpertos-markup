@@ -133,7 +133,7 @@ export default function ModalProductos(
         </div>
         <div className="col-md-6 flex">
           <div className="form-group">
-                <label htmlFor="fecha">PVP (Sin IVA):</label>
+                <label htmlFor="fecha">PVP:</label>
                 <input type="text" className="form-control text-center" id="pvp" name="pvp" 
                 value={Object.keys(productos).length !== 0 ? "$"+productos.PVP : ""} disabled={true}/>
           </div>
