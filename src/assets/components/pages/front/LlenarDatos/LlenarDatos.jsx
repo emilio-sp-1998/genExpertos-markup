@@ -758,9 +758,9 @@ const LlenarDatos = () => {
                 <div className="form-group">
                     <button type='button' className='btn btn-primary' disabled={false} onClick={() => reset()}>Reset</button>
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                     <button type='button' className='btn btn-danger' disabled={dataInsercion.length === 0} onClick={() => generarPDF("666").save("pruebaGen.pdf")}>Verificar</button>
-                </div>
+                </div> */}
             </div>
             <div className='container mt-5'>
                 <DataTable
