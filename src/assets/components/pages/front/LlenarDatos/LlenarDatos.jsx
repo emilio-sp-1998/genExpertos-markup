@@ -38,8 +38,20 @@ const LlenarDatos = () => {
             selector: row => row.unidades
         },
         {
-            name: "Margen",
+            name: "Descuento",
             selector: row => row.margen
+        },
+        {
+            name: "Subtotal Sin Descuento",
+            selector: row => row.solosubtotal
+        },
+        {
+            name: "IVA%",
+            selector: row => row.ivaporcentaje
+        },
+        {
+            name: "IVA",
+            selector: row => row.totaliva.toFixed(2)
         },
         {
             name: "PVP",
@@ -67,6 +79,9 @@ const LlenarDatos = () => {
     ]
 
     const borrarInsercion = (id) => {
+        const elemento = dataInsercion.find(objeto => objeto.id === id);
+        setTotal(total-elemento.subtotal)
+        setSumaIva(sumaIva - parseFloat(subtotal*producto.IVA))
         setDataInsercion(p => p.filter(prod => prod.id !== id))
     }
 
@@ -125,6 +140,8 @@ const LlenarDatos = () => {
     const [cantidad, setCantidad] = useState(0);
 
     const [total, setTotal] = useState(0.0);
+
+    const [sumaIva, setSumaIva] = useState(0.0)
 
     const [fecha, setFecha] = useState('');
 
@@ -337,13 +354,18 @@ const LlenarDatos = () => {
             nombre: producto.DESCRIPCION,
             unidades: cantidad,
             margen: parseInt(porcentaje*100) + "%",
-            pvp: "$"+producto.PVP,
-            pvfunitario: "$"+parseFloat(producto.PVP - (producto.PVP*producto.ESCALA_1_UNIDAD)).toFixed(2),
+            ivaporcentaje: parseInt(producto.IVA*100) + "%",
+            totaliva: subtotal*producto.IVA,
+            solosubtotal: "$"+producto.PVP_SIN_IVA*cantidad,
+            pvp: "$"+producto.PVP_CON_IVA,
             pvpsiniva: "$"+producto.PVP_SIN_IVA,
             subtotal: subtotal
         }
         let subTotalConvertido = parseFloat(subtotal)
         let asignarTotal = total + subTotalConvertido;
+        let sumaIvaConvertido = parseFloat(subtotal*producto.IVA)
+        let asignarSumaIva = sumaIva + sumaIvaConvertido
+        setSumaIva(asignarSumaIva);
         setTotal(asignarTotal);
         setDataInsercion([...dataInsercion, json])
         setOpenModal(false)
@@ -392,13 +414,14 @@ const LlenarDatos = () => {
         // Añadir el encabezado al documento
         doc.text(encabezado, x, y);
 
-        const columns = ['Code', 'Nombre', 'Unidades', 'Margen', 'Precio Unitario', 'PVP Sin IVA', 'SubTotal']
+        const columns = ['Code', 'Nombre', 'Unidades', 'Descuento', 'SubTotal Sin IVA', 'IVA%', 'IVA', 'Precio Unitario', 'PVP Sin IVA', 'SubTotal']
 
         let data = []
 
         dataInsercion.forEach((item) => {
             let insertData = [`${item.code}`, `${item.nombre}`, `${item.unidades}`,
-                `${item.margen}`, `${item.pvp}`, `${item.pvpsiniva}`, `${item.subtotal}`
+                `${item.margen}`, `${item.solosubtotal}`, `${item.ivaporcentaje}`, `${item.totaliva.toFixed(2)}`, 
+                `${item.pvp}`, `${item.pvpsiniva}`, `${item.subtotal}`
             ]
             data.push(insertData)
         })
@@ -406,12 +429,28 @@ const LlenarDatos = () => {
         doc.autoTable({
             startY: 150,
             head: [columns],
-            body: data
+            body: data,
+            columnStyles: {
+                0: {
+                    columnWidth: 30
+                },
+                3: {
+                    columnWidth: 15
+                },
+                6: {
+                    columnWidth: 10
+                },
+                8: {
+                    columnWidth: 20
+                }
+            }
         })
 
         doc.setFontSize(12);
 
-        doc.text(`Total: ${total}`,20, 200)
+        doc.text(`IVA: ${sumaIva.toFixed(2)}`,20, 220)
+        doc.text(`Subtotal: ${total.toFixed(2)}`,20, 230)
+        doc.text(`Total: ${total + sumaIva}`,20, 240)
 
         return doc
     }
@@ -441,13 +480,13 @@ const LlenarDatos = () => {
         // Añadir el encabezado al documento
         doc.text(encabezado, x, y);
 
-        const columns = ['Code', 'Nombre', 'Unidades', 'Margen', 'Precio Unitario', 'PVF Unitario', 'SubTotal']
+        const columns = ['Code', 'Nombre', 'Unidades', 'Margen', 'Precio Unitario', 'SubTotal']
 
         let data = []
 
         dataInsercion.forEach((item) => {
             let insertData = [`${item.code}`, `${item.nombre}`, `${item.unidades}`,
-                `${item.margen}`, `${item.pvp}`, `${item.pvfunitario}`, `${item.subtotal}`
+                `${item.margen}`, `${item.pvp}`, `${item.subtotal}`
             ]
             data.push(insertData)
         })
@@ -481,7 +520,7 @@ const LlenarDatos = () => {
     const tableCustomStyles = {
         headCells: {
           style: {
-            fontSize: '20px',
+            fontSize: '14px',
             fontWeight: 'bold',
             paddingLeft: '0 8px',
             justifyContent: 'center',
@@ -555,10 +594,10 @@ const LlenarDatos = () => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
             })
-            dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            /* dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
-            })
+            }) */
         }else{
             /* dispatch(enviarMailFormulario2(asunto, "transferencias@quifatex.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
@@ -572,10 +611,10 @@ const LlenarDatos = () => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
             })
-            dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            /* dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
-            })
+            }) */
         }
         setDataInsercion([])
         setTotal(0);
@@ -719,9 +758,9 @@ const LlenarDatos = () => {
                 <div className="form-group">
                     <button type='button' className='btn btn-primary' disabled={false} onClick={() => reset()}>Reset</button>
                 </div>
-                {/* <div className="form-group">
+                <div className="form-group">
                     <button type='button' className='btn btn-danger' disabled={dataInsercion.length === 0} onClick={() => generarPDF("666").save("pruebaGen.pdf")}>Verificar</button>
-                </div> */}
+                </div>
             </div>
             <div className='container mt-5'>
                 <DataTable
@@ -732,8 +771,20 @@ const LlenarDatos = () => {
             </div>
             <div class="container1">
                 <div class="subtotal-container">
+                    <span class="label">IVA:</span>
+                    <span class="amount">${sumaIva.toFixed(2)}</span>
+                </div>
+            </div>
+            <div class="container1">
+                <div class="subtotal-container">
+                    <span class="label">SubTotal Descuento:</span>
+                    <span class="amount">${total.toFixed(2)}</span>
+                </div>
+            </div>
+            <div class="container1">
+                <div class="subtotal-container">
                     <span class="label">Total:</span>
-                    <span class="amount">${total}</span>
+                    <span class="amount">${total+sumaIva}</span>
                 </div>
             </div>
             <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => insertarRegistroFunc()}>Enviar</button>

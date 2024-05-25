@@ -49,6 +49,7 @@ export default function ModalProductos(
     setSelectedProducto(producto)
     setSelectedIdProducto(id)
     setSuggestionsProducto([])
+    setCantidad(0)
   }
 
   useEffect(() => {
@@ -67,7 +68,7 @@ export default function ModalProductos(
       parseInt(cantidad) >= 12 ? productos.ESCALA_12_UNIDAD:0)
     }
     if(porcentaje){
-      setSubtotal(parseFloat((productos.PVP*cantidad)-((productos.PVP*cantidad)*porcentaje)).toFixed(2))
+      setSubtotal(parseFloat((productos.PVP_SIN_IVA*cantidad)-((productos.PVP_SIN_IVA*cantidad)*porcentaje)).toFixed(2))
     }
   }, [cantidad, porcentaje, subtotal])
 
@@ -133,14 +134,14 @@ export default function ModalProductos(
         </div>
         <div className="col-md-6 flex">
           <div className="form-group">
-                <label htmlFor="fecha">PVP:</label>
+                <label htmlFor="fecha">PVP (SIN IVA):</label>
                 <input type="text" className="form-control text-center" id="pvp" name="pvp" 
-                value={Object.keys(productos).length !== 0 ? "$"+productos.PVP : ""} disabled={true}/>
+                value={Object.keys(productos).length !== 0 ? "$"+productos.PVP_SIN_IVA : ""} disabled={true}/>
           </div>
           <div className="form-group">
                 <label htmlFor="fecha">Subtotal:</label>
                 <input type="text" className="form-control text-center" id="subtotal" name="subtotal" 
-                value={cantidad ? "$"+parseFloat((productos.PVP*cantidad)-((productos.PVP*cantidad)*porcentaje)).toFixed(2):""} disabled={true}/>
+                value={cantidad ? "$"+parseFloat((productos.PVP_SIN_IVA*cantidad)-((productos.PVP_SIN_IVA*cantidad)*porcentaje)).toFixed(2):""} disabled={true}/>
           </div>
         </div>
         <button className="btn1 btn btn-danger" onClick={() => closeModal(false)}>CERRAR</button>
