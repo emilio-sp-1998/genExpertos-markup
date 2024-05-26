@@ -279,7 +279,7 @@ const LlenarDatos = () => {
                     data.forEach((item) => {
                         const json = {
                             idCliente: item.CLIENTE,
-                            razon_social: item.RAZON_SOCIAL
+                            razon_social: item.CLIENTE+" - "+item.RAZON_SOCIAL+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC)
                         }
                         agregarFarmacia.push(json)
                     })
@@ -356,7 +356,7 @@ const LlenarDatos = () => {
             margen: parseInt(porcentaje*100) + "%",
             ivaporcentaje: parseInt(producto.IVA*100) + "%",
             totaliva: subtotal*producto.IVA,
-            solosubtotal: "$"+producto.PVP_SIN_IVA*cantidad,
+            solosubtotal: "$"+(producto.PVP_SIN_IVA*cantidad).toFixed(2),
             pvp: "$"+producto.PVP_CON_IVA,
             pvpsiniva: "$"+producto.PVP_SIN_IVA,
             subtotal: subtotal
@@ -448,9 +448,9 @@ const LlenarDatos = () => {
 
         doc.setFontSize(12);
 
-        doc.text(`IVA: ${sumaIva.toFixed(2)}`,20, 220)
-        doc.text(`Subtotal: ${total.toFixed(2)}`,20, 230)
-        doc.text(`Total: ${total + sumaIva}`,20, 240)
+        doc.text(`IVA: $${sumaIva.toFixed(2)}`,20, 220)
+        doc.text(`Subtotal: $${total.toFixed(2)}`,20, 230)
+        doc.text(`Total: $${(total + sumaIva).toFixed(2)}`,20, 240)
 
         return doc
     }
@@ -594,10 +594,10 @@ const LlenarDatos = () => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
             })
-            /* dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
-            }) */
+            })
         }else{
             /* dispatch(enviarMailFormulario2(asunto, "transferencias@quifatex.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
@@ -611,13 +611,14 @@ const LlenarDatos = () => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
             })
-            /* dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
-            }) */
+            })
         }
         setDataInsercion([])
         setTotal(0);
+        setSumaIva(0);
     }
 
     const mostrarAlerta = (bool, cod) => {
@@ -784,7 +785,7 @@ const LlenarDatos = () => {
             <div class="container1">
                 <div class="subtotal-container">
                     <span class="label">Total:</span>
-                    <span class="amount">${total+sumaIva}</span>
+                    <span class="amount">${(total+sumaIva).toFixed(2)}</span>
                 </div>
             </div>
             <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => insertarRegistroFunc()}>Enviar</button>
