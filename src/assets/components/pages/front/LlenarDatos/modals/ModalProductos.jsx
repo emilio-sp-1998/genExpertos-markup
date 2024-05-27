@@ -17,7 +17,8 @@ export default function ModalProductos(
     setSubtotal,
     cantidad,
     setCantidad,
-    agregarProductoCola
+    agregarProductoCola,
+    sumaSuerox
   }
   ) {
   const dispatch = useDispatch();
@@ -60,12 +61,38 @@ export default function ModalProductos(
 
   useEffect(() => {
     if(productos){
-      setPorcentaje(cantidad == 1 ? productos.ESCALA_1_UNIDAD: 
-      cantidad == 2 ? productos.ESCALA_2_UNIDAD:
-      parseInt(cantidad) >= 3 && parseInt(cantidad) < 6 ? productos.ESCALA_3_UNIDAD:
-      parseInt(cantidad) >= 6 && parseInt(cantidad) < 11 ? productos.ESCALA_6_UNIDAD:
-      cantidad == 11 ? productos.ESCALA_11_UNIDAD:
-      parseInt(cantidad) >= 12 ? productos.ESCALA_12_UNIDAD:0)
+      if(productos.MARCA === "SUEROX"){
+        const cantidadTotal = parseInt(sumaSuerox) + parseInt(cantidad)
+        if(sumaSuerox < 11){
+          console.log("CANT: "+ cantidadTotal)
+          setPorcentaje(cantidadTotal == 1 ? productos.ESCALA_1_UNIDAD: 
+            cantidadTotal == 2 ? productos.ESCALA_2_UNIDAD:
+            parseInt(cantidadTotal) >= 3 && parseInt(cantidadTotal) < 6 ? productos.ESCALA_3_UNIDAD:
+            parseInt(cantidadTotal) >= 6 && parseInt(cantidadTotal) < 11 ? productos.ESCALA_6_UNIDAD:
+            cantidadTotal == 11 ? productos.ESCALA_11_UNIDAD:
+            parseInt(cantidadTotal) >= 12 && parseInt(cantidadTotal) < 26 ? productos.ESCALA_11_UNIDAD:
+            parseInt(cantidadTotal) >= 26 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
+            parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD: 0)
+        }else if(sumaSuerox >= 11 && sumaSuerox < 26){
+          setPorcentaje(cantidadTotal <= 11 ? productos.ESCALA_11_UNIDAD:
+            parseInt(cantidadTotal) >= 12 && parseInt(cantidadTotal) < 26 ? productos.ESCALA_11_UNIDAD:
+            parseInt(cantidadTotal) >= 26 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
+            parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD: 0)
+        }else if(sumaSuerox >= 26 && sumaSuerox < 36){
+          setPorcentaje(cantidadTotal < 26 ? productos.ESCALA_11_UNIDAD:
+            parseInt(cantidadTotal) >= 26 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
+            parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD: 0)
+        } else{
+          setPorcentaje(productos.ESCALA_36_UNIDAD)
+        }
+      }else{
+        setPorcentaje(cantidad == 1 ? productos.ESCALA_1_UNIDAD: 
+        cantidad == 2 ? productos.ESCALA_2_UNIDAD:
+        parseInt(cantidad) >= 3 && parseInt(cantidad) < 6 ? productos.ESCALA_3_UNIDAD:
+        parseInt(cantidad) >= 6 && parseInt(cantidad) < 11 ? productos.ESCALA_6_UNIDAD:
+        cantidad == 11 ? productos.ESCALA_11_UNIDAD:
+        parseInt(cantidad) >= 12 ? productos.ESCALA_12_UNIDAD:0)
+      }
     }
     if(porcentaje){
       setSubtotal(parseFloat((productos.PVP_SIN_IVA*cantidad)-((productos.PVP_SIN_IVA*cantidad)*porcentaje)).toFixed(2))

@@ -81,8 +81,12 @@ const LlenarDatos = () => {
     const borrarInsercion = (id) => {
         const elemento = dataInsercion.find(objeto => objeto.id === id);
         setTotal(total-elemento.subtotal)
-        setSumaIva(sumaIva - parseFloat(subtotal*producto.IVA))
+        setSumaIva(sumaIva - parseFloat(elemento.totaliva))
         setDataInsercion(p => p.filter(prod => prod.id !== id))
+        if(elemento.marca === "SUEROX" && elemento.tipoProducto === "leterago"){
+            setSumaSuerox(sumaSuerox-parseInt(elemento.unidades))
+            setRestaSuerox(true)
+        }
     }
 
     const dataInsercionPruebas = [
@@ -108,10 +112,6 @@ const LlenarDatos = () => {
         }
     ]
     const [dataInsercion, setDataInsercion] = useState([])
-
-    useEffect(() => {
-        console.log(dataInsercion)
-    }, [dataInsercion])
 
     const [insertarDataBd, setInsertarDataBd] = useState([])
 
@@ -147,6 +147,9 @@ const LlenarDatos = () => {
 
     const [openModal, setOpenModal] = useState(false);
 
+    const [sumaSuerox, setSumaSuerox] = useState(0.0)
+    const [restaSuerox, setRestaSuerox] = useState(false);
+
     const logout = () => {
         navigate("/logout")
     }
@@ -158,6 +161,9 @@ const LlenarDatos = () => {
         setRuc('')
         setDireccion('')
         setProvincia('')
+        setDataInsercion([])
+        setTotal(0)
+        setSumaIva(0)
     };
 
     const fechaActual = () => {
@@ -346,13 +352,15 @@ const LlenarDatos = () => {
 
     const agregarProductoCola = () => {
         let json = {
-            id: dataInsercion.length+1,
+            id: dataInsercion.length === 0 ? dataInsercion.length+1 : dataInsercion[dataInsercion.length-1].id+1,
+            tipoProducto: distribuidorSeleccionado,
             code: producto.SAP,
             idCode: distribuidorSeleccionado === "leterago" ? 
                 producto.IDPROD_LETERAGO : distribuidorSeleccionado === "quifatex" ? 
                 producto.IDPROD_QUIFATEX : producto.IDPROD_FARMAENLACE,
             nombre: producto.DESCRIPCION,
             unidades: cantidad,
+            marca: producto.MARCA,
             margen: parseInt(porcentaje*100) + "%",
             ivaporcentaje: parseInt(producto.IVA*100) + "%",
             totaliva: subtotal*producto.IVA,
@@ -370,6 +378,114 @@ const LlenarDatos = () => {
         setDataInsercion([...dataInsercion, json])
         setOpenModal(false)
     }
+
+    useEffect(() => {
+        const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && elemento.tipoProducto === "leterago")
+        let suma = 0
+        sueroxProductos.forEach((item) => {
+            if(!restaSuerox) {
+                suma += parseInt(item.unidades)
+                setSumaSuerox(suma)
+            }
+            console.log("xdddd", dataInsercion)
+        })
+        if(restaSuerox) setRestaSuerox(false)
+        console.log(dataInsercion)
+    }, [dataInsercion])
+
+    useEffect(() => {
+        const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && elemento.tipoProducto === "leterago")
+        if(sumaSuerox < 11){
+            let totalCambio = parseFloat(total)
+            sueroxProductos.forEach((item) => {
+                const quitarValor = totalCambio - parseFloat(item.subtotal)
+                setTotal(quitarValor.toFixed(2))
+                console.log("Quitar Valor M: "+ quitarValor.toFixed(2))
+                const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
+                if (index !== -1) {
+                    dataInsercion[index].margen = "16%"
+                    let valorConDolar = item.solosubtotal;
+                    let valorSinDolar = valorConDolar.replace('$', ''); // Elimina el signo de dólar
+                    let valorFloat = parseFloat(valorSinDolar).toFixed(2);
+                    let sub = (valorFloat - valorFloat*0.16).toFixed(2)
+                    dataInsercion[index].subtotal = sub
+                    const añadirValor = quitarValor + parseFloat(sub)
+                    totalCambio = añadirValor
+                    setTotal(añadirValor)
+                    console.log("Añadir valor: "+ añadirValor)
+                    console.log(valorFloat)
+                }
+            })
+        }
+        if(sumaSuerox >= 11 && sumaSuerox < 26){
+            let totalCambio = parseFloat(total)
+            sueroxProductos.forEach((item) => {
+                const quitarValor = totalCambio - parseFloat(item.subtotal)
+                setTotal(quitarValor.toFixed(2))
+                console.log("Quitar Valor: "+ quitarValor.toFixed(2))
+                const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
+                if (index !== -1) {
+                    dataInsercion[index].margen = "24%"
+                    let valorConDolar = item.solosubtotal;
+                    let valorSinDolar = valorConDolar.replace('$', ''); // Elimina el signo de dólar
+                    let valorFloat = parseFloat(valorSinDolar).toFixed(2);
+                    let sub = (valorFloat - valorFloat*0.24).toFixed(2)
+                    dataInsercion[index].subtotal = sub
+                    console.log("asdasdas: "+ sub)
+                    const añadirValor = quitarValor + parseFloat(sub)
+                    totalCambio = añadirValor
+                    setTotal(añadirValor)
+                    console.log("Añadir valor: "+ añadirValor)
+                    console.log(sumaIva)
+                }
+            })
+        } else if(sumaSuerox >= 26 && sumaSuerox < 36){
+            let totalCambio = parseFloat(total)
+            sueroxProductos.forEach((item) =>{
+                const quitarValor = totalCambio - parseFloat(item.subtotal)
+                setTotal(quitarValor.toFixed(2))
+                console.log("Quitar Valor: "+ quitarValor.toFixed(2))
+                const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
+                if (index !== -1) {
+                    dataInsercion[index].margen = "30%"
+                    let valorConDolar = item.solosubtotal;
+                    let valorSinDolar = valorConDolar.replace('$', ''); // Elimina el signo de dólar
+                    let valorFloat = parseFloat(valorSinDolar).toFixed(2);
+                    let sub = (valorFloat - valorFloat*0.3).toFixed(2)
+                    dataInsercion[index].subtotal = sub
+                    console.log("asdasdas: "+ sub)
+                    const añadirValor = quitarValor + parseFloat(sub)
+                    totalCambio = añadirValor
+                    setTotal(añadirValor)
+                    console.log("Añadir valor: "+ añadirValor)
+                    console.log(sumaIva)
+                }
+            })
+        } else{
+            let totalCambio = parseFloat(total)
+            sueroxProductos.forEach((item) =>{
+                const quitarValor = totalCambio - parseFloat(item.subtotal)
+                setTotal(quitarValor.toFixed(2))
+                console.log("Quitar Valor: "+ quitarValor.toFixed(2))
+                const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
+                if (index !== -1) {
+                    dataInsercion[index].margen = "35%"
+                    let valorConDolar = item.solosubtotal;
+                    let valorSinDolar = valorConDolar.replace('$', ''); // Elimina el signo de dólar
+                    let valorFloat = parseFloat(valorSinDolar).toFixed(2);
+                    let sub = (valorFloat - valorFloat*0.36).toFixed(2)
+                    dataInsercion[index].subtotal = sub
+                    console.log("asdasdas: "+ sub)
+                    const añadirValor = quitarValor + parseFloat(sub)
+                    totalCambio = añadirValor
+                    setTotal(añadirValor)
+                    console.log("Añadir valor: "+ añadirValor)
+                    console.log(sumaIva)
+                }
+            })
+        }
+        console.log("SUMAAA: "+ sumaSuerox)
+    }, [sumaSuerox])
 
     const conditionalRowStyles = [
         {
@@ -432,7 +548,7 @@ const LlenarDatos = () => {
             body: data,
             columnStyles: {
                 0: {
-                    columnWidth: 30
+                    columnWidth: 17
                 },
                 3: {
                     columnWidth: 15
@@ -515,6 +631,9 @@ const LlenarDatos = () => {
 
         setProducto('')
         setCantidad(0)
+
+        setSumaIva(0)
+        setTotal(0)
     }
 
     const tableCustomStyles = {
@@ -779,13 +898,13 @@ const LlenarDatos = () => {
             <div class="container1">
                 <div class="subtotal-container">
                     <span class="label">SubTotal Descuento:</span>
-                    <span class="amount">${total.toFixed(2)}</span>
+                    <span class="amount">${parseFloat(total).toFixed(2)}</span>
                 </div>
             </div>
             <div class="container1">
                 <div class="subtotal-container">
                     <span class="label">Total:</span>
-                    <span class="amount">${(total+sumaIva).toFixed(2)}</span>
+                    <span class="amount">${(parseFloat(total)+parseFloat(sumaIva)).toFixed(2)}</span>
                 </div>
             </div>
             <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => insertarRegistroFunc()}>Enviar</button>
@@ -802,7 +921,8 @@ const LlenarDatos = () => {
             setSubtotal={setSubtotal}
             cantidad={cantidad}
             setCantidad={setCantidad}
-            agregarProductoCola={agregarProductoCola}/>}
+            agregarProductoCola={agregarProductoCola}
+            sumaSuerox={sumaSuerox}/>}
         </>
     )
 }
