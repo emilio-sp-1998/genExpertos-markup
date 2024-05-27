@@ -559,14 +559,20 @@ const LlenarDatos = () => {
                 8: {
                     columnWidth: 20
                 }
+            },
+            didDrawPage: function (data) {
+                // data.cursor.y te da la posición Y final después de dibujar la tabla
+                let finalY = data.cursor.y;
+        
+                // Ajustar el tamaño de la fuente
+                doc.setFontSize(12);
+        
+                // Dibujar los textos de IVA, Subtotal y Total debajo de la tabla
+                doc.text(`IVA: $${sumaIva.toFixed(2)}`, 20, finalY + 10);
+                doc.text(`Subtotal: $${total.toFixed(2)}`, 20, finalY + 20);
+                doc.text(`Total: $${(total + sumaIva).toFixed(2)}`, 20, finalY + 30);
             }
         })
-
-        doc.setFontSize(12);
-
-        doc.text(`IVA: $${sumaIva.toFixed(2)}`,20, 220)
-        doc.text(`Subtotal: $${total.toFixed(2)}`,20, 230)
-        doc.text(`Total: $${(total + sumaIva).toFixed(2)}`,20, 240)
 
         return doc
     }
