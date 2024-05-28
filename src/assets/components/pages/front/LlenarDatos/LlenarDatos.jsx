@@ -707,6 +707,10 @@ const LlenarDatos = () => {
             if (!!res.status) if(res.status === 200) {mostrarAlerta(true, cod)} else {mostrarAlerta(false)}
             else mostrarAlerta(false)
         })
+        dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+            else console.log("Hubo un error")
+        })
         if(distribuidorSeleccionado === "leterago"){
             dispatch(enviarMailFormulario2(asunto, "operaciones@innovaservgroup.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
@@ -720,10 +724,6 @@ const LlenarDatos = () => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
             })
-            dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                else console.log("Hubo un error")
-            })
         }else{
             dispatch(enviarMailFormulario2(asunto, "transferencias@quifatex.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
@@ -734,10 +734,6 @@ const LlenarDatos = () => {
                 else console.log("Hubo un error")
             })
             dispatch(enviarMailFormulario2(asunto, "subzerovega45@gmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                else console.log("Hubo un error")
-            })
-            dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
             })
