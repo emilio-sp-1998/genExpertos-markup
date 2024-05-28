@@ -18,7 +18,8 @@ export default function ModalProductos(
     cantidad,
     setCantidad,
     agregarProductoCola,
-    sumaSuerox
+    sumaSuerox,
+    dataProductos
   }
   ) {
   const dispatch = useDispatch();
@@ -31,6 +32,8 @@ export default function ModalProductos(
   const [selectedProducto, setSelectedProducto] = useState('');
   const [selectedIdProducto, setSelectedIdProducto] = useState(-1);
   const [suggestionsProducto, setSuggestionsProducto] = useState([]);
+
+  const [bloquear, setBloquear] = useState(false);
 
   const onChangeHandlerProducto = (producto) => {
     let matches = []
@@ -105,6 +108,7 @@ export default function ModalProductos(
             if(res.status === 200){
                 const data = res.data
                 console.log(data)
+                setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_LETERAGO))
                 setProductos(data)
             }else if(res.status === 401){
                 navigate("/logout");
@@ -172,7 +176,14 @@ export default function ModalProductos(
           </div>
         </div>
         <button className="btn1 btn btn-danger" onClick={() => closeModal(false)}>CERRAR</button>
-        <button className='btn btn-success' disabled={subtotal == 0 ? true : false} onClick={() => agregarProductoCola()}>AGREGAR</button>
+        <button className='btn btn-success' disabled={subtotal == 0 || bloquear ? true : false} onClick={() => agregarProductoCola()}>AGREGAR</button>
+        {bloquear ? (
+          <div>
+            <p className="text-sm font-normal text-red-700 mt-1">
+                Este Producto ya está insertado
+            </p>
+          </div>
+        ) : null}
       </div>
     </div>
   )

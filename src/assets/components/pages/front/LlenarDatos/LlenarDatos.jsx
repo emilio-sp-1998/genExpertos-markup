@@ -31,7 +31,8 @@ const LlenarDatos = () => {
         },
         {
             name: "Nombre",
-            selector: row => row.nombre
+            selector: row => row.nombre,
+            width: "280px",
         },
         {
             name: "Unidades",
@@ -417,7 +418,7 @@ const LlenarDatos = () => {
                 }
             })
         }
-        if(sumaSuerox >= 11 && sumaSuerox < 26){
+        else if(sumaSuerox >= 11 && sumaSuerox < 26){
             let totalCambio = parseFloat(total)
             sueroxProductos.forEach((item) => {
                 const quitarValor = totalCambio - parseFloat(item.subtotal)
@@ -928,7 +929,8 @@ const LlenarDatos = () => {
             cantidad={cantidad}
             setCantidad={setCantidad}
             agregarProductoCola={agregarProductoCola}
-            sumaSuerox={sumaSuerox}/>}
+            sumaSuerox={sumaSuerox}
+            dataProductos={dataInsercion}/>}
         </>
     )
 }
