@@ -398,9 +398,12 @@ const LlenarDatos = () => {
         const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && elemento.tipoProducto === "leterago")
         if(sumaSuerox < 11){
             let totalCambio = parseFloat(total)
+            let totalIVA = parseFloat(sumaIva)
             sueroxProductos.forEach((item) => {
                 const quitarValor = totalCambio - parseFloat(item.subtotal)
+                const quitarIva = totalIVA - parseFloat(item.totaliva)
                 setTotal(quitarValor.toFixed(2))
+                setSumaIva(quitarIva.toFixed(2))
                 console.log("Quitar Valor M: "+ quitarValor.toFixed(2))
                 const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
                 if (index !== -1) {
@@ -410,9 +413,13 @@ const LlenarDatos = () => {
                     let valorFloat = parseFloat(valorSinDolar).toFixed(2);
                     let sub = (valorFloat - valorFloat*0.16).toFixed(2)
                     dataInsercion[index].subtotal = sub
+                    dataInsercion[index].totaliva = sub*0.15
                     const añadirValor = quitarValor + parseFloat(sub)
+                    const añadirIva = quitarIva + parseFloat(sub*0.15)
                     totalCambio = añadirValor
+                    totalIVA = añadirIva
                     setTotal(añadirValor)
+                    setSumaIva(añadirIva)
                     console.log("Añadir valor: "+ añadirValor)
                     console.log(valorFloat)
                 }
@@ -420,9 +427,12 @@ const LlenarDatos = () => {
         }
         else if(sumaSuerox >= 11 && sumaSuerox < 26){
             let totalCambio = parseFloat(total)
+            let totalIVA = parseFloat(sumaIva)
             sueroxProductos.forEach((item) => {
                 const quitarValor = totalCambio - parseFloat(item.subtotal)
+                const quitarIva = totalIVA - parseFloat(item.totaliva)
                 setTotal(quitarValor.toFixed(2))
+                setSumaIva(quitarIva.toFixed(2))
                 console.log("Quitar Valor: "+ quitarValor.toFixed(2))
                 const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
                 if (index !== -1) {
@@ -432,19 +442,26 @@ const LlenarDatos = () => {
                     let valorFloat = parseFloat(valorSinDolar).toFixed(2);
                     let sub = (valorFloat - valorFloat*0.24).toFixed(2)
                     dataInsercion[index].subtotal = sub
+                    dataInsercion[index].totaliva = sub*0.15
                     console.log("asdasdas: "+ sub)
                     const añadirValor = quitarValor + parseFloat(sub)
+                    const añadirIva = quitarIva + parseFloat(sub*0.15)
                     totalCambio = añadirValor
+                    totalIVA = añadirIva
                     setTotal(añadirValor)
+                    setSumaIva(añadirIva)
                     console.log("Añadir valor: "+ añadirValor)
                     console.log(sumaIva)
                 }
             })
         } else if(sumaSuerox >= 26 && sumaSuerox < 36){
             let totalCambio = parseFloat(total)
+            let totalIVA = parseFloat(sumaIva)
             sueroxProductos.forEach((item) =>{
                 const quitarValor = totalCambio - parseFloat(item.subtotal)
+                const quitarIva = totalIVA - parseFloat(item.totaliva)
                 setTotal(quitarValor.toFixed(2))
+                setSumaIva(quitarIva.toFixed(2))
                 console.log("Quitar Valor: "+ quitarValor.toFixed(2))
                 const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
                 if (index !== -1) {
@@ -454,19 +471,26 @@ const LlenarDatos = () => {
                     let valorFloat = parseFloat(valorSinDolar).toFixed(2);
                     let sub = (valorFloat - valorFloat*0.3).toFixed(2)
                     dataInsercion[index].subtotal = sub
+                    dataInsercion[index].totaliva = sub*0.15
                     console.log("asdasdas: "+ sub)
                     const añadirValor = quitarValor + parseFloat(sub)
+                    const añadirIva = quitarIva + parseFloat(sub*0.15)
                     totalCambio = añadirValor
+                    totalIVA = añadirIva
                     setTotal(añadirValor)
+                    setSumaIva(añadirIva)
                     console.log("Añadir valor: "+ añadirValor)
                     console.log(sumaIva)
                 }
             })
         } else{
             let totalCambio = parseFloat(total)
+            let totalIVA = parseFloat(sumaIva)
             sueroxProductos.forEach((item) =>{
                 const quitarValor = totalCambio - parseFloat(item.subtotal)
+                const quitarIva = totalIVA - parseFloat(item.totaliva)
                 setTotal(quitarValor.toFixed(2))
+                setSumaIva(quitarIva.toFixed(2))
                 console.log("Quitar Valor: "+ quitarValor.toFixed(2))
                 const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
                 if (index !== -1) {
@@ -476,10 +500,14 @@ const LlenarDatos = () => {
                     let valorFloat = parseFloat(valorSinDolar).toFixed(2);
                     let sub = (valorFloat - valorFloat*0.36).toFixed(2)
                     dataInsercion[index].subtotal = sub
+                    dataInsercion[index].totaliva = sub*0.15
                     console.log("asdasdas: "+ sub)
                     const añadirValor = quitarValor + parseFloat(sub)
+                    const añadirIva = quitarIva + parseFloat(sub*0.15)
                     totalCambio = añadirValor
+                    totalIVA = añadirIva
                     setTotal(añadirValor)
+                    setSumaIva(añadirIva)
                     console.log("Añadir valor: "+ añadirValor)
                     console.log(sumaIva)
                 }
