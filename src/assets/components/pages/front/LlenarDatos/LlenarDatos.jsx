@@ -757,10 +757,6 @@ const LlenarDatos = () => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
             })
-            dispatch(enviarMailFormulario2(asunto, "mauro.noboa@quifatex.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                else console.log("Hubo un error")
-            })
             dispatch(enviarMailFormulario2(asunto, "subzerovega45@gmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
                 else console.log("Hubo un error")
