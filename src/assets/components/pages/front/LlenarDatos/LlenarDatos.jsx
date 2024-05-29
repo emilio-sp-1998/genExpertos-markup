@@ -308,7 +308,8 @@ const LlenarDatos = () => {
     }
 
     const insertarRegistroFunc = () => {
-        dispatch(insertarRegistro(distribuidorSeleccionado, selectedIdFarmacia, vendedor, dataInsercion, observacion)).then((res) => {
+        dispatch(insertarRegistro(distribuidorSeleccionado, selectedIdFarmacia, vendedor, dataInsercion, sumaIva.toFixed(2), 
+            total.toFixed(2), ((parseFloat(total)+parseFloat(sumaIva)).toFixed(2)), observacion)).then((res) => {
             if(res.status){
                 if(res.status === 200){
                     console.log("GOOD!!")

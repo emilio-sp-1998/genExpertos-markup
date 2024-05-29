@@ -228,7 +228,7 @@ export function enviarMailFormulario2(asunto, correodest, cuerpo, adjunto, filen
   }
 }
 
-export function insertarRegistro(local_farmacia, cod_local, vendedor, productos, observacion) {
+export function insertarRegistro(local_farmacia, cod_local, vendedor, productos, iva, subtotal_reg, total_reg, observacion) {
   try{
     return async function (dispatch) {
       let token = localStorage.getItem("token");
@@ -236,7 +236,7 @@ export function insertarRegistro(local_farmacia, cod_local, vendedor, productos,
       try{
         const res = await axios.post(
           server + "/pedidos/insertarRegistro",
-          {local_farmacia, cod_local, vendedor, productos, observacion},
+          {local_farmacia, cod_local, vendedor, productos, iva, subtotal_reg, total_reg, observacion},
           {
             headers: {
               Authorization: "Bearer " + token,
