@@ -36,7 +36,7 @@ const authReducer = (state = initial_state, action) => {
             isAuthenticated: true,
             tokenApp: action.payload.jwt,
             usuario: action.payload.usuario,
-            datosUsuario: action.payload.datosUsuario,
+            datosUsuario: action.payload.datosUsuarios,
             dataNavegacion: action.payload.navigation
         }}
         case "LOGOUT": {return{...state, tokenApp: ""}}
