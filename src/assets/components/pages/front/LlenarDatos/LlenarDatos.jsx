@@ -756,39 +756,20 @@ const LlenarDatos = () => {
 
         const pdf = generarPDF(cod)
         const pdfBase64 = pdf.output();
-        dispatch(enviarMailFormulario(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-            if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
-            else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
-        })
-        dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-            if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-            else console.log("Hubo un error")
-        })
-        dispatch(enviarMailFormulario2(asunto, "leonardo@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-            if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-            else console.log("Hubo un error")
-        })
+        let arrayMails = []
         if(distribuidorSeleccionado === "leterago"){
-            dispatch(enviarMailFormulario2(asunto, "operaciones@innovaservgroup.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                else console.log("Hubo un error")
-            })
-            dispatch(enviarMailFormulario2(asunto, "krey@leterago.com.ec", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                else console.log("Hubo un error")
-            })
-            dispatch(enviarMailFormulario2(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                else console.log("Hubo un error")
+            arrayMails = ['jemilio_s@hotmail.com', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                'operaciones@innovaservgroup.com', 'krey@leterago.com.ec']
+            dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
+                else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else{
-            dispatch(enviarMailFormulario2(asunto, "transferencias@quifatex.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                else console.log("Hubo un error")
-            })
-            dispatch(enviarMailFormulario2(asunto, "subzerovega45@gmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                else console.log("Hubo un error")
+            arrayMails = ['subzerovega45@gmail.com', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                'transferencias@quifatex.com']
+            dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
+                else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }
         setDataInsercion([])
