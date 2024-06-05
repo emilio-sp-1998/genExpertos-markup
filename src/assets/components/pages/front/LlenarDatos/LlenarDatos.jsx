@@ -339,7 +339,7 @@ const LlenarDatos = () => {
                     console.log("GOOD!!")
                     //mostrarAlerta(true, res.data.code)
                     setObservacion('')
-                    //enviarFormularioACorreo(res.data.code)
+                    enviarFormularioACorreo(res.data.code)
                     setSelectedFarmacia('')
                     setSelectedIdFarmacia(-1)
                     setRuc('')
@@ -757,43 +757,40 @@ const LlenarDatos = () => {
         const pdf = generarPDF(cod)
         const pdfBase64 = pdf.output();
         dispatch(enviarMailFormulario(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-            if (!!res.status) if(res.status === 200) {
-                mostrarAlerta(true, "xd", cod)
-                insertarRegistroFunc()
-                dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                    if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                    else console.log("Hubo un error")
-                })
-                dispatch(enviarMailFormulario2(asunto, "leonardo@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                    if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                    else console.log("Hubo un error")
-                })
-                if(distribuidorSeleccionado === "leterago"){
-                    dispatch(enviarMailFormulario2(asunto, "operaciones@innovaservgroup.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                        if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                        else console.log("Hubo un error")
-                    })
-                    dispatch(enviarMailFormulario2(asunto, "krey@leterago.com.ec", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                        if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                        else console.log("Hubo un error")
-                    })
-                    dispatch(enviarMailFormulario2(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                        if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                        else console.log("Hubo un error")
-                    })
-                }else{
-                    dispatch(enviarMailFormulario2(asunto, "transferencias@quifatex.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                        if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                        else console.log("Hubo un error")
-                    })
-                    dispatch(enviarMailFormulario2(asunto, "subzerovega45@gmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
-                        if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
-                        else console.log("Hubo un error")
-                    })
-                }
-            } else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
+            if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
             else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
         })
+        dispatch(enviarMailFormulario2(asunto, "veronica.navarrete@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+            else console.log("Hubo un error")
+        })
+        dispatch(enviarMailFormulario2(asunto, "leonardo@markup.ws", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+            else console.log("Hubo un error")
+        })
+        if(distribuidorSeleccionado === "leterago"){
+            dispatch(enviarMailFormulario2(asunto, "operaciones@innovaservgroup.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            })
+            dispatch(enviarMailFormulario2(asunto, "krey@leterago.com.ec", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            })
+            dispatch(enviarMailFormulario2(asunto, "jemilio_s@hotmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            })
+        }else{
+            dispatch(enviarMailFormulario2(asunto, "transferencias@quifatex.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            })
+            dispatch(enviarMailFormulario2(asunto, "subzerovega45@gmail.com", cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {console.log("Se envio el correo!!!")} else {console.log("Hubo un error")}
+                else console.log("Hubo un error")
+            })
+        }
         setDataInsercion([])
         setTotal(0);
         setSumaIva(0);
@@ -966,7 +963,7 @@ const LlenarDatos = () => {
                     <span class="amount">${(parseFloat(total)+parseFloat(sumaIva)).toFixed(2)}</span>
                 </div>
             </div>
-            <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => obtenerUltimoRegistroFunc()}>Enviar</button>
+            <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => insertarRegistroFunc()}>Enviar</button>
         </div>
         {openModal && <ModalProductos 
             closeModal={setOpenModal} 
