@@ -283,7 +283,7 @@ const LlenarDatos = () => {
             if (res.status) {
                 if (res.status === 200) {
                     const data = res.data
-                    enviarFormularioACorreo(data.ID)
+                    enviarFormularioACorreo(data.code)
                 } else if (res.status === 401){
                     navigate("/logout");
                 } else {
