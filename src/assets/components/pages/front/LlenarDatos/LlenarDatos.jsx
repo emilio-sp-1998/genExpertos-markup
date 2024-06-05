@@ -2,7 +2,10 @@ import React, {useEffect} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "./LlenarDatos.css"
 import { nombreFarmacia } from '../../../../redux/actions/authActions';
-import { obtenerFarmacia, obtenerVendedor, listarProductos, enviarMailFormulario, insertarRegistro, enviarMailFormulario2 } from '../../../../redux/actions/pedidosActions';
+import { obtenerFarmacia, obtenerVendedor, 
+    listarProductos, enviarMailFormulario, 
+    insertarRegistro, enviarMailFormulario2, 
+    obtenerUltimoRegistro } from '../../../../redux/actions/pedidosActions';
 import NotificationAlert from '../../../common/notifications/NotificationAlert'
 import DataTable from 'react-data-table-component';
 import ModalProductos from './modals/ModalProductos';
@@ -268,6 +271,27 @@ const LlenarDatos = () => {
                     setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
                 }
             }else{
+                setShowAlert(true);
+                setAlertType(2);
+                setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+            }
+        })
+    }
+
+    const obtenerUltimoRegistroFunc = () => {
+        dispatch(obtenerUltimoRegistro()).then((res) => {
+            if (res.status) {
+                if (res.status === 200) {
+                    const data = res.data
+                    console.log(data.ID)
+                } else if (res.status === 401){
+                    navigate("/logout");
+                } else {
+                    setShowAlert(true);
+                    setAlertType(2);
+                    setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+                }
+            } else {
                 setShowAlert(true);
                 setAlertType(2);
                 setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");

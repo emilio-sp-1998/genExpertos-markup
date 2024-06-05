@@ -259,3 +259,35 @@ export function insertarRegistro(local_farmacia, cod_local, vendedor, productos,
     console.log(e);
   }
 }
+
+export function obtenerUltimoRegistro() {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "OBTENER_ULTIMO_REGISTRO" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/obtenerUltimoRegistro",
+          {},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "OBTENER_ULTIMO_REGISTRO_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "OBTENER_ULTIMO_REGISTRO_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
