@@ -759,21 +759,21 @@ const LlenarDatos = () => {
         const pdfBase64 = pdf.output();
         let arrayMails = []
         if(distribuidorSeleccionado === "leterago"){
-            arrayMails = ['jemilio_s@hotmail.com', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+            arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
                 'operaciones@innovaservgroup.com', 'krey@leterago.com.ec']
             dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else if (distribuidorSeleccionado === "quifatex"){
-            arrayMails = ['subzerovega45@gmail.com', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+            arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
                 'transferencias@quifatex.com']
             dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else{
-            arrayMails = ['vegesayan1800@gmail.com']
+            arrayMails = ['emilio.segovia@markup.ws']
             dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
