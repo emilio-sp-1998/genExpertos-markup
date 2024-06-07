@@ -383,7 +383,8 @@ const LlenarDatos = () => {
             code: producto.SAP,
             idCode: distribuidorSeleccionado === "leterago" ? 
                 producto.IDPROD_LETERAGO : distribuidorSeleccionado === "quifatex" ? 
-                producto.IDPROD_QUIFATEX : producto.IDPROD_FARMAENLACE,
+                producto.IDPROD_QUIFATEX : distribuidorSeleccionado === "difare" ? 
+                producto.IDPROD_DIFARE : producto.IDPROD_FARMAENLACE,
             nombre: producto.DESCRIPCION,
             unidades: cantidad,
             marca: producto.MARCA,
@@ -764,9 +765,15 @@ const LlenarDatos = () => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
-        }else{
+        }else if (distribuidorSeleccionado === "quifatex"){
             arrayMails = ['subzerovega45@gmail.com', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
                 'transferencias@quifatex.com']
+            dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
+                else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
+            })
+        }else{
+            arrayMails = ['vegesayan1800@gmail.com']
             dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
@@ -817,6 +824,7 @@ const LlenarDatos = () => {
                         <option value="">Seleccionar...</option>
                         <option value="leterago">LETERAGO</option>
                         <option value="quifatex">QUIFATEX</option>
+                        <option value="difare">DIFARE</option>
                         {/* <option value="farmaenlace">FARMAENLACE</option> */}
                     </select>
                 </div>

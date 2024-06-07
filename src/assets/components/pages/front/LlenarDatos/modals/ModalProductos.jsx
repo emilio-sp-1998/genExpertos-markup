@@ -105,8 +105,10 @@ export default function ModalProductos(
         if (res.status) {
             if(res.status === 200){
                 const data = res.data
-                console.log(data)
-                setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_LETERAGO))
+                console.log(distribuidorSeleccionado)
+                if (distribuidorSeleccionado === 'leterago') setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_LETERAGO))
+                else if (distribuidorSeleccionado === 'quifatex') setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_QUIFATEX))
+                else setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_DIFARE))
                 setProductos(data)
             }else if(res.status === 401){
                 navigate("/logout");
