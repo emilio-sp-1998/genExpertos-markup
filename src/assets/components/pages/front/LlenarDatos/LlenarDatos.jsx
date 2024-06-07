@@ -9,6 +9,7 @@ import { obtenerFarmacia, obtenerVendedor,
 import NotificationAlert from '../../../common/notifications/NotificationAlert'
 import DataTable from 'react-data-table-component';
 import ModalProductos from './modals/ModalProductos';
+import AgregarCliente from './modals/AgregarCliente';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
@@ -150,6 +151,7 @@ const LlenarDatos = () => {
     const [fecha, setFecha] = useState('');
 
     const [openModal, setOpenModal] = useState(false);
+    const [openAgregarCliente, setOpenAgregarCliente] = useState(false);
 
     const [sumaSuerox, setSumaSuerox] = useState(0.0)
     const [restaSuerox, setRestaSuerox] = useState(false);
@@ -837,6 +839,9 @@ const LlenarDatos = () => {
                 <div className="form-group">
                     <button type="button" className="btn1 btn btn-danger" onClick={() => logout()}>Logout</button>
                 </div>
+                <div className="form-group">
+                    <button type="button" className="btn1 btn btn-success" onClick={() => setOpenAgregarCliente(true)}>Nuevo Cliente</button>
+                </div>
             </div>
             <div className="row mt-3">
                 <div className="col">
@@ -969,6 +974,9 @@ const LlenarDatos = () => {
             agregarProductoCola={agregarProductoCola}
             sumaSuerox={sumaSuerox}
             dataProductos={dataInsercion}/>}
+
+        {openAgregarCliente && <AgregarCliente
+            closeModal={setOpenAgregarCliente}/>}
         </>
     )
 }
