@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { agregarCliente, verificarClienteExistente } from '../../../../../redux/actions/pedidosActions';
+import { agregarCliente, verificarClienteExistente, verificarRucClienteExistente } from '../../../../../redux/actions/pedidosActions';
 import swal from 'sweetalert';
 
 export default function AgregarCliente(
@@ -35,9 +35,9 @@ export default function AgregarCliente(
             errors.nombre = "Este campo es requerido!!"
         }
 
-        if(!values.codigo){
+        /* if(!values.codigo){
             errors.codigo = "Este campo es requerido!!"
-        }
+        } */
 
         if(!values.ruc) errors.ruc = "Este campo es requerido!!"
         else if(values.ruc.length !== 13) errors.ruc = "Debe tener 13 digitos!!"
@@ -69,30 +69,29 @@ export default function AgregarCliente(
 
     const agregarClienteFunc = (values) => {
 
-        dispatch(verificarClienteExistente(codigo, dis)).then((res) => {
+        dispatch(verificarRucClienteExistente(ruc, dis)).then((res) => {
             if(res.status){
                 if(res.status === 200){
                     const data = res.data
-                    console.log(data)
                     if(!data.bool){
-                        dispatch(agregarCliente(values, dis)).then((res) => {
+                        dispatch(verificarClienteExistente(codigo, dis)).then((res) => {
                             if(res.status){
                                 if(res.status === 200){
-                                    mostrarAlerta(true)
-                                }else{
-                                    mostrarAlerta(false, "Algo salió mal!!!")
-                                }
-                            }else{
-                                mostrarAlerta(false, "Algo salió mal!!!")
-                            }
+                                    const data = res.data
+                                    if(!data.bool){
+                                        dispatch(agregarCliente(values, dis)).then((res) => {
+                                            if(res.status){
+                                                if(res.status === 200) mostrarAlerta(true) 
+                                                else mostrarAlerta(false, "Algo salió mal!!!")
+                                            }else mostrarAlerta(false, "Algo salió mal!!!")
+                                        })
+                                    }else mostrarAlerta(false, "Ya existe un Cliente con ese código, intente otro!!!")
+                                }else mostrarAlerta(false, "Algo salió mal!!!")
+                            }else mostrarAlerta(false, "Algo salió mal!!!")
                         })
-                    }else mostrarAlerta(false, "Ya existe un Cliente con ese código, intente otro!!!")
-                }else{
-                    mostrarAlerta(false, "Algo salió mal!!!")
-                }
-            }else{
-                mostrarAlerta(false, "Algo salió mal!!!")
-            }
+                    }else mostrarAlerta(false, "Ya existe un Cliente con ese RUC, intente otro!!!")
+                }else mostrarAlerta(false, "Algo salió mal!!!")
+            }else mostrarAlerta(false, "Algo salió mal!!!")
         })
     }
 

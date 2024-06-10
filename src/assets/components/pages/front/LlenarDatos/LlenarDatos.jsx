@@ -312,7 +312,8 @@ const LlenarDatos = () => {
                     data.forEach((item) => {
                         const json = {
                             idCliente: item.CLIENTE,
-                            razon_social: item.CLIENTE+" - "+item.RAZON_SOCIAL+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC)
+                            razon_social: item.CLIENTE ? item.CLIENTE +" - "+item.RAZON_SOCIAL+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC) :
+                                            item.RAZON_SOCIAL+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC)
                         }
                         agregarFarmacia.push(json)
                     })
@@ -730,7 +731,7 @@ const LlenarDatos = () => {
         <br>
         Nombre Farmacia: ${selectedFarmacia}
         <br>
-        Cód. Farmacia: ${selectedIdFarmacia}
+        Cód. Farmacia: ${selectedIdFarmacia ? selectedIdFarmacia : "NO DISPONE"}
         <br>
         RUC: ${ruc}
         <br>
@@ -775,7 +776,8 @@ const LlenarDatos = () => {
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else{
-            arrayMails = ['emilio.segovia@markup.ws', 'ccenter@grupodifare.com']
+            arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                'ccenter@grupodifare.com']
             dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
