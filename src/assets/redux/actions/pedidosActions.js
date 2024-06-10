@@ -323,3 +323,35 @@ export function agregarCliente(values, distribuidor) {
     console.log(e);
   }
 }
+
+export function verificarClienteExistente(codFarmacia, distribuidor) {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "VERIFICAR_CLIENTE_EXISTENTE" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/verificarClienteExistente",
+          {codFarmacia, distribuidor},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "VERIFICAR_CLIENTE_EXISTENTE_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "VERIFICAR_CLIENTE_EXISTENTE_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}

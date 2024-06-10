@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { agregarCliente } from '../../../../../redux/actions/pedidosActions';
+import { agregarCliente, verificarClienteExistente } from '../../../../../redux/actions/pedidosActions';
 import swal from 'sweetalert';
 
 export default function AgregarCliente(
@@ -39,9 +39,8 @@ export default function AgregarCliente(
             errors.codigo = "Este campo es requerido!!"
         }
 
-        if(!values.ruc){
-            errors.ruc = "Este campo es requerido!!"
-        }
+        if(!values.ruc) errors.ruc = "Este campo es requerido!!"
+        else if(values.ruc.length !== 13) errors.ruc = "Debe tener 13 digitos!!"
 
         if(!values.ciudad){
             errors.ciudad = "Este campo es requerido!!"
@@ -69,20 +68,35 @@ export default function AgregarCliente(
     }
 
     const agregarClienteFunc = (values) => {
-        dispatch(agregarCliente(values, dis)).then((res) => {
+
+        dispatch(verificarClienteExistente(codigo, dis)).then((res) => {
             if(res.status){
                 if(res.status === 200){
-                    mostrarAlerta(true)
+                    const data = res.data
+                    console.log(data)
+                    if(!data.bool){
+                        dispatch(agregarCliente(values, dis)).then((res) => {
+                            if(res.status){
+                                if(res.status === 200){
+                                    mostrarAlerta(true)
+                                }else{
+                                    mostrarAlerta(false, "Algo salió mal!!!")
+                                }
+                            }else{
+                                mostrarAlerta(false, "Algo salió mal!!!")
+                            }
+                        })
+                    }else mostrarAlerta(false, "Ya existe un Cliente con ese código, intente otro!!!")
                 }else{
-                    mostrarAlerta(false)
+                    mostrarAlerta(false, "Algo salió mal!!!")
                 }
             }else{
-                mostrarAlerta(false)
+                mostrarAlerta(false, "Algo salió mal!!!")
             }
         })
     }
 
-    const mostrarAlerta = (bool) => {
+    const mostrarAlerta = (bool, mensaje) => {
         if(bool){
             swal({
                 title: `AGREGADO`,
@@ -103,7 +117,7 @@ export default function AgregarCliente(
         }else{
             swal({
                 title: "UPS!!!",
-                text: "Algo salió mal!!!",
+                text: mensaje,
                 icon: "error",
                 buttons: "OK"
               })
@@ -132,6 +146,15 @@ export default function AgregarCliente(
         setProvincia("");
         setParroquia("");
         setDireccion("");
+    }
+
+    const handleChangeRuc = (event) => {
+        const value = event.target.value;
+        if(value){
+            if (/^\d*$/.test(value) && value.length <= 13) {
+                setRuc(value);
+            }
+        }else setRuc("");
     }
 
     return (
@@ -186,10 +209,7 @@ export default function AgregarCliente(
                         <div className="col-md-16 flex">
                             <div className="form-group" style={{ width: '50%' }}>
                                 <label htmlFor="fecha">RUC CLIENTE:</label>
-                                <input type="text" className="form-control" value={ruc} id="ruc" disabled={!dis} name="ruc" onChange={(e) => {
-                                    if(e.target.value) setRuc(e.target.value)
-                                    else setRuc("")
-                                }}/>
+                                <input type="text" className="form-control" value={ruc} id="ruc" disabled={!dis} name="ruc" onChange={handleChangeRuc}/>
                                 {err.ruc ? (
                                     <div>
                                         <p className="text-sm font-normal text-red-700 mt-1">
