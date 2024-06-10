@@ -757,6 +757,54 @@ const LlenarDatos = () => {
         Equipo de Automatización MarkUP / Genomma
         Para dudas respecto a la información del correo contactar a Veronica Navarrete 098 0780 407 o responder al correo veronica.navarrete@markup.ws .
         `
+        
+        const cuerpoWhats = `
+        Fwd: Pedido de transferencia ${vendedor} GenommaLab ${distribuidorSeleccionado}/ Registro ${cod}
+        
+        Estimado distribuidor.
+        
+        El siguiente correo es automatizado y corresponde a una solicitud de trasferencia con los datos indicados en el cuerpo del correo.
+        
+        
+        Pedido de transferencia
+        
+
+
+
+        Distribuidor: ${distribuidorSeleccionado}
+        
+        Fecha de Pedido: ${fecha}
+        
+        Nombre Farmacia: ${selectedFarmacia}
+        
+        Cód. Farmacia: ${selectedIdFarmacia ? selectedIdFarmacia : "NO DISPONE"}
+        
+        RUC: ${ruc}
+        
+        Dirección Farmacia: ${direccion}
+        
+        Provincia: ${provincia}
+        
+        Vendedor: ${vendedor}
+        
+        
+
+
+        ${observacion ? 
+            `
+
+                Observacion: ${observacion}
+             
+                ` : ''
+        }
+
+
+
+
+        Saludos.
+        Equipo de Automatización MarkUP / Genomma
+        Para dudas respecto a la información del correo contactar a Veronica Navarrete 098 0780 407 o responder al correo veronica.navarrete@markup.ws .
+        `
 
         const pdf = generarPDF(cod)
         const pdfBase64 = pdf.output();
@@ -764,21 +812,21 @@ const LlenarDatos = () => {
         if(distribuidorSeleccionado === "leterago"){
             arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
                 'operaciones@innovaservgroup.com', 'krey@leterago.com.ec']
-            dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, cuerpoWhats, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else if (distribuidorSeleccionado === "quifatex"){
             arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
                 'transferencias@quifatex.com']
-            dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, cuerpoWhats, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else{
             arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
                 'ccenter@grupodifare.com']
-            dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, cuerpoWhats, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
