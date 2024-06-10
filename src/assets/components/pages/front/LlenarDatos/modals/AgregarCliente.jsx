@@ -193,8 +193,8 @@ export default function AgregarCliente(
                             </div>
                             <div className="form-group" style={{ width: '50%' }}>
                                 <label htmlFor="fecha">CÓDIGO CLIENTE:</label>
-                                <input type="number" className="form-control" value={codigo} id="codigo" disabled={!dis} name="codigo" onChange={(e) => {
-                                    if(e.target.valueAsNumber) setCodigo(e.target.value)
+                                <input type="text" className="form-control" value={codigo} id="codigo" disabled={!dis} name="codigo" onChange={(e) => {
+                                    if(e.target.value) setCodigo(e.target.value)
                                     else setCodigo("")
                                 }}/>
                                 {err.codigo ? (
