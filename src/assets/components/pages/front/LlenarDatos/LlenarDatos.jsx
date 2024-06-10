@@ -775,7 +775,7 @@ const LlenarDatos = () => {
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else{
-            arrayMails = ['emilio.segovia@markup.ws']
+            arrayMails = ['emilio.segovia@markup.ws', 'ccenter@grupodifare.com']
             dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
