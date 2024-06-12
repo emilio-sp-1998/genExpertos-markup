@@ -95,7 +95,7 @@ export default function ModalProductos(
         parseInt(cantidad) >= 12 ? productos.ESCALA_12_UNIDAD:0)
       }
     }
-    if(porcentaje){
+    if(porcentaje || porcentaje == 0){
       setSubtotal(parseFloat((productos.PVP_SIN_IVA*cantidad)-((productos.PVP_SIN_IVA*cantidad)*porcentaje)).toFixed(2))
     }
   }, [cantidad, porcentaje, subtotal])
