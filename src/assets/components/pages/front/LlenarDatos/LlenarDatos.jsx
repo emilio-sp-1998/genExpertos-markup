@@ -825,7 +825,7 @@ const LlenarDatos = () => {
             })
         }else{
             arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
-                (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? 'ccenter@grupodifare.com' : 'andrea.jordan@genommalab.com']
+                (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? ('ccenter@grupodifare.com', 'andrea.jordan@genommalab.com') : 'andrea.jordan@genommalab.com']
             dispatch(enviarMailFormulario(asunto, arrayMails, (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? 
                 [] : ['luisbrionesvargas5@gmail.com', 'tanyapalacios2905@gmail.com', 'evelynbolanos54@gmail.com', 
                     'mairaanchundia@hotmail.com', 'josefranrey21@hotmail.com', 'israel.ap_90@hotmail.com']
