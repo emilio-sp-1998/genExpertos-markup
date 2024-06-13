@@ -826,7 +826,10 @@ const LlenarDatos = () => {
         }else{
             arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
                 (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? 'ccenter@grupodifare.com' : 'andrea.jordan@genommalab.com']
-            dispatch(enviarMailFormulario(asunto, arrayMails, cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            dispatch(enviarMailFormulario(asunto, arrayMails, (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? 
+                [] : ['luisbrionesvargas5@gmail.com', 'tanyapalacios2905@gmail.com', 'evelynbolanos54@gmail.com', 
+                    'mairaanchundia@hotmail.com', 'josefranrey21@hotmail.com', 'israel.ap_90@hotmail.com']
+            , cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })

@@ -164,7 +164,7 @@ export function obtenerVendedor(local) {
     }
 }
 
-export function enviarMailFormulario(asunto, correodest, cuerpo, adjunto, filename) {
+export function enviarMailFormulario(asunto, correodest, correocc, cuerpo, adjunto, filename) {
   try{
     return async function (dispatch) {
       let token = localStorage.getItem("token");
@@ -172,7 +172,7 @@ export function enviarMailFormulario(asunto, correodest, cuerpo, adjunto, filena
       try{
         const res = await axios.post(
           server + "/pedidos/enviarMailFormulario",
-          {asunto, correodest, cuerpo, adjunto, filename},
+          {asunto, correodest, correocc, cuerpo, adjunto, filename},
           {
             headers: {
               Authorization: "Bearer " + token,
