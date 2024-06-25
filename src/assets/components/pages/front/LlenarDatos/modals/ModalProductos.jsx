@@ -176,7 +176,7 @@ export default function ModalProductos(
           </div>
         </div>
         <button className="btn1 btn btn-danger" onClick={() => closeModal(false)}>CERRAR</button>
-        <button className='btn btn-success' disabled={subtotal == 0 || bloquear ? true : false} onClick={() => agregarProductoCola()}>AGREGAR</button>
+        <button className='btn btn-success' disabled={subtotal == 0 || bloquear || Object.keys(productos).length === 0 ? true : false} onClick={() => agregarProductoCola()}>AGREGAR</button>
         {bloquear ? (
           <div>
             <p className="text-sm font-normal text-red-700 mt-1">
