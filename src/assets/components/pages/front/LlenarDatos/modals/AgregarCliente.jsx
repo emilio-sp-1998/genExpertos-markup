@@ -35,9 +35,9 @@ export default function AgregarCliente(
             errors.nombre = "Este campo es requerido!!"
         }
 
-        /* if(!values.codigo){
+        if(!values.codigo){
             errors.codigo = "Este campo es requerido!!"
-        } */
+        }
 
         if(!values.ruc) errors.ruc = "Este campo es requerido!!"
         else if(values.ruc.length !== 13) errors.ruc = "Debe tener 13 digitos!!"
@@ -191,7 +191,7 @@ export default function AgregarCliente(
                                 ) : null}
                             </div>
                             <div className="form-group" style={{ width: '50%' }}>
-                                <label htmlFor="fecha">CÓDIGO CLIENTE:</label>
+                                <label htmlFor="fecha">CÓDIGO CLIENTE (O RUC SI NO DISPONE DEL CÓDIGO):</label>
                                 <input type="text" className="form-control" value={codigo} id="codigo" disabled={!dis} name="codigo" onChange={(e) => {
                                     if(e.target.value) setCodigo(e.target.value)
                                     else setCodigo("")
