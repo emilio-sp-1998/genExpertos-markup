@@ -75,7 +75,7 @@ export default function ModalProductos(
             cantidadTotal == 12 ? productos.ESCALA_12_UNIDAD:
             parseInt(cantidadTotal) >= 13 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
             parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD : 0)
-        }else if(sumaSuerox >= 13 && sumaSuerox < 36){
+        }else /* if(sumaSuerox >= 13 && sumaSuerox < 36) */{
           setPorcentaje(cantidadTotal == 13 ? productos.ESCALA_11_UNIDAD:
             parseInt(cantidadTotal) >= 13 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
             parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD : 0)
@@ -83,9 +83,9 @@ export default function ModalProductos(
           setPorcentaje(cantidadTotal == 26 ? productos.ESCALA_11_UNIDAD:
             parseInt(cantidadTotal) >= 26 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
             parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD: 0)
-        } */ else{
+        } */ /* else{
           setPorcentaje(cantidadTotal ? productos.ESCALA_36_UNIDAD : 0)
-        }
+        } */
       }else{
         setPorcentaje(cantidad == 1 ? productos.ESCALA_1_UNIDAD: 
         cantidad == 2 ? productos.ESCALA_2_UNIDAD:

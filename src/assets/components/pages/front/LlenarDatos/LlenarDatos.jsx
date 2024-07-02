@@ -436,11 +436,11 @@ const LlenarDatos = () => {
                 console.log("Quitar Valor M: "+ quitarValor.toFixed(2))
                 const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
                 if (index !== -1) {
-                    dataInsercion[index].margen = "30%"
+                    dataInsercion[index].margen = "16%"
                     let valorConDolar = item.solosubtotal;
                     let valorSinDolar = valorConDolar.replace('$', ''); // Elimina el signo de dólar
                     let valorFloat = parseFloat(valorSinDolar).toFixed(2);
-                    let sub = (valorFloat - valorFloat*0.3).toFixed(2)
+                    let sub = (valorFloat - valorFloat*0.16).toFixed(2)
                     dataInsercion[index].subtotal = sub
                     dataInsercion[index].totaliva = sub*0.15
                     const añadirValor = quitarValor + parseFloat(sub)
@@ -454,7 +454,7 @@ const LlenarDatos = () => {
                 }
             })
         }
-        else if(sumaSuerox >= 13 && sumaSuerox < 35){
+        /* else if(sumaSuerox >= 13 && sumaSuerox < 35){
             let totalCambio = parseFloat(total)
             let totalIVA = parseFloat(sumaIva)
             sueroxProductos.forEach((item) => {
@@ -483,7 +483,7 @@ const LlenarDatos = () => {
                     console.log(sumaIva)
                 }
             })
-        } /* else if(sumaSuerox >= 26 && sumaSuerox < 36){
+        } */ /* else if(sumaSuerox >= 26 && sumaSuerox < 36){
             let totalCambio = parseFloat(total)
             let totalIVA = parseFloat(sumaIva)
             sueroxProductos.forEach((item) =>{
@@ -523,11 +523,11 @@ const LlenarDatos = () => {
                 console.log("Quitar Valor: "+ quitarValor.toFixed(2))
                 const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
                 if (index !== -1) {
-                    dataInsercion[index].margen = "40%"
+                    dataInsercion[index].margen = "31%"
                     let valorConDolar = item.solosubtotal;
                     let valorSinDolar = valorConDolar.replace('$', ''); // Elimina el signo de dólar
                     let valorFloat = parseFloat(valorSinDolar).toFixed(2);
-                    let sub = (valorFloat - valorFloat*0.4).toFixed(2)
+                    let sub = (valorFloat - valorFloat*0.31).toFixed(2)
                     dataInsercion[index].subtotal = sub
                     dataInsercion[index].totaliva = sub*0.15
                     console.log("asdasdas: "+ sub)
