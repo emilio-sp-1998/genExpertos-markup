@@ -5,16 +5,17 @@ import { nombreFarmacia } from '../../../../redux/actions/authActions';
 import { obtenerFarmacia, obtenerVendedor, 
     listarProductos, enviarMailFormulario, 
     insertarRegistro, enviarMailFormulario2, 
-    obtenerUltimoRegistro } from '../../../../redux/actions/pedidosActions';
+    obtenerUltimoRegistro, listarPDVs } from '../../../../redux/actions/pedidosActions';
 import NotificationAlert from '../../../common/notifications/NotificationAlert'
 import DataTable from 'react-data-table-component';
 import ModalProductos from './modals/ModalProductos';
 import AgregarCliente from './modals/AgregarCliente';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import logo from '../../../../../markup.ico'
 import logo2 from '../../../../../genomma-lab.ico'
+import logo3 from '../../../../../gloria.ico'
 import swal from 'sweetalert';
 import { FaTrash } from 'react-icons/fa';
 import {jsPDF} from 'jspdf';
@@ -126,10 +127,15 @@ const LlenarDatos = () => {
 
     const [distribuidorSeleccionado, setDistribuidorSeleccionado] = useState("");
     const [farmacias, setFarmacias] = useState([]);
+    const [pdvs, setPdvs] = useState([]);
     const [productos, setProductos] = useState([]);
     const [selectedFarmacia, setSelectedFarmacia] = useState('');
     const [selectedIdFarmacia, setSelectedIdFarmacia] = useState(-1);
     const [suggestionsFarmacias, setSuggestionsFarmacias] = useState([]);
+
+    const [selectedPdv, setSelectedPdv] = useState('');
+    const [selectedIdPdv, setSelectedIdPdv] = useState(-1);
+    const [suggestionsPdv, setSuggestionsPdv] = useState([]);
 
     const [vendedor, setVendedor] = useState('')
 
@@ -155,6 +161,15 @@ const LlenarDatos = () => {
 
     const [sumaSuerox, setSumaSuerox] = useState(0.0)
     const [restaSuerox, setRestaSuerox] = useState(false);
+
+    const auth = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        console.log(auth);
+        if(auth.datosUsuario.RUC_CUENTA == '1790663973001'){
+            nombrePDVFunc()
+        }
+    }, [])
 
     const logout = () => {
         navigate("/logout")
@@ -334,6 +349,39 @@ const LlenarDatos = () => {
         })
     }
 
+    const nombrePDVFunc = () => {
+        dispatch(listarPDVs("LECHE GLORIA")).then((res) => {
+            if (res.status) {
+                if(res.status === 200){
+                    const data = res.data
+                    
+                    let agregarPDV = []
+
+                    data.forEach((item) => {
+                        const json = {
+                            idCliente: item.ID_INVOLVES                            ,
+                            razon_social: item.ID_INVOLVES ? item.ID_INVOLVES +" - "+item.NOMBRE_PDV+" - "+item.RUC :
+                                            item.NOMBRE_PDV+" - "+item.RUC
+                        }
+                        agregarPDV.push(json)
+                    })
+
+                    setPdvs(agregarPDV)
+                }else if(res.status === 401){
+                    navigate("/logout");
+                }else{
+                    setShowAlert(true);
+                    setAlertType(2);
+                    setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+                }
+            }else{
+                setShowAlert(true);
+                setAlertType(2);
+                setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+            }
+        })
+    }
+
     const insertarRegistroFunc = () => {
         dispatch(insertarRegistro(distribuidorSeleccionado, selectedIdFarmacia, vendedor, dataInsercion, sumaIva.toFixed(2), 
             total.toFixed(2), ((parseFloat(total)+parseFloat(sumaIva)).toFixed(2)), observacion)).then((res) => {
@@ -373,10 +421,29 @@ const LlenarDatos = () => {
         setSelectedFarmacia(farmacia)
     }
 
+    const onChangeHandlerPDV = (pdv) => {
+        let matches = []
+        if(pdv.length>0){
+            matches = pdvs.filter((farm) => {
+                const regex = new RegExp(`${pdv}`, "gi")
+                return farm.razon_social.match(regex)
+            })
+        }
+        matches = matches.slice(0, 10)
+        setSuggestionsPdv(matches)
+        setSelectedPdv(pdv)
+    }
+
     const onSuggestHandlerFarmacia = (farmacia, id) => {
         setSelectedFarmacia(farmacia)
         setSelectedIdFarmacia(id)
         setSuggestionsFarmacias([])
+    }
+
+    const onSuggestHandlerPdv = (pdv, id) => {
+        setSelectedPdv(pdv)
+        setSelectedIdPdv(id)
+        setSuggestionsPdv([])
     }
 
     const agregarProductoCola = () => {
@@ -866,39 +933,53 @@ const LlenarDatos = () => {
             <div className="row">
                 <div className="col text-center mt-5">
                     <h1 className='tituloGrande'>Levantamiento de pedidos</h1>
-                    <h2 className='tituloGrande'>Proyecto GenExpertos 2024 - MarkUP</h2>
+                    {auth.datosUsuario.RUC_CUENTA != '1790663973001' && (
+                        <h2 className='tituloGrande'>Proyecto GenExpertos 2024 - MarkUP</h2>
+                    )}
                 </div>
             </div>
             <div className="row mt-3">
-            <div className="col-md-6">
-                <label htmlFor="distribuidor">Seleccionar distribuidor:</label>
-                    <select className="form-select" id="distribuidor" value={distribuidorSeleccionado} onChange={handleChange}>
-                        <option value="">Seleccionar...</option>
-                        <option value="leterago">LETERAGO</option>
-                        <option value="quifatex">QUIFATEX</option>
-                        <option value="difare">DIFARE</option>
-                        {/* <option value="farmaenlace">FARMAENLACE</option> */}
-                    </select>
+            {auth.datosUsuario.RUC_CUENTA != '1790663973001' && (
+                <div className="col-md-6">
+                    <label htmlFor="distribuidor">Seleccionar distribuidor:</label>
+                        <select className="form-select" id="distribuidor" value={distribuidorSeleccionado} onChange={handleChange}>
+                            <option value="">Seleccionar...</option>
+                            <option value="leterago">LETERAGO</option>
+                            <option value="quifatex">QUIFATEX</option>
+                            <option value="difare">DIFARE</option>
+                            {/* <option value="farmaenlace">FARMAENLACE</option> */}
+                        </select>
                 </div>
+            )}
                 <div className="flex col">
                     <img src={logo}></img>
                 </div>
-                <div className="flex col">
-                    <img src={logo2}></img>
-                </div>
+                {auth.datosUsuario.RUC_CUENTA == '1790663973001' ? (
+                    <div className="flex col">
+                        <img src={logo3}></img>
+                    </div>
+                ) : (
+                    <div className="flex col">
+                        <img src={logo2}></img>
+                    </div>
+                )}
                 <div className="form-group">
                     <button type="button" className="btn1 btn btn-danger" onClick={() => logout()}>Logout</button>
                 </div>
-                <div className="form-group">
-                    <button type="button" className="btn1 btn btn-success" onClick={() => setOpenAgregarCliente(true)}>Nuevo Cliente</button>
-                </div>
+                {auth.datosUsuario.RUC_CUENTA != '1790663973001' && (
+                    <div className="form-group">
+                        <button type="button" className="btn1 btn btn-success" onClick={() => setOpenAgregarCliente(true)}>Nuevo Cliente</button>
+                    </div>
+                )}
             </div>
-            <div className="row mt-3">
-                <div className="col">
-                {/* Mostramos el distribuidor seleccionado debajo del combobox */}
-                <p>Distribuidor seleccionado: {distribuidorSeleccionado}</p>
+            {auth.datosUsuario.RUC_CUENTA != '1790663973001' && (
+                <div className="row mt-3">
+                    <div className="col">
+                        {/* Mostramos el distribuidor seleccionado debajo del combobox */}
+                        <p>Distribuidor seleccionado: {distribuidorSeleccionado}</p>
+                    </div>
                 </div>
-            </div>
+            )}
             <div className="myDiv">
                 <div className="row mt-3">
                     <div className="col-md-6">
@@ -907,24 +988,45 @@ const LlenarDatos = () => {
                             <input type="date" className="form-control" id="fecha" value={fecha} disabled={true}/>
                         </div>
                     </div>
-                    <div className="col-md-6">
-                        <div className="form-group">
-                            <label htmlFor="fecha">Nombre Farmacia:</label>
-                            <input type='text' className='form-control' 
-                                disabled={distribuidorSeleccionado ? false : true} 
-                                onChange={e => onChangeHandlerFarmacia(e.target.value)}
-                                value={selectedFarmacia}></input>
-                            {suggestionsFarmacias && suggestionsFarmacias.map((suggestion) => {
-                                return(
-                                    <div key={suggestion.idCliente}
-                                        className='suggestion col-md-12 justify-content-md-center'
-                                        onClick={() => onSuggestHandlerFarmacia(suggestion.razon_social, suggestion.idCliente)}
-                                    >
-                                        {suggestion.razon_social}</div>
-                                )
-                            })}
+                    {auth.datosUsuario.RUC_CUENTA != '1790663973001' ? (
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <label htmlFor="fecha">Nombre Farmacia:</label>
+                                <input type='text' className='form-control' 
+                                    disabled={distribuidorSeleccionado ? false : true} 
+                                    onChange={e => onChangeHandlerFarmacia(e.target.value)}
+                                    value={selectedFarmacia}></input>
+                                {suggestionsFarmacias && suggestionsFarmacias.map((suggestion) => {
+                                    return(
+                                        <div key={suggestion.idCliente}
+                                            className='suggestion col-md-12 justify-content-md-center'
+                                            onClick={() => onSuggestHandlerFarmacia(suggestion.razon_social, suggestion.idCliente)}
+                                        >
+                                            {suggestion.razon_social}</div>
+                                    )
+                                })}
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <label htmlFor="fecha">PDV:</label>
+                                <input type='text' className='form-control' 
+                                    onChange={e => onChangeHandlerPDV(e.target.value)}
+                                    value={selectedPdv}
+                                />
+                                {suggestionsPdv && suggestionsPdv.map((suggestion) => {
+                                    return(
+                                        <div key={suggestion.idCliente}
+                                            className='suggestion col-md-12 justify-content-md-center'
+                                            onClick={() => onSuggestHandlerPdv(suggestion.razon_social, suggestion.idCliente)}
+                                        >
+                                            {suggestion.razon_social}</div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    )}
                     <div className="col-md-6">
                         <div className="form-group">
                             <label htmlFor="fecha">Cod. Farmacia:</label>
