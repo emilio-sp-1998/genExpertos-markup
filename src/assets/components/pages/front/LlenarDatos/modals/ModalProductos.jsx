@@ -97,6 +97,21 @@ export default function ModalProductos(
           cantidad == 11 ? productos.ESCALA_11_UNIDAD:
           parseInt(cantidad) >= 12 ? productos.ESCALA_12_UNIDAD:0)
         }
+      }else{
+        if(productos.PORCENTAJES) {
+          const porc = Object.entries(JSON.parse(productos.PORCENTAJES)).map(([ne, porcentaje]) => ({
+            nombreEscala: ne,
+            escala: parseInt(ne.match(/\d+/)[0]),
+            porcentaje: parseFloat(porcentaje)
+          }));
+          porc.some((item) => {
+            if (cantidad >= item.escala) {
+              setPorcentaje(item.porcentaje)
+            } else if (cantidad < porc[0].escala){
+              setPorcentaje(0)
+            }
+          })
+        }
       }
     }
     if(porcentaje || porcentaje == 0){
@@ -183,13 +198,11 @@ export default function ModalProductos(
               onChange={(e) => setCantidad(e.target.value)}
               disabled={selectedIdProducto === -1}/>
           </div>
-          {auth.datosUsuario.RUC_CUENTA != '1790663973001' && (
-            <div className="form-group">
+          <div className="form-group">
               <label htmlFor="fecha">DESCUENTO:</label>
               <input type="text" className="form-control text-center" id="descuento" name="descuento" 
               value={productos ? parseInt(porcentaje*100) + "%" : ""} disabled={true}/>
           </div>
-          )}
         </div>
         <div className="col-md-6 flex">
           <div className="form-group">
@@ -197,19 +210,11 @@ export default function ModalProductos(
                 <input type="text" className="form-control text-center" id="pvp" name="pvp" 
                 value={Object.keys(productos).length !== 0 ? "$"+productos.PVP_SIN_IVA : ""} disabled={true}/>
           </div>
-          {auth.datosUsuario.RUC_CUENTA != '1790663973001' ? (
-            <div className="form-group">
+          <div className="form-group">
               <label htmlFor="fecha">Subtotal:</label>
               <input type="text" className="form-control text-center" id="subtotal" name="subtotal" 
               value={cantidad ? "$"+parseFloat((productos.PVP_SIN_IVA*cantidad)-((productos.PVP_SIN_IVA*cantidad)*porcentaje)).toFixed(2):""} disabled={true}/>
-            </div>
-          ) : (
-            <div className="form-group">
-              <label htmlFor="fecha">Subtotal:</label>
-              <input type="text" className="form-control text-center" id="subtotal" name="subtotal" 
-              value={cantidad ? "$"+parseFloat(productos.PVP_SIN_IVA*cantidad).toFixed(2):""} disabled={true}/>
-            </div>
-          )}
+          </div>
         </div>
         <button className="btn1 btn btn-danger" onClick={() => closeModal(false)}>CERRAR</button>
         <button className='btn btn-success' disabled={subtotal == 0 || bloquear || Object.keys(productos).length === 0 ? true : false} onClick={() => agregarProductoCola()}>AGREGAR</button>
