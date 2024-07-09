@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './ModalProductos.css'
-import { obtenerProducto } from '../../../../../redux/actions/pedidosActions';
-import { useDispatch } from 'react-redux';
+import { obtenerProducto, obtenerProductoPdv } from '../../../../../redux/actions/pedidosActions';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 export default function ModalProductos(
@@ -35,6 +35,8 @@ export default function ModalProductos(
 
   const [bloquear, setBloquear] = useState(false);
 
+  const auth = useSelector((state) => state.auth);
+
   const onChangeHandlerProducto = (producto) => {
     let matches = []
     if(producto.length>0){
@@ -64,35 +66,37 @@ export default function ModalProductos(
 
   useEffect(() => {
     if(productos){
-      if(productos.MARCA === "SUEROX"){
-        const cantidadTotal = parseInt(sumaSuerox) + parseInt(cantidad)
-        if(sumaSuerox < 13){
-          console.log("CANT: "+ cantidadTotal)
-          setPorcentaje(cantidadTotal == 1 ? productos.ESCALA_1_UNIDAD: 
-            cantidadTotal == 2 ? productos.ESCALA_2_UNIDAD:
-            parseInt(cantidadTotal) >= 3 && parseInt(cantidadTotal) < 6 ? productos.ESCALA_3_UNIDAD:
-            parseInt(cantidadTotal) >= 6 && parseInt(cantidadTotal) < 12 ? productos.ESCALA_6_UNIDAD:
-            cantidadTotal == 12 ? productos.ESCALA_12_UNIDAD:
-            parseInt(cantidadTotal) >= 13 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
-            parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD : 0)
-        }else /* if(sumaSuerox >= 13 && sumaSuerox < 36) */{
-          setPorcentaje(cantidadTotal == 13 ? productos.ESCALA_11_UNIDAD:
-            parseInt(cantidadTotal) >= 13 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
-            parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD : 0)
-        }/* else if(sumaSuerox >= 35 && sumaSuerox < 36){
-          setPorcentaje(cantidadTotal == 26 ? productos.ESCALA_11_UNIDAD:
-            parseInt(cantidadTotal) >= 26 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
-            parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD: 0)
-        } */ /* else{
-          setPorcentaje(cantidadTotal ? productos.ESCALA_36_UNIDAD : 0)
-        } */
-      }else{
-        setPorcentaje(cantidad == 1 ? productos.ESCALA_1_UNIDAD: 
-        cantidad == 2 ? productos.ESCALA_2_UNIDAD:
-        parseInt(cantidad) >= 3 && parseInt(cantidad) < 6 ? productos.ESCALA_3_UNIDAD:
-        parseInt(cantidad) >= 6 && parseInt(cantidad) < 11 ? productos.ESCALA_6_UNIDAD:
-        cantidad == 11 ? productos.ESCALA_11_UNIDAD:
-        parseInt(cantidad) >= 12 ? productos.ESCALA_12_UNIDAD:0)
+      if(auth.datosUsuario.RUC_CUENTA != "1790663973001"){
+        if(productos.MARCA === "SUEROX"){
+          const cantidadTotal = parseInt(sumaSuerox) + parseInt(cantidad)
+          if(sumaSuerox < 13){
+            console.log("CANT: "+ cantidadTotal)
+            setPorcentaje(cantidadTotal == 1 ? productos.ESCALA_1_UNIDAD: 
+              cantidadTotal == 2 ? productos.ESCALA_2_UNIDAD:
+              parseInt(cantidadTotal) >= 3 && parseInt(cantidadTotal) < 6 ? productos.ESCALA_3_UNIDAD:
+              parseInt(cantidadTotal) >= 6 && parseInt(cantidadTotal) < 12 ? productos.ESCALA_6_UNIDAD:
+              cantidadTotal == 12 ? productos.ESCALA_12_UNIDAD:
+              parseInt(cantidadTotal) >= 13 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
+              parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD : 0)
+          }else /* if(sumaSuerox >= 13 && sumaSuerox < 36) */{
+            setPorcentaje(cantidadTotal == 13 ? productos.ESCALA_11_UNIDAD:
+              parseInt(cantidadTotal) >= 13 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
+              parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD : 0)
+          }/* else if(sumaSuerox >= 35 && sumaSuerox < 36){
+            setPorcentaje(cantidadTotal == 26 ? productos.ESCALA_11_UNIDAD:
+              parseInt(cantidadTotal) >= 26 && parseInt(cantidadTotal) < 36 ? productos.ESCALA_26_UNIDAD:
+              parseInt(cantidadTotal) >= 36 ? productos.ESCALA_36_UNIDAD: 0)
+          } */ /* else{
+            setPorcentaje(cantidadTotal ? productos.ESCALA_36_UNIDAD : 0)
+          } */
+        }else{
+          setPorcentaje(cantidad == 1 ? productos.ESCALA_1_UNIDAD: 
+          cantidad == 2 ? productos.ESCALA_2_UNIDAD:
+          parseInt(cantidad) >= 3 && parseInt(cantidad) < 6 ? productos.ESCALA_3_UNIDAD:
+          parseInt(cantidad) >= 6 && parseInt(cantidad) < 11 ? productos.ESCALA_6_UNIDAD:
+          cantidad == 11 ? productos.ESCALA_11_UNIDAD:
+          parseInt(cantidad) >= 12 ? productos.ESCALA_12_UNIDAD:0)
+        }
       }
     }
     if(porcentaje || porcentaje == 0){
@@ -101,7 +105,8 @@ export default function ModalProductos(
   }, [cantidad, porcentaje, subtotal])
 
   const obtenerProductoFunc = () => {
-    dispatch(obtenerProducto(distribuidorSeleccionado, selectedIdProducto)).then((res) => {
+    if(auth.datosUsuario.RUC_CUENTA != "1790663973001"){
+      dispatch(obtenerProducto(distribuidorSeleccionado, selectedIdProducto)).then((res) => {
         if (res.status) {
             if(res.status === 200){
                 const data = res.data
@@ -122,7 +127,28 @@ export default function ModalProductos(
             setAlertType(2);
             setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
         }
-    })
+      })
+    }else{
+      dispatch(obtenerProductoPdv(selectedIdProducto)).then((res) => {
+        if (res.status){
+          if (res.status === 200){
+            const data = res.data
+            setProductos(data)
+          }else if(res.status === 401){
+                navigate("/logout");
+          }else{
+              setShowAlert(true);
+              setAlertType(2);
+              setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+          }
+        }else{
+          setShowAlert(true);
+          setAlertType(2);
+          setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+        }
+      })
+    }
+    
   }
 
   return (
@@ -157,11 +183,13 @@ export default function ModalProductos(
               onChange={(e) => setCantidad(e.target.value)}
               disabled={selectedIdProducto === -1}/>
           </div>
-          <div className="form-group">
+          {auth.datosUsuario.RUC_CUENTA != '1790663973001' && (
+            <div className="form-group">
               <label htmlFor="fecha">DESCUENTO:</label>
               <input type="text" className="form-control text-center" id="descuento" name="descuento" 
               value={productos ? parseInt(porcentaje*100) + "%" : ""} disabled={true}/>
           </div>
+          )}
         </div>
         <div className="col-md-6 flex">
           <div className="form-group">
@@ -169,11 +197,19 @@ export default function ModalProductos(
                 <input type="text" className="form-control text-center" id="pvp" name="pvp" 
                 value={Object.keys(productos).length !== 0 ? "$"+productos.PVP_SIN_IVA : ""} disabled={true}/>
           </div>
-          <div className="form-group">
-                <label htmlFor="fecha">Subtotal:</label>
-                <input type="text" className="form-control text-center" id="subtotal" name="subtotal" 
-                value={cantidad ? "$"+parseFloat((productos.PVP_SIN_IVA*cantidad)-((productos.PVP_SIN_IVA*cantidad)*porcentaje)).toFixed(2):""} disabled={true}/>
-          </div>
+          {auth.datosUsuario.RUC_CUENTA != '1790663973001' ? (
+            <div className="form-group">
+              <label htmlFor="fecha">Subtotal:</label>
+              <input type="text" className="form-control text-center" id="subtotal" name="subtotal" 
+              value={cantidad ? "$"+parseFloat((productos.PVP_SIN_IVA*cantidad)-((productos.PVP_SIN_IVA*cantidad)*porcentaje)).toFixed(2):""} disabled={true}/>
+            </div>
+          ) : (
+            <div className="form-group">
+              <label htmlFor="fecha">Subtotal:</label>
+              <input type="text" className="form-control text-center" id="subtotal" name="subtotal" 
+              value={cantidad ? "$"+parseFloat(productos.PVP_SIN_IVA*cantidad).toFixed(2):""} disabled={true}/>
+            </div>
+          )}
         </div>
         <button className="btn1 btn btn-danger" onClick={() => closeModal(false)}>CERRAR</button>
         <button className='btn btn-success' disabled={subtotal == 0 || bloquear || Object.keys(productos).length === 0 ? true : false} onClick={() => agregarProductoCola()}>AGREGAR</button>

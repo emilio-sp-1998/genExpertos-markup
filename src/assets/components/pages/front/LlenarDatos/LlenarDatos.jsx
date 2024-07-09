@@ -5,7 +5,7 @@ import { nombreFarmacia } from '../../../../redux/actions/authActions';
 import { obtenerFarmacia, obtenerVendedor, 
     listarProductos, enviarMailFormulario, 
     insertarRegistro, enviarMailFormulario2, 
-    obtenerUltimoRegistro, listarPDVs } from '../../../../redux/actions/pedidosActions';
+    obtenerUltimoRegistro, listarPDVs, obtenerPdv, listarProductosPdv } from '../../../../redux/actions/pedidosActions';
 import NotificationAlert from '../../../common/notifications/NotificationAlert'
 import DataTable from 'react-data-table-component';
 import ModalProductos from './modals/ModalProductos';
@@ -212,6 +212,12 @@ const LlenarDatos = () => {
     }, [selectedIdFarmacia])
 
     useEffect(() => {
+        if(selectedIdPdv !== -1){
+            obtenerPdvFunc()
+        }
+    }, [selectedIdPdv])
+
+    useEffect(() => {
         if(observacion){
             console.log("SI!!")
         }else{
@@ -272,6 +278,38 @@ const LlenarDatos = () => {
         })
     }
 
+    const listarProductosPdvFunc = () => {
+        dispatch(listarProductosPdv("LECHE GLORIA")).then((res) => {
+            if(res.status){
+                if(res.status === 200){
+                    const data = res.data
+                    
+                    let agregarProducto = []
+
+                    data.forEach((item) => {
+                        const json = {
+                            id: item.COD_PRODUCTO,
+                            nombre_producto: item.NOMBRE_PRODUCTO
+                        }
+                        agregarProducto.push(json)
+                    })
+
+                    setProductos(agregarProducto)
+                }else if(res.status === 401){
+                    navigate("/logout");
+                }else{
+                    setShowAlert(true);
+                    setAlertType(2);
+                    setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+                }
+            }else{
+                setShowAlert(true);
+                setAlertType(2);
+                setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+            }
+        })
+    }
+
     const obtenerFarmaciaFunc = () => {
         dispatch(obtenerFarmacia(distribuidorSeleccionado, selectedIdFarmacia)).then((res) => {
             if (res.status) {
@@ -280,6 +318,31 @@ const LlenarDatos = () => {
                     setRuc(data.RUC.length === 13 ? data.RUC : "0"+data.RUC)
                     setDireccion(data.DIRECCION)
                     setProvincia(data.PROVINCIA)
+                }else if(res.status === 401){
+                    navigate("/logout");
+                }else{
+                    setShowAlert(true);
+                    setAlertType(2);
+                    setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+                }
+            }else{
+                setShowAlert(true);
+                setAlertType(2);
+                setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+            }
+        })
+    }
+
+    const obtenerPdvFunc = () => {
+        dispatch(obtenerPdv(selectedIdPdv)).then((res) => {
+            if (res.status) {
+                if(res.status === 200){
+                    const data = res.data
+                    setRuc(data.RUC)
+                    setDireccion(data.COMPLEMENTO_DIRECCION)
+                    setProvincia(data.PROVINCIA)
+                    setVendedor(auth.datosUsuario.NOMBRE_VENDEDOR)
+                    listarProductosPdvFunc()
                 }else if(res.status === 401){
                     navigate("/logout");
                 }else{
@@ -447,7 +510,7 @@ const LlenarDatos = () => {
     }
 
     const agregarProductoCola = () => {
-        let json = {
+        let json = auth.datosUsuario.RUC_CUENTA != "1790663973001" ? {
             id: dataInsercion.length === 0 ? dataInsercion.length+1 : dataInsercion[dataInsercion.length-1].id+1,
             tipoProducto: distribuidorSeleccionado,
             code: producto.SAP,
@@ -459,6 +522,19 @@ const LlenarDatos = () => {
             unidades: cantidad,
             marca: producto.MARCA,
             margen: parseInt(porcentaje*100) + "%",
+            ivaporcentaje: parseInt(producto.IVA*100) + "%",
+            totaliva: subtotal*producto.IVA,
+            solosubtotal: "$"+(producto.PVP_SIN_IVA*cantidad).toFixed(2),
+            pvp: "$"+producto.PVP_CON_IVA,
+            pvpsiniva: "$"+producto.PVP_SIN_IVA,
+            subtotal: subtotal
+        } : {
+            id: dataInsercion.length === 0 ? dataInsercion.length+1 : dataInsercion[dataInsercion.length-1].id+1,
+            code: producto.COD_PRODUCTO,
+            nombre: producto.NOMBRE_PRODUCTO,
+            unidades: cantidad,
+            marca: producto.MARCA,
+            margen: "0%",
             ivaporcentaje: parseInt(producto.IVA*100) + "%",
             totaliva: subtotal*producto.IVA,
             solosubtotal: "$"+(producto.PVP_SIN_IVA*cantidad).toFixed(2),
@@ -702,6 +778,50 @@ const LlenarDatos = () => {
         return doc
     }
 
+    const generarPDFOtro = () => {
+        const doc = new jsPDF()
+
+        doc.text('Productos', 95, 20);
+
+        doc.setFontSize(12);
+
+        const encabezado = `
+            Fecha de Pedido: ${fecha}
+            Nombre PDV: ${selectedPdv}
+            Cód. PDV: ${selectedIdPdv}
+            RUC: ${ruc}
+            Dirección Farmacia: ${direccion}
+            Provincia: ${provincia}
+            Vendedor: ${vendedor}
+            `;
+
+        // Establecer la posición inicial para el texto del encabezado
+        let x = 0;  // Margen izquierdo
+        let y = 30;  // Margen superior
+
+        // Añadir el encabezado al documento
+        doc.text(encabezado, x, y);
+
+        const columns = ['Code', 'Nombre', 'Unidades', 'Margen', 'Precio Unitario', 'SubTotal']
+
+        let data = []
+
+        dataInsercion.forEach((item) => {
+            let insertData = [`${item.code}`, `${item.nombre}`, `${item.unidades}`,
+                `${item.margen}`, `${item.pvp}`, `${item.subtotal}`
+            ]
+            data.push(insertData)
+        })
+
+        doc.autoTable({
+            startY: 100,
+            head: [columns],
+            body: data
+        })
+
+        return doc
+    }
+
     const generarPDFTest = () => {
         const doc = new jsPDF()
 
@@ -778,6 +898,64 @@ const LlenarDatos = () => {
           },
         },
       }
+
+    const enviarCorreoOtro = () => {
+        const asunto = `Estimado Vendedor ${vendedor}`
+        const cuerpo = `
+        Estimado distribuidor.
+        <br>
+        El siguiente correo es automatizado y corresponde a una solicitud de trasferencia con los datos indicados en el cuerpo del correo.
+        <br>
+        <br>
+        Pedido de transferencia
+        <br>
+        <br>
+        <br>
+        Fecha de Pedido: ${fecha}
+        <br>
+        Nombre PDV: ${selectedPdv}
+        <br>
+        Cód. PDV: ${selectedIdPdv ? selectedIdPdv : "NO DISPONE"}
+        <br>
+        RUC: ${ruc}
+        <br>
+        Dirección Farmacia: ${direccion}
+        <br>
+        Provincia: ${provincia}
+        <br>
+        Vendedor: ${vendedor}
+        <br>
+        <br>
+        <br>
+        <br>
+        ${observacion ? 
+            `<br>
+                Observacion: ${observacion}
+             <br>` : ''
+        }
+        <br>
+        <br>
+        <br>
+        <br>
+        Saludos.
+        Equipo de Automatización MarkUP / Gloria
+        Para dudas respecto a la información del correo contactar a <PERSONA_ENCARGADA> <NUMERO_TELEFONICO> o responder al correo <CORREO> .
+        `
+
+        const pdf = generarPDFOtro()
+        const pdfBase64 = pdf.output();
+
+        const arrayMails = ['emilio.segovia@markup.ws']
+
+        dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas.pdf`)).then((res) => {
+            if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", "666")} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
+            else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
+        })
+
+        setDataInsercion([])
+        setTotal(0);
+        setSumaIva(0);
+    }
 
     const enviarFormularioACorreo = (cod) => {
         const asunto = `Fwd: Pedido de transferencia ${vendedor} GenommaLab ${distribuidorSeleccionado}/ Registro ${cod}`
@@ -1027,13 +1205,23 @@ const LlenarDatos = () => {
                             </div>
                         </div>
                     )}
-                    <div className="col-md-6">
-                        <div className="form-group">
-                            <label htmlFor="fecha">Cod. Farmacia:</label>
-                            <input type="text" className="form-control text-center" id="codFarmacia" name="codFarmacia" 
-                                value={selectedIdFarmacia === -1 ? "" : selectedIdFarmacia} disabled={true}/>
+                    {auth.datosUsuario.RUC_CUENTA != '1790663973001' ? (
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <label htmlFor="fecha">Cod. Farmacia:</label>
+                                <input type="text" className="form-control text-center" id="codFarmacia" name="codFarmacia" 
+                                    value={selectedIdFarmacia === -1 ? "" : selectedIdFarmacia} disabled={true}/>
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <label htmlFor="fecha">Cod. PDV:</label>
+                                <input type="text" className="form-control text-center" id="codFarmacia" name="codFarmacia" 
+                                    value={selectedIdPdv === -1 ? "" : selectedIdPdv} disabled={true}/>
+                            </div>
+                        </div>
+                    )}
                     <div className="col-md-6">
                         <div className="form-group">
                             <label htmlFor="fecha">RUC:</label>
@@ -1071,7 +1259,7 @@ const LlenarDatos = () => {
             </div>
             <div className='buttons-div'>
                 <div className="form-group">
-                    <button type='button' className='btn btn-success' disabled={selectedIdFarmacia === -1}
+                    <button type='button' className='btn btn-success' disabled={selectedIdFarmacia === -1 && selectedIdPdv === -1}
                         onClick={() => setOpenModal(true)}>Nuevo</button>
                 </div>
                 {/* <div className="form-group">
@@ -1109,7 +1297,10 @@ const LlenarDatos = () => {
                     <span class="amount">${(parseFloat(total)+parseFloat(sumaIva)).toFixed(2)}</span>
                 </div>
             </div>
-            <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => insertarRegistroFunc()}>Enviar</button>
+            <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => {
+                if(auth.datosUsuario.RUC_CUENTA == '1790663973001') enviarCorreoOtro()
+                else insertarRegistroFunc()
+            }}>Enviar</button>
         </div>
         {openModal && <ModalProductos 
             closeModal={setOpenModal} 

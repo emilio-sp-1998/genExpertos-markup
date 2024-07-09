@@ -67,6 +67,38 @@ export function listarProductos(local) {
     }
 }
 
+export function listarProductosPdv(cuenta_comercial) {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "LISTAR_PRODUCTOS_PDV" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/listarProductosPdv",
+          {cuenta_comercial},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "LISTAR_PRODUCTOS_PDV_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "LISTAR_PRODUCTOS_PDV_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export function obtenerFarmacia(local, idCliente) {
     try{
       return async function (dispatch) {
@@ -100,6 +132,38 @@ export function obtenerFarmacia(local, idCliente) {
     }
 }
 
+export function obtenerPdv(id_involves) {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "OBTENER_PDV" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/obtenerPdv",
+          {id_involves},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "OBTENER_PDV_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "OBTENER_PDV_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export function obtenerProducto(local, id) {
     try{
       return async function (dispatch) {
@@ -130,6 +194,38 @@ export function obtenerProducto(local, id) {
     } catch (e) {
       console.log(e);
     }
+}
+
+export function obtenerProductoPdv(cod_producto) {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "OBTENER_PRODUCTO_PDV" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/obtenerProductoPdv",
+          {cod_producto},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "OBTENER_PRODUCTO_PDV_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "OBTENER_PRODUCTO_PDV_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export function obtenerVendedor(local) {
