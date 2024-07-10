@@ -17,6 +17,8 @@ export default function ModalProductos(
     setSubtotal,
     cantidad,
     setCantidad,
+    dataInsercion,
+    setDataInsercion,
     agregarProductoCola,
     sumaSuerox,
     dataProductos
@@ -34,6 +36,7 @@ export default function ModalProductos(
   const [suggestionsProducto, setSuggestionsProducto] = useState([]);
 
   const [bloquear, setBloquear] = useState(false);
+  const [textoBloquear, setTextoBloquear] = useState("");
 
   const auth = useSelector((state) => state.auth);
 
@@ -60,6 +63,7 @@ export default function ModalProductos(
 
   useEffect(() => {
     if(selectedIdProducto !== -1){
+        console.log(dataInsercion)
         obtenerProductoFunc();
     }
   }, [selectedIdProducto])
@@ -112,6 +116,8 @@ export default function ModalProductos(
             }
           })
         }
+        setBloquear(cantidad > parseInt(productos.STOCK))
+        setTextoBloquear(cantidad > parseInt(productos.STOCK) ? "La cantidad sobrepasa el Stock" : "")
       }
     }
     if(porcentaje || porcentaje == 0){
@@ -126,9 +132,18 @@ export default function ModalProductos(
             if(res.status === 200){
                 const data = res.data
                 console.log(distribuidorSeleccionado)
-                if (distribuidorSeleccionado === 'leterago') setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_LETERAGO))
-                else if (distribuidorSeleccionado === 'quifatex') setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_QUIFATEX))
-                else setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_DIFARE))
+                if (distribuidorSeleccionado === 'leterago') {
+                  setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_LETERAGO))
+                  setTextoBloquear(dataProductos.find(p => p.idCode === data.IDPROD_LETERAGO) ? "Este Producto ya está insertado" : "")
+                }
+                else if (distribuidorSeleccionado === 'quifatex') {
+                  setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_QUIFATEX))
+                  setTextoBloquear(dataProductos.find(p => p.idCode === data.IDPROD_QUIFATEX) ? "Este Producto ya está insertado" : "")
+                }
+                else {
+                  setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_DIFARE))
+                  setTextoBloquear(dataProductos.find(p => p.idCode === data.IDPROD_DIFARE) ? "Este Producto ya está insertado" : "")
+                }
                 setProductos(data)
             }else if(res.status === 401){
                 navigate("/logout");
@@ -148,6 +163,8 @@ export default function ModalProductos(
         if (res.status){
           if (res.status === 200){
             const data = res.data
+            let productoEncontrado = dataInsercion.find(p => p.code === data.COD_PRODUCTO)
+            if(productoEncontrado) data.STOCK = productoEncontrado.stock - cantidad
             setProductos(data)
           }else if(res.status === 401){
                 navigate("/logout");
@@ -203,6 +220,13 @@ export default function ModalProductos(
               <input type="text" className="form-control text-center" id="descuento" name="descuento" 
               value={productos ? parseInt(porcentaje*100) + "%" : ""} disabled={true}/>
           </div>
+          {auth.datosUsuario.RUC_CUENTA == '1790663973001' && (
+            <div className="form-group">
+              <label htmlFor="fecha">STOCK:</label>
+              <input type="text" className="form-control text-center" id="stock" name="stock" 
+              value={productos ? productos.STOCK : ""} disabled={true}/>
+            </div>
+          )}
         </div>
         <div className="col-md-6 flex">
           <div className="form-group">
@@ -221,7 +245,7 @@ export default function ModalProductos(
         {bloquear ? (
           <div>
             <p className="text-sm font-normal text-red-700 mt-1">
-                Este Producto ya está insertado
+                {textoBloquear}
             </p>
           </div>
         ) : null}

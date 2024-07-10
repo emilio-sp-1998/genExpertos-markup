@@ -289,7 +289,8 @@ const LlenarDatos = () => {
                     data.forEach((item) => {
                         const json = {
                             id: item.COD_PRODUCTO,
-                            nombre_producto: item.NOMBRE_PRODUCTO
+                            nombre_producto: item.NOMBRE_PRODUCTO,
+                            stock: item.STOCK
                         }
                         agregarProducto.push(json)
                     })
@@ -540,7 +541,8 @@ const LlenarDatos = () => {
             solosubtotal: "$"+(producto.PVP_SIN_IVA*cantidad).toFixed(2),
             pvp: "$"+producto.PVP_CON_IVA,
             pvpsiniva: "$"+producto.PVP_SIN_IVA,
-            subtotal: subtotal
+            subtotal: subtotal,
+            stock: producto.STOCK - cantidad
         }
         let subTotalConvertido = parseFloat(subtotal)
         let asignarTotal = total + subTotalConvertido;
@@ -1314,6 +1316,8 @@ const LlenarDatos = () => {
             setSubtotal={setSubtotal}
             cantidad={cantidad}
             setCantidad={setCantidad}
+            dataInsercion={dataInsercion}
+            setDataInsercion={setDataInsercion}
             agregarProductoCola={agregarProductoCola}
             sumaSuerox={sumaSuerox}
             dataProductos={dataInsercion}/>}
