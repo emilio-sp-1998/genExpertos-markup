@@ -5,7 +5,8 @@ import { nombreFarmacia } from '../../../../redux/actions/authActions';
 import { obtenerFarmacia, obtenerVendedor, 
     listarProductos, enviarMailFormulario, 
     insertarRegistro, enviarMailFormulario2, 
-    obtenerUltimoRegistro, listarPDVs, obtenerPdv, listarProductosPdv } from '../../../../redux/actions/pedidosActions';
+    obtenerUltimoRegistro, listarPDVs, obtenerPdv, 
+    listarProductosPdv, actualizarStockGloria } from '../../../../redux/actions/pedidosActions';
 import NotificationAlert from '../../../common/notifications/NotificationAlert'
 import DataTable from 'react-data-table-component';
 import ModalProductos from './modals/ModalProductos';
@@ -143,6 +144,7 @@ const LlenarDatos = () => {
 
     const [selectedPdv, setSelectedPdv] = useState('');
     const [selectedIdPdv, setSelectedIdPdv] = useState(-1);
+    const [selectedIdPdv2, setSelectedIdPdv2] = useState("");
     const [suggestionsPdv, setSuggestionsPdv] = useState([]);
 
     const [vendedor, setVendedor] = useState('')
@@ -346,6 +348,7 @@ const LlenarDatos = () => {
                 if(res.status === 200){
                     const data = res.data
                     setRuc(data.RUC)
+                    setSelectedIdPdv2(data.COD_PDV)
                     setDireccion(data.COMPLEMENTO_DIRECCION)
                     setProvincia(data.PROVINCIA)
                     setVendedor(auth.datosUsuario.NOMBRE_VENDEDOR)
@@ -452,15 +455,24 @@ const LlenarDatos = () => {
         })
     }
 
+    const actualizarStockGloriaFunc = (arrayProducto) => {
+        dispatch(actualizarStockGloria(arrayProducto)).then((res) => {
+            if(res.status){ if(res.status === 200){ mostrarAlerta(true, "xd", "Gloria"); insertarRegistroFunc() } 
+            else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")} } 
+            else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
+        })
+    }
+
     const insertarRegistroFunc = () => {
-        dispatch(insertarRegistro(distribuidorSeleccionado, selectedIdFarmacia, vendedor, dataInsercion, sumaIva.toFixed(2), 
-            total.toFixed(2), ((parseFloat(total)+parseFloat(sumaIva)).toFixed(2)), observacion)).then((res) => {
+        dispatch(insertarRegistro(distribuidorSeleccionado, auth.datosUsuario.RUC_CUENTA != "1790663973001" ? selectedIdFarmacia : selectedIdPdv2, vendedor, dataInsercion, sumaIva.toFixed(2), 
+            total.toFixed(2), ((parseFloat(total)+parseFloat(sumaIva)).toFixed(2)), observacion, auth.datosUsuario.RUC_CUENTA)).then((res) => {
             if(res.status){
                 if(res.status === 200){
                     console.log("GOOD!!")
                     //mostrarAlerta(true, res.data.code)
+                    console.log(dataInsercion)
                     setObservacion('')
-                    enviarFormularioACorreo(res.data.code)
+                    if(auth.datosUsuario.RUC_CUENTA != "1790663973001") enviarFormularioACorreo(res.data.code)
                     setSelectedFarmacia('')
                     setSelectedIdFarmacia(-1)
                     setRuc('')
@@ -959,7 +971,21 @@ const LlenarDatos = () => {
         const arrayMails = ['emilio.segovia@markup.ws',/* 'luis.andrade@markup.ec' , 'leonardo@markup.ws', 'juanfrancisco@markup.ec' */]
 
         dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas.pdf`)).then((res) => {
-            if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", "Gloria")} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
+            if (!!res.status) if(res.status === 200) {
+                if(dataInsercion){
+                    let arrayStock = []
+                    dataInsercion.map((item) => {
+                        const objStock = {
+                            cod_producto: item.code,
+                            stock: item.stock
+                        }
+                        arrayStock.push(objStock)
+                    })
+                    if(arrayStock !== 0){
+                        actualizarStockGloriaFunc(arrayStock)
+                    }
+                }
+            } else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
             else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
         })
 

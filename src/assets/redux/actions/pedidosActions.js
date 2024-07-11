@@ -324,7 +324,7 @@ export function enviarMailFormulario2(asunto, correodest, cuerpo, adjunto, filen
   }
 }
 
-export function insertarRegistro(local_farmacia, cod_local, vendedor, productos, iva, subtotal_reg, total_reg, observacion) {
+export function insertarRegistro(local_farmacia, cod_local, vendedor, productos, iva, subtotal_reg, total_reg, observacion, ruc_cuenta) {
   try{
     return async function (dispatch) {
       let token = localStorage.getItem("token");
@@ -332,7 +332,7 @@ export function insertarRegistro(local_farmacia, cod_local, vendedor, productos,
       try{
         const res = await axios.post(
           server + "/pedidos/insertarRegistro",
-          {local_farmacia, cod_local, vendedor, productos, iva, subtotal_reg, total_reg, observacion},
+          {local_farmacia, cod_local, vendedor, productos, iva, subtotal_reg, total_reg, observacion, ruc_cuenta},
           {
             headers: {
               Authorization: "Bearer " + token,
@@ -376,6 +376,38 @@ export function obtenerUltimoRegistro() {
         return res;
       }catch(e){
         dispatch({ type: "OBTENER_ULTIMO_REGISTRO_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function actualizarStockGloria(arrayProducto) {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "ACTUALIZAR_STOCK_GLORIA_REGISTRO" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/actualizarStockGloria",
+          {arrayProducto},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "ACTUALIZAR_STOCK_GLORIA_REGISTRO_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "ACTUALIZAR_STOCK_GLORIA_REGISTRO_FAIL", payload: {} });
         let res = {};
         if (!!e.response) {
           res = e.response;
