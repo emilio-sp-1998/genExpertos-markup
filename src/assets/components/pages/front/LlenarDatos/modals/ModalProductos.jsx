@@ -126,11 +126,11 @@ export default function ModalProductos(
   }, [cantidad, porcentaje, subtotal])
 
   useEffect(() => {
-    if(productos.PORCENTAJES){
+    if(Object.keys(productos).length !== 0){
       productos.STOCK = productosLista.find(pl => pl.id === productos.COD_PRODUCTO).stock
-      if(cantidad != 0){
-        productos.STOCK = productos.STOCK - cantidad;
-      }
+    }
+    if(cantidad != 0){
+      productos.STOCK = productos.STOCK - cantidad;
     }
   }, [cantidad])
 
