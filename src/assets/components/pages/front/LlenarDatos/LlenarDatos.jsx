@@ -25,6 +25,8 @@ const LlenarDatos = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const auth = useSelector((state) => state.auth);
+
     const columnsInsercion = [
         {
             name: "Code",
@@ -43,6 +45,12 @@ const LlenarDatos = () => {
             name: "Unidades",
             selector: row => row.unidades
         },
+        auth.datosUsuario.RUC_CUENTA == '1790663973001' && (
+            {
+                name: "Stock Restante",
+                selector: row => row.stock
+            }
+        ),
         {
             name: "Descuento",
             selector: row => row.margen
@@ -161,8 +169,6 @@ const LlenarDatos = () => {
 
     const [sumaSuerox, setSumaSuerox] = useState(0.0)
     const [restaSuerox, setRestaSuerox] = useState(false);
-
-    const auth = useSelector((state) => state.auth);
 
     useEffect(() => {
         console.log(auth);
@@ -542,7 +548,7 @@ const LlenarDatos = () => {
             pvp: "$"+producto.PVP_CON_IVA,
             pvpsiniva: "$"+producto.PVP_SIN_IVA,
             subtotal: subtotal,
-            stock: producto.STOCK - cantidad
+            stock: producto.STOCK
         }
         let subTotalConvertido = parseFloat(subtotal)
         let asignarTotal = total + subTotalConvertido;
@@ -551,6 +557,9 @@ const LlenarDatos = () => {
         setSumaIva(asignarSumaIva);
         setTotal(asignarTotal);
         setDataInsercion([...dataInsercion, json])
+        setProducto({})
+        setPorcentaje(0)
+        setCantidad(0)
         setOpenModal(false)
     }
 
@@ -804,12 +813,12 @@ const LlenarDatos = () => {
         // Añadir el encabezado al documento
         doc.text(encabezado, x, y);
 
-        const columns = ['Code', 'Nombre', 'Unidades', 'Margen', 'Precio Unitario', 'SubTotal']
+        const columns = ['Code', 'Nombre', 'Unidades', 'Stock Restante', 'Margen', 'Precio Unitario', 'SubTotal']
 
         let data = []
 
         dataInsercion.forEach((item) => {
-            let insertData = [`${item.code}`, `${item.nombre}`, `${item.unidades}`,
+            let insertData = [`${item.code}`, `${item.nombre}`, `${item.unidades}`, `${item.stock}`,
                 `${item.margen}`, `${item.pvp}`, `${item.subtotal}`
             ]
             data.push(insertData)
@@ -947,7 +956,7 @@ const LlenarDatos = () => {
         const pdf = generarPDFOtro()
         const pdfBase64 = pdf.output();
 
-        const arrayMails = ['emilio.segovia@markup.ws', 'luis.andrade@markup.ec'/* , 'leonardo@markup.ws', 'juanfrancisco@markup.ec' */]
+        const arrayMails = ['emilio.segovia@markup.ws',/* 'luis.andrade@markup.ec' , 'leonardo@markup.ws', 'juanfrancisco@markup.ec' */]
 
         dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas.pdf`)).then((res) => {
             if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", "Gloria")} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}

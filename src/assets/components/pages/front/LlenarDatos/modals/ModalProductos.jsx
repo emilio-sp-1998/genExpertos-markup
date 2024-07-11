@@ -116,14 +116,23 @@ export default function ModalProductos(
             }
           })
         }
-        setBloquear(cantidad > parseInt(productos.STOCK))
-        setTextoBloquear(cantidad > parseInt(productos.STOCK) ? "La cantidad sobrepasa el Stock" : "")
+        setBloquear(parseInt(productos.STOCK) < 0)
+        setTextoBloquear(parseInt(productos.STOCK) < 0 ? "La cantidad sobrepasa el Stock" : "")
       }
     }
     if(porcentaje || porcentaje == 0){
       setSubtotal(parseFloat((productos.PVP_SIN_IVA*cantidad)-((productos.PVP_SIN_IVA*cantidad)*porcentaje)).toFixed(2))
     }
   }, [cantidad, porcentaje, subtotal])
+
+  useEffect(() => {
+    if(productos.PORCENTAJES){
+      productos.STOCK = productosLista.find(pl => pl.id === productos.COD_PRODUCTO).stock
+      if(cantidad != 0){
+        productos.STOCK = productos.STOCK - cantidad;
+      }
+    }
+  }, [cantidad])
 
   const obtenerProductoFunc = () => {
     if(auth.datosUsuario.RUC_CUENTA != "1790663973001"){
@@ -164,7 +173,11 @@ export default function ModalProductos(
           if (res.status === 200){
             const data = res.data
             let productoEncontrado = dataInsercion.find(p => p.code === data.COD_PRODUCTO)
-            if(productoEncontrado) data.STOCK = productoEncontrado.stock - cantidad
+            if(productoEncontrado) {
+              data.STOCK = productoEncontrado.stock
+              setBloquear(productoEncontrado)
+              setTextoBloquear(productoEncontrado ? "Este Producto ya está insertado" : "")
+            }
             setProductos(data)
           }else if(res.status === 401){
                 navigate("/logout");
@@ -224,7 +237,7 @@ export default function ModalProductos(
             <div className="form-group">
               <label htmlFor="fecha">STOCK:</label>
               <input type="text" className="form-control text-center" id="stock" name="stock" 
-              value={productos ? productos.STOCK : ""} disabled={true}/>
+              value={productos ? (productos.STOCK < 0 ? 0 : productos.STOCK) : ""} disabled={true}/>
             </div>
           )}
         </div>
@@ -240,7 +253,7 @@ export default function ModalProductos(
               value={cantidad ? "$"+parseFloat((productos.PVP_SIN_IVA*cantidad)-((productos.PVP_SIN_IVA*cantidad)*porcentaje)).toFixed(2):""} disabled={true}/>
           </div>
         </div>
-        <button className="btn1 btn btn-danger" onClick={() => closeModal(false)}>CERRAR</button>
+        <button className="btn1 btn btn-danger" onClick={() => {closeModal(false); setProductos({}); setCantidad(0); setPorcentaje(0)}}>CERRAR</button>
         <button className='btn btn-success' disabled={subtotal == 0 || bloquear || Object.keys(productos).length === 0 ? true : false} onClick={() => agregarProductoCola()}>AGREGAR</button>
         {bloquear ? (
           <div>
