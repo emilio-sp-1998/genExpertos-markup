@@ -968,7 +968,7 @@ const LlenarDatos = () => {
         const pdf = generarPDFOtro()
         const pdfBase64 = pdf.output();
 
-        const arrayMails = ['emilio.segovia@markup.ws',/* 'luis.andrade@markup.ec' , 'leonardo@markup.ws', 'juanfrancisco@markup.ec' */]
+        const arrayMails = ['emilio.segovia@markup.ws','luis.andrade@markup.ec'/*  , 'leonardo@markup.ws', 'juanfrancisco@markup.ec' */]
 
         dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas.pdf`)).then((res) => {
             if (!!res.status) if(res.status === 200) {
