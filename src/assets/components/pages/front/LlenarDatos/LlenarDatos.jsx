@@ -1295,7 +1295,7 @@ const LlenarDatos = () => {
                 <div className="form-group">
                     <label htmlFor="fecha">Observacion:</label>
                     <textarea className="form-control" rows="4" cols="50" id="observacion" name="observacion"
-                        onChange={(e) => setObservacion(e.target.value)} disabled={selectedIdFarmacia === -1}
+                        onChange={(e) => setObservacion(e.target.value)} disabled={selectedIdFarmacia === -1 && selectedIdPdv === -1}
                         value={observacion}
                     />
                 </div>
