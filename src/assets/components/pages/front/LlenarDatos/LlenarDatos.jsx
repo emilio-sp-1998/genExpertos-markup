@@ -43,8 +43,16 @@ const LlenarDatos = () => {
             width: "280px",
         },
         {
+            name: "PVF",
+            selector: row => row.pvpsiniva
+        },
+        {
             name: "Unidades",
             selector: row => row.unidades
+        },
+        {
+            name: "Subtotal Sin Descuento",
+            selector: row => row.solosubtotal
         },
         auth.datosUsuario.RUC_CUENTA == '1790663973001' && (
             {
@@ -56,9 +64,15 @@ const LlenarDatos = () => {
             name: "Descuento",
             selector: row => row.margen
         },
+        auth.datosUsuario.RUC_CUENTA == '1790663973001' && (
+            {
+                name: "Valor Descuento",
+                selector: row => row.valorDesc
+            }
+        ),
         {
-            name: "Subtotal Sin Descuento",
-            selector: row => row.solosubtotal
+            name: "Subtotal",
+            selector: row => row.subtotal
         },
         {
             name: "IVA%",
@@ -68,18 +82,12 @@ const LlenarDatos = () => {
             name: "IVA",
             selector: row => row.totaliva.toFixed(2)
         },
-        {
-            name: "PVP",
-            selector: row => row.pvp
-        },
-        {
-            name: "PVP Sin IVA",
-            selector: row => row.pvpsiniva
-        },
-        {
-            name: "Subtotal",
-            selector: row => row.subtotal
-        },
+        auth.datosUsuario.RUC_CUENTA != '1790663973001' && (
+            {
+                name: "TOTAL",
+                selector: row => row.total
+            }
+        ),
         {
             name: "Acciones",
             cell: row => (
@@ -530,6 +538,9 @@ const LlenarDatos = () => {
     }
 
     const agregarProductoCola = () => {
+        const soloSubTotal = (producto.PVP_SIN_IVA*cantidad).toFixed(2)
+        const t = subtotal*producto.IVA
+        console.log(t)
         let json = auth.datosUsuario.RUC_CUENTA != "1790663973001" ? {
             id: dataInsercion.length === 0 ? dataInsercion.length+1 : dataInsercion[dataInsercion.length-1].id+1,
             tipoProducto: distribuidorSeleccionado,
@@ -544,10 +555,12 @@ const LlenarDatos = () => {
             margen: parseInt(porcentaje*100) + "%",
             ivaporcentaje: parseInt(producto.IVA*100) + "%",
             totaliva: subtotal*producto.IVA,
-            solosubtotal: "$"+(producto.PVP_SIN_IVA*cantidad).toFixed(2),
+            solosubtotal: "$"+soloSubTotal,
             pvp: "$"+producto.PVP_CON_IVA,
             pvpsiniva: "$"+producto.PVP_SIN_IVA,
-            subtotal: subtotal
+            subtotal: subtotal,
+            valorDesc: (soloSubTotal*porcentaje).toFixed(2),
+            total: (parseFloat(subtotal)+t).toFixed(2)
         } : {
             id: dataInsercion.length === 0 ? dataInsercion.length+1 : dataInsercion[dataInsercion.length-1].id+1,
             code: producto.COD_PRODUCTO,
@@ -755,14 +768,13 @@ const LlenarDatos = () => {
         // Añadir el encabezado al documento
         doc.text(encabezado, x, y);
 
-        const columns = ['Code', 'Nombre', 'Unidades', 'Descuento', 'SubTotal Sin IVA', 'IVA%', 'IVA', 'Precio Unitario', 'PVP Sin IVA', 'SubTotal']
+        const columns = ['Code', 'Nombre', 'PVF', 'Unidades', 'SubTotal Sin Descuento', 'Descuento', 'Valor Descuento', 'SubTotal', 'IVA', 'Total']
 
         let data = []
 
         dataInsercion.forEach((item) => {
-            let insertData = [`${item.code}`, `${item.nombre}`, `${item.unidades}`,
-                `${item.margen}`, `${item.solosubtotal}`, `${item.ivaporcentaje}`, `${item.totaliva.toFixed(2)}`, 
-                `${item.pvp}`, `${item.pvpsiniva}`, `${item.subtotal}`
+            let insertData = [`${item.code}`, `${item.nombre}`, `${item.pvpsiniva}`, `${item.unidades}`, `${item.solosubtotal}`,
+                `${item.margen}`, `${item.valorDesc}`, `${item.subtotal}`, `${item.totaliva.toFixed(2)}`, `${item.total}`
             ]
             data.push(insertData)
         })
