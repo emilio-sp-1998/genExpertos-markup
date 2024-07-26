@@ -295,7 +295,7 @@ const LlenarDatos = () => {
     }
 
     const listarProductosPdvFunc = () => {
-        dispatch(listarProductosPdv("LECHE GLORIA")).then((res) => {
+        dispatch(listarProductosPdv("1790663973001")).then((res) => {
             if(res.status){
                 if(res.status === 200){
                     const data = res.data
