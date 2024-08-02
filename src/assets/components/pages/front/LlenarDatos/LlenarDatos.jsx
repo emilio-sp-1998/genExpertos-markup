@@ -756,7 +756,7 @@ const LlenarDatos = () => {
 
             // Información de la orden de compra
             doc.setFontSize(20);
-            doc.text('ORDEN DE COMPRA #', 150, 15); // No se modifica
+            doc.text('PEDIDO #', 150, 15); // No se modifica
             doc.text('224167', 230, 15); // No se modifica
             doc.setFontSize(10);
             doc.text('MATRIZ', 100, 22);
@@ -774,15 +774,15 @@ const LlenarDatos = () => {
             // Dibujar una línea horizontal
             doc.line(10, 44, width - 10, 44);
             doc.text('Distribuidor:', 14, 51); // Subido 10 unidades
-            doc.text('Distribuidor:', 50, 51); // Subido 10 unidades
+            doc.text(distribuidorSeleccionado, 50, 51); // Subido 10 unidades
             doc.text('R.U.C:', 14, 56); // Subido 10 unidades
-            doc.text('0992414499001', 50, 56); // Subido 10 unidades
+            doc.text(ruc, 50, 56); // Subido 10 unidades
             doc.text('Direccion:', 14, 60)
-            doc.text('AV JOSE C CASTILLO Y JUSTINO CORNEJO', 50, 60); // Subido 10 unidades
-            doc.text('BODEGA:', 14, 72); // Subido 10 unidades
-            doc.text('ADMINISTRACION CENTRAL, BODEGA CENTRAL', 50, 72); // Subido 10 unidades
-            doc.text('DIRECCIÓN:', 14, 77); // Subido 10 unidades
-            doc.text('CAPITAN RAFAEL RAMOS E2-210 Y CASTELLI', 50, 77); // Subido 10 unidades
+            doc.text(direccion, 50, 60); // Subido 10 unidades
+            doc.text('FARMACIA:', 14, 72); // Subido 10 unidades
+            doc.text(selectedFarmacia, 50, 72); // Subido 10 unidades
+            doc.text('CODIGO FARMACIA:', 14, 77); // Subido 10 unidades
+            doc.text(selectedIdFarmacia, 50, 77); // Subido 10 unidades
 
             // Información de contacto ajustada
             doc.text('CONTACTO:', 200, 51); // Subido 10 unidades
@@ -792,8 +792,8 @@ const LlenarDatos = () => {
             doc.text('0992197358/0992197358', 230, 61); // Subido 10 unidades
 
             // Información de entrega ajustada
-            doc.text('FECHA ENTREGA:', 200, 71); // Subido 10 unidades
-            doc.text('2024/07/23', 260, 71); // Subido 10 unidades
+            doc.text('FECHA PEDIDO:', 200, 71); // Subido 10 unidades
+            doc.text(fecha, 260, 71); // Subido 10 unidades
 
         // Datos de la tabla
         const columns = [
