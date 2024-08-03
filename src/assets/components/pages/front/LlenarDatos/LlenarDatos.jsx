@@ -739,7 +739,7 @@ const LlenarDatos = () => {
         },
     ];
 
-    const generarPDFTest2 = () => {
+    const generarPDF = (cod) => {
         // Crear un nuevo documento jsPDF
         var imgData = "data:image/png;base64,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";
         const doc = new jsPDF({
@@ -751,19 +751,19 @@ const LlenarDatos = () => {
         // Agregar encabezado
             doc.setFontSize(10);
             doc.addImage(imgData, 'PNG', 20, 3, 80, 15)
-            doc.text('FARMANENLACE CIA. LTDA', 14, 26);
-            doc.text('R.U.C 1791984722001', 14, 31);
+            doc.text('GENOMMA LAB', 14, 26);
+            doc.text('R.U.C 0992414499001', 14, 31);
 
             // Información de la orden de compra
             doc.setFontSize(20);
             doc.text('PEDIDO #', 150, 15); // No se modifica
-            doc.text('224167', 230, 15); // No se modifica
+            doc.text(cod, 190, 15); // No se modifica
             doc.setFontSize(10);
             doc.text('MATRIZ', 100, 22);
-            doc.text('Quito:', 90, 30);
-            doc.text('CAP. RAFAEL RAMOS E2-210 Y CASTELLI', 120, 30);
+            doc.text('Encargado/a', 90, 30);
+            doc.text('Veronica Navarrete', 120, 30);
             doc.text('Teléfono:', 90, 34);
-            doc.text('2993100', 120, 34);
+            doc.text('098 0780 407', 120, 34);
             doc.text('Quito, 2024/07/23', 260, 32);
             // Obtener el ancho del documento
             const width = doc.internal.pageSize.getWidth();
@@ -774,7 +774,7 @@ const LlenarDatos = () => {
             // Dibujar una línea horizontal
             doc.line(10, 44, width - 10, 44);
             doc.text('Distribuidor:', 14, 51); // Subido 10 unidades
-            doc.text(distribuidorSeleccionado, 50, 51); // Subido 10 unidades
+            doc.text(distribuidorSeleccionado.toLocaleUpperCase(), 50, 51); // Subido 10 unidades
             doc.text('R.U.C:', 14, 56); // Subido 10 unidades
             doc.text(ruc, 50, 56); // Subido 10 unidades
             doc.text('Direccion:', 14, 60)
@@ -785,60 +785,87 @@ const LlenarDatos = () => {
             doc.text(selectedIdFarmacia, 50, 77); // Subido 10 unidades
 
             // Información de contacto ajustada
-            doc.text('CONTACTO:', 200, 51); // Subido 10 unidades
+            doc.text('CONTACTO: Veronica Navarrete', 200, 51); // Subido 10 unidades
             doc.text('Teléfono:', 200, 56); // Subido 10 unidades
-            doc.text('0992197358/0992197358', 230, 56); // Subido 10 unidades
-            doc.text('FAX:', 200, 61); // Subido 10 unidades
-            doc.text('0992197358/0992197358', 230, 61); // Subido 10 unidades
+            doc.text('098 0780 407', 230, 56); // Subido 10 unidades
+            /* doc.text('FAX:', 200, 61); // Subido 10 unidades
+            doc.text('0992197358/0992197358', 230, 61); // Subido 10 unidades */
 
             // Información de entrega ajustada
             doc.text('FECHA PEDIDO:', 200, 71); // Subido 10 unidades
             doc.text(fecha, 260, 71); // Subido 10 unidades
 
         // Datos de la tabla
-        const columns = [
-        { header: 'CÓD DE BARRA', dataKey: 'codigo' },
-        { header: 'DESCRIPCIÓN', dataKey: 'descripcion' },
-        { header: 'UMEP', dataKey: 'umep' },
-        { header: 'UMB', dataKey: 'umb' },
-        { header: 'CANT', dataKey: 'cant' },
-        { header: 'BONIF', dataKey: 'bonif' },
-        { header: 'V UNIT', dataKey: 'vunit' },
-        { header: 'DESC', dataKey: 'desc' },
-        { header: 'DESC1', dataKey: 'desc1' },
-        { header: 'DESC2', dataKey: 'desc2' },
-        { header: 'TOTAL', dataKey: 'total' }
-        ];
+        const columns = ['Code', 'Nombre', 'PVF', 'Unidades', 'SubTotal Sin Descuento', 'Descuento', 'Valor Descuento', 'SubTotal', 'IVA', 'Total']
 
-        const rows = [
-        { codigo: '650240007828', descripcion: 'ASEPXIA JAB BAR AZUFRE P/GRASA *100G', umep: '20', umb: 'UND', cant: '240', bonif: '0.00', vunit: '3.56', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '654.0800' },
-        { codigo: '650240033695', descripcion: 'ASEPXIA JAB BAR BICARBONATO SODIO *100G', umep: '20', umb: 'PAQ', cant: '120', bonif: '0.00', vunit: '3.56', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '327.0400' },
-        { codigo: '650240035401', descripcion: 'ASEPXIA JAB BAR CARBON DETOX *100G', umep: '6', umb: 'UND', cant: '400', bonif: '0.00', vunit: '3.56', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '1,090.1300' },
-        { codigo: '650240033242', descripcion: 'ASEPXIA POLVO COMPACTO BEIGE CLAR P/M *10G', umep: '6', umb: 'CAJ', cant: '6', bonif: '0.00', vunit: '11.60', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '53.2300' },
-        { codigo: '7798140250371', descripcion: 'CICATRICURE CREMA BEAUTY CARE *50G', umep: '20', umb: 'FCO', cant: '20', bonif: '0.00', vunit: '13.38', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '204.7800' },
-        { codigo: '650240068669', descripcion: 'CICATRICURE CREMA FAC FPS50 PORCELAN*40G', umep: '6', umb: 'CAJ', cant: '40', bonif: '0.00', vunit: '11.60', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '491.7400' },
-        { codigo: '650240041434', descripcion: 'GOICOECHEA CREMA ARNICA MANZANILL *400ML', umep: '12', umb: 'FCO', cant: '84', bonif: '0.00', vunit: '10.30', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '515.8200' },
-        { codigo: '650240058141', descripcion: 'MEDICASPB SHAMPOO FORTE 2% *1000ML', umep: '6', umb: 'CAJ', cant: '200', bonif: '100.00', vunit: '15.38', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '2,335.4300' },
-        { codigo: '650240007408', descripcion: 'SILKA MEDIC GEL PIE PIE ATLETA TUBO*15G', umep: '10', umb: 'UND', cant: '100', bonif: '0.00', vunit: '5.24', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '524.0300' },
-        { codigo: '650240023404', descripcion: 'SUEROX BEBIDA HIDR MARO-AZUL-HIER *630ML', umep: '12', umb: 'CAJ', cant: '720', bonif: '58.00', vunit: '2.50', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '1,388.0200' },
-        { codigo: '650240033788', descripcion: 'TEATRICAL CREMA FAC ANTIRRUGAS *100G', umep: '6', umb: 'CAJ', cant: '288', bonif: '0.00', vunit: '7.85', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '1,729.5100' },
-        { codigo: '650240033723', descripcion: 'TEATRICAL CREMA FAC HUMECTANTE *200G', umep: '6', umb: 'FCO', cant: '48', bonif: '0.00', vunit: '4.88', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '234.2700' },
-        { codigo: '650240033803', descripcion: 'TEATRICAL CREMA FAC HUMECTANTE *200G', umep: '6', umb: 'CAJ', cant: '36', bonif: '0.00', vunit: '3.80', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '136.7900' },
-        { codigo: '650240035159', descripcion: 'TIO NACHO AC ENGROSADOR *415ML', umep: '12', umb: 'UND', cant: '12', bonif: '0.00', vunit: '10.31', desc: '23.50', desc1: '0.00', desc2: '0.00', total: '94.6700' }
-        ];
+        let data = []
 
-        // Agregar la tabla al documento
-        autoTable(doc, {
-        columns,
-        body: rows,
-        startY: 86
-        });
+        dataInsercion.forEach((item) => {
+            let insertData = [`${item.code}`, `${item.nombre}`, `${item.pvpsiniva}`, `${item.unidades}`, `${item.solosubtotal}`,
+                `${item.margen}`, `${item.valorDesc}`, `${item.subtotal}`, `${item.totaliva.toFixed(2)}`, `${item.total}`
+            ]
+            data.push(insertData)
+        })
+
+        doc.autoTable({
+            startY: 86,
+            head: [columns],
+            body: data,
+            didDrawPage: function (data) {
+                // data.cursor.y te da la posición Y final después de dibujar la tabla
+                let finalY = data.cursor.y;
+        
+                // Línea de separación
+                doc.setLineWidth(0.5);
+                doc.line(10, 130, width - 10, 130);
+
+                // Textos de la tabla
+                let startY = 140; // Empezamos después de la línea de separación
+
+                doc.text('OBSERVACIONES:', 10, startY);
+                doc.text(observacion, 50, startY, {maxWidth: 210});
+
+
+                /* doc.line(20, 195, 80, 195);
+                doc.text('FIRMA COMPRADOR', 30, startY + 60);
+                doc.line(120, 195, 170, 195);
+                doc.text('FIRMA PROVEEDOR', 130, startY + 60); */
+
+                /* doc.text('Descto (-):', 150, startY + 20);
+                doc.text('0.00', 180, startY + 20); */
+
+                /* doc.text(`SUMA IVA 15%:`, 150, startY + 30);
+                doc.text('4,013.19', 180, startY + 30); */
+
+                doc.text('SUMA IVA 15%:', 350, startY + 40);
+                doc.text(`$${sumaIva.toFixed(2)}`, 380, startY + 40);
+
+                /* doc.text('Imp Verde:', 150, startY + 50);
+                doc.text('0.00', 180, startY + 50); */
+
+                /* doc.text('IVA:', 150, startY + 60);
+                doc.text('1,573.53', 180, startY + 60); */
+
+                doc.text('SubTotal:', 350, startY + 50);
+                doc.text(`$${total.toFixed(2)}`, 380, startY + 50);
+
+                doc.line(340, startY + 55, 400, startY + 55);
+
+                doc.text('TOTAL:', 350, startY + 60);
+                doc.text(`$${(total + sumaIva).toFixed(2)}`, 380, startY + 60);
+
+                /* doc.text('RECUERDE: LA ORDEN DE COMPRA DEBE SER IGUAL A LA FACTURA EMITIDA POR EL PROVEEDOR EN CANTIDAD, VALOR Y POLÍTICA DE NEGOCIACIÓN. DE NO CUMPLIR CON LO REQUERIDO SE EMITA UNA NOTA DE CRÉDITO.', 10, startY + 90);
+
+                doc.text('"MEJORANDO LA CALIDAD DE NUESTROS PROCESOS Y SERVICIOS"', 10, startY + 110); */
+
+            }
+        })
 
         // Guardar el PDF
-        doc.save('orden_de_compra.pdf');
+        return doc
     }
 
-    const generarPDF = (cod) => {
+    /* const generarPDF = (cod) => {
         const doc = new jsPDF({
             orientation: 'portrait', // 'portrait' o 'landscape'
             unit: 'mm',
@@ -916,7 +943,7 @@ const LlenarDatos = () => {
         })
 
         return doc
-    }
+    } */
 
     const generarPDFOtro = (cod) => {
         const doc = new jsPDF()
@@ -1427,9 +1454,9 @@ const LlenarDatos = () => {
                 <div className="form-group">
                     <button type='button' className='btn btn-primary' disabled={false} onClick={() => reset()}>Reset</button>
                 </div>
-                <div className="form-group">
-                    <button type='button' className='btn btn-danger' disabled={dataInsercion.length === 0} onClick={() => generarPDFTest2()}>Verificar</button>
-                </div>
+                {/* <div className="form-group">
+                    <button type='button' className='btn btn-danger' disabled={dataInsercion.length === 0} onClick={() => generarPDF()}>Verificar</button>
+                </div> */}
             </div>
             <div className='container mt-5'>
                 <DataTable
