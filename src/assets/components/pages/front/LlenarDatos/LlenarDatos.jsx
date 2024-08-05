@@ -933,7 +933,7 @@ const LlenarDatos = () => {
             doc.text(direccion, 50, 60); // Subido 10 unidades
             doc.text('LOCAL:', 14, 72); // Subido 10 unidades
             doc.text(selectedFarmacia, 50, 72); // Subido 10 unidades
-            doc.text('CODIGO FARMACIA:', 14, 77); // Subido 10 unidades
+            doc.text('CODIGO LOCAL:', 14, 77); // Subido 10 unidades
             doc.text(selectedIdFarmacia, 50, 77); // Subido 10 unidades
 
             // Información de contacto ajustada
@@ -1414,7 +1414,7 @@ const LlenarDatos = () => {
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else{
-            arrayMails = ['emilio.segovia@markup.ws']
+            arrayMails = ['emilio.segovia@markup.ws', 'luis.andrade@markup.ws']
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
