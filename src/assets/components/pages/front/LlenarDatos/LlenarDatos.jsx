@@ -37,15 +37,35 @@ const LlenarDatos = () => {
             name: "Code",
             selector: row => row.code
         },
+        distribuidorSeleccionado !== "genomma" && (
+            {
+                name: "Id Code",
+                selector: row => row.idCode
+            }
+        ),
         {
-            name: "Id Code",
-            selector: row => row.idCode
-        },
-        {
-            name: "Nombre",
+            name: "Descripción",
             selector: row => row.nombre,
             width: "280px",
         },
+        distribuidorSeleccionado === "genomma" && (
+            {
+                name: "UMEP",
+                selector: row => row.umep
+            }
+        ),
+        distribuidorSeleccionado === "genomma" && (
+            {
+                name: "UMB",
+                selector: row => row.umb
+            }
+        ),
+        distribuidorSeleccionado === "genomma" && (
+            {
+                name: "BONIF",
+                selector: row => row.bonif
+            }
+        ),
         {
             name: `${distribuidorSeleccionado !== "genomma" ? "PVF" : "Costo"}`,
             selector: row => row.pvpsiniva
@@ -564,7 +584,10 @@ const LlenarDatos = () => {
             pvpsiniva: "$"+producto.PVP_SIN_IVA,
             subtotal: subtotal,
             valorDesc: (soloSubTotal*porcentaje).toFixed(2),
-            total: (parseFloat(subtotal)+t).toFixed(2)
+            total: (parseFloat(subtotal)+t).toFixed(2),
+            umep: 12,
+            umb: "UND",
+            bonif: "0.00"
         } : {
             id: dataInsercion.length === 0 ? dataInsercion.length+1 : dataInsercion[dataInsercion.length-1].id+1,
             code: producto.COD_PRODUCTO,
@@ -930,7 +953,7 @@ const LlenarDatos = () => {
         let data = []
 
         dataInsercion.forEach((item) => {
-            let insertData = [`${item.code}`, `${item.nombre}`, `0`, `0`, `0.00`, `${item.pvpsiniva}`, `${item.unidades}`, `${item.solosubtotal}`,
+            let insertData = [`${item.code}`, `${item.nombre}`, `12`, `UND`, `0.00`, `${item.pvpsiniva}`, `${item.unidades}`, `${item.solosubtotal}`,
                 `${item.margen}`, `${item.valorDesc}`, `${item.subtotal}`, `${item.totaliva.toFixed(2)}`, `${item.total}`
             ]
             data.push(insertData)
@@ -1493,7 +1516,7 @@ const LlenarDatos = () => {
                         
                         {auth.datosUsuario.RUC_CUENTA !== '1790663973001' ? (
                             <div className="relative form-group">
-                                <label htmlFor="farmacia" className="block text-sm font-medium text-gray-700">Nombre Farmacia:</label>
+                                <label htmlFor="farmacia" className="block text-sm font-medium text-gray-700">Nombre Local:</label>
                                 <input type='text' className='form-control mt-1 block w-full p-2 border rounded' 
                                     disabled={!distribuidorSeleccionado} 
                                     onChange={e => onChangeHandlerFarmacia(e.target.value)}
@@ -1534,7 +1557,7 @@ const LlenarDatos = () => {
 
                         {auth.datosUsuario.RUC_CUENTA !== '1790663973001' ? (
                             <div className="form-group">
-                                <label htmlFor="codFarmacia" className="block text-sm font-medium text-gray-700">Cod. Farmacia:</label>
+                                <label htmlFor="codFarmacia" className="block text-sm font-medium text-gray-700">Cod. Local:</label>
                                 <input type="text" className="form-control mt-1 block w-full text-center p-2 border rounded" id="codFarmacia" name="codFarmacia"
                                     value={selectedIdFarmacia === -1 ? "" : selectedIdFarmacia} disabled={true} />
                             </div>
