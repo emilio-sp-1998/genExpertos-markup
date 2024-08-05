@@ -7,7 +7,9 @@ import './Login.css'
 import logo from '../../../../../markup.ico'
 import logo2 from '../../../../../genomma-lab.ico'
 import logo3 from '../../../../../markup2.ico'
+import logo4 from '../../../../../markupBlanco.png'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import Footer from '../../../common/content/Footer';
 const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -85,18 +87,13 @@ const Login = () => {
     }
 
     return(
-        <div className='flex min-h-full flex-col justify-center py-20 px-5 sm:px-2 lg:px-8 bg-lila'>
+        <div className='flex min-h-screen flex-col justify-center lg:px-8'>
             <div className="py-20">
-                <img src={logo3} className='mx-auto object-cover text-center w-80'></img>
+                <img src={logo2} className='mx-auto object-cover text-center w-80'></img>
             </div>
-            {/* <div className="">
-                    <img src={logo}></img>
-                </div>
-                <div className="">
-                    <img src={logo2}></img>
-                </div> */}
-            <div className='py-16 rounded-lg border border-gray-200 w-full sm:w-8/12 md:w-1/3 mx-auto'>
-                <div className='p-3 bg-white w-70'>
+            <div className='py-16 rounded-lg border border-gray-200 w-full sm:w-8/12 md:w-1/3 mx-auto bg-white shadow-lg'>
+                <div className='p-6'>
+                    <h2 className="text-center text-2xl font-bold mb-6">Iniciar sesión</h2>
                     <Formik
                         initialValues={formInitialValues}
                         onSubmit={(values, actions) => {
@@ -110,9 +107,9 @@ const Login = () => {
                             isSubmitting
                         }) => (
                             <Form onSubmit={handleSubmit}>
-                                <div className='mb-3'>
-                                    <label htmlFor="username">Username</label>
-                                    <input id="username" name="username" type="text" placeholder='Enter Username' className='form-content' 
+                                <div className='mb-4'>
+                                    <label htmlFor="username" className="block text-gray-700 font-medium mb-2">Username</label>
+                                    <input id="username" name="username" type="text" placeholder='Enter Username' className='form-content w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                                     value={values.username} onChange={handleChange}/>
                                     {errors.username ? (
                                         <div>
@@ -122,9 +119,9 @@ const Login = () => {
                                         </div>
                                     ) : null}
                                 </div>
-                                <div className='mb-3'>
-                                    <label htmlFor="password">Password</label>
-                                    <input id="password" name="password" type="password" placeholder='Enter Password' className='form-content' 
+                                <div className='mb-4'>
+                                    <label htmlFor="password" className="block text-gray-700 font-medium mb-2">Password</label>
+                                    <input id="password" name="password" type="password" placeholder='Enter Password' className='form-content w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                                     value={values.password} onChange={handleChange}/>
                                     {errors.username ? (
                                         <div>
@@ -134,7 +131,7 @@ const Login = () => {
                                         </div>
                                     ) : null}
                                 </div>
-                                <button type="submit" className='btn btn-success' disabled={isSubmitting}>
+                                <button type="submit" className='w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50' disabled={isSubmitting}>
                                     {isSubmitting ? "Iniciando..." : "Iniciar sesión"}
                                 </button>
                             </Form>
@@ -149,7 +146,9 @@ const Login = () => {
                     )}
                 </div>
             </div>
+            <Footer/>
         </div>
+
     )
 }
 

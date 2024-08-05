@@ -200,71 +200,70 @@ export default function ModalProductos(
 
   return (
     <div className='fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
-      <div className='bg-white p-5 rounded flex flex-col gap-5 justify-center' style={{
-          width: 600,
-          height: 600,
-          backgroundColor: 'steelblue',
-          style: "border: 5px outset red;"
-        }}>
-        <div className="col-md-6">
+      <div className='bg-white p-8 rounded-lg shadow-lg flex flex-col gap-6' style={{ width: '80%', maxWidth: '600px', height: 'auto', backgroundColor: 'steelblue', border: '5px outset red' }}>
           <div className="form-group">
-            <label htmlFor="fecha">Nombre Producto:</label>
-            <input type='text' className='form-control' 
-              onChange={e => onChangeHandlerProducto(e.target.value)}
-              value={selectedProducto}></input>
-              {suggestionsProducto && suggestionsProducto.map((suggestion) => {
-                return(
-                  <div key={suggestion.id}
-                      className='suggestion col-md-12 justify-content-md-center'
-                      onClick={() => onSuggestHandlerProducto(suggestion.nombre_producto, suggestion.id)}
-                  >
-                      {suggestion.nombre_producto}</div>
-                )
-              })}
+              <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">Nombre Producto:</label>
+              <input type='text' className='form-control mt-1 block w-full p-2 border rounded'
+                  onChange={e => onChangeHandlerProducto(e.target.value)}
+                  value={selectedProducto} />
+              <div className="relative">
+                  {suggestionsProducto && suggestionsProducto.length > 0 && (
+                      <div className="absolute z-10 w-full bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-y-auto">
+                          {suggestionsProducto.map((suggestion) => (
+                              <div key={suggestion.id}
+                                  className='suggestion p-2 hover:bg-gray-200 cursor-pointer'
+                                  onClick={() => onSuggestHandlerProducto(suggestion.nombre_producto, suggestion.id)}
+                              >
+                                  {suggestion.nombre_producto}
+                              </div>
+                          ))}
+                      </div>
+                  )}
+              </div>
           </div>
-        </div>
-        <div className="col-md-6 flex">
-          <div className="form-group">
-              <label htmlFor="fecha">CANTIDAD:</label>
-              <input type="text" className="form-control text-center" id="cantidad" name="cantidad" value={cantidad} 
-              onChange={(e) => setCantidad(e.target.value)}
-              disabled={selectedIdProducto === -1}/>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="form-group">
+                  <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">CANTIDAD:</label>
+                  <input type="text" className="form-control mt-1 block w-full text-center p-2 border rounded" id="cantidad" name="cantidad" value={cantidad}
+                      onChange={(e) => setCantidad(e.target.value)}
+                      disabled={selectedIdProducto === -1} />
+              </div>
+              <div className="form-group">
+                  <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">DESCUENTO:</label>
+                  <input type="text" className="form-control mt-1 block w-full text-center p-2 border rounded" id="descuento" name="descuento"
+                      value={productos ? parseInt(porcentaje * 100) + "%" : ""} disabled={true} />
+              </div>
+              {auth.datosUsuario.RUC_CUENTA == '1790663973001' && (
+                  <div className="form-group">
+                      <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">STOCK:</label>
+                      <input type="text" className="form-control mt-1 block w-full text-center p-2 border rounded" id="stock" name="stock"
+                          value={productos ? (productos.STOCK < 0 ? 0 : productos.STOCK) : ""} disabled={true} />
+                  </div>
+              )}
+              <div className="form-group">
+                  <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">PVP (SIN IVA):</label>
+                  <input type="text" className="form-control mt-1 block w-full text-center p-2 border rounded" id="pvp" name="pvp"
+                      value={Object.keys(productos).length !== 0 ? "$" + productos.PVP_SIN_IVA : ""} disabled={true} />
+              </div>
+              <div className="form-group">
+                  <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">Subtotal:</label>
+                  <input type="text" className="form-control mt-1 block w-full text-center p-2 border rounded" id="subtotal" name="subtotal"
+                      value={cantidad ? "$" + parseFloat((productos.PVP_SIN_IVA * cantidad) - ((productos.PVP_SIN_IVA * cantidad) * porcentaje)).toFixed(2) : ""} disabled={true} />
+              </div>
           </div>
-          <div className="form-group">
-              <label htmlFor="fecha">DESCUENTO:</label>
-              <input type="text" className="form-control text-center" id="descuento" name="descuento" 
-              value={productos ? parseInt(porcentaje*100) + "%" : ""} disabled={true}/>
+          <div className="flex justify-end gap-4 mt-6">
+              <button className="btn1 btn btn-danger p-2 bg-red-500 text-white rounded" onClick={() => { closeModal(false); setProductos({}); setCantidad(0); setPorcentaje(0) }}>CERRAR</button>
+              <button className='btn btn-success p-2 bg-green-500 text-white rounded' disabled={subtotal == 0 || bloquear || Object.keys(productos).length === 0} onClick={() => agregarProductoCola()}>AGREGAR</button>
           </div>
-          {auth.datosUsuario.RUC_CUENTA == '1790663973001' && (
-            <div className="form-group">
-              <label htmlFor="fecha">STOCK:</label>
-              <input type="text" className="form-control text-center" id="stock" name="stock" 
-              value={productos ? (productos.STOCK < 0 ? 0 : productos.STOCK) : ""} disabled={true}/>
-            </div>
+          {bloquear && (
+              <div>
+                  <p className="text-sm font-normal text-red-700 mt-1">
+                      {textoBloquear}
+                  </p>
+              </div>
           )}
-        </div>
-        <div className="col-md-6 flex">
-          <div className="form-group">
-                <label htmlFor="fecha">PVP (SIN IVA):</label>
-                <input type="text" className="form-control text-center" id="pvp" name="pvp" 
-                value={Object.keys(productos).length !== 0 ? "$"+productos.PVP_SIN_IVA : ""} disabled={true}/>
-          </div>
-          <div className="form-group">
-              <label htmlFor="fecha">Subtotal:</label>
-              <input type="text" className="form-control text-center" id="subtotal" name="subtotal" 
-              value={cantidad ? "$"+parseFloat((productos.PVP_SIN_IVA*cantidad)-((productos.PVP_SIN_IVA*cantidad)*porcentaje)).toFixed(2):""} disabled={true}/>
-          </div>
-        </div>
-        <button className="btn1 btn btn-danger" onClick={() => {closeModal(false); setProductos({}); setCantidad(0); setPorcentaje(0)}}>CERRAR</button>
-        <button className='btn btn-success' disabled={subtotal == 0 || bloquear || Object.keys(productos).length === 0 ? true : false} onClick={() => agregarProductoCola()}>AGREGAR</button>
-        {bloquear ? (
-          <div>
-            <p className="text-sm font-normal text-red-700 mt-1">
-                {textoBloquear}
-            </p>
-          </div>
-        ) : null}
       </div>
-    </div>
+  </div>
+
   )
 }
