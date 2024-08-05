@@ -1444,7 +1444,9 @@ const LlenarDatos = () => {
                             <option value="leterago">LETERAGO</option>
                             <option value="quifatex">QUIFATEX</option>
                             <option value="difare">DIFARE</option>
-                            <option value="genomma">PRIMAX</option>
+                            {auth.datosUsuario.VALIDAR_DIST !== "GENEXPERTOS" && (
+                                <option value="genomma">PRIMAX</option>
+                            )}
                             {/* <option value="farmaenlace">FARMAENLACE</option> */}
                         </select>
                     </div>
