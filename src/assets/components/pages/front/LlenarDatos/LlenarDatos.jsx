@@ -1604,7 +1604,7 @@ const LlenarDatos = () => {
             <div className='buttons-div'>
                 <div className="form-group">
                     <button type='button' className='btn btn-success' disabled={selectedIdFarmacia === -1 && selectedIdPdv === -1}
-                        onClick={() => setOpenModal(true)}>Nuevo</button>
+                        onClick={() => setOpenModal(true)}>Agregar Producto</button>
                 </div>
                 {/* <div className="form-group">
                     <button type='button' className='btn btn-dark' disabled={dataInsercion.length === 0} onClick={() => insertarRegistroFunc()}>Enviar</button>
@@ -1665,7 +1665,8 @@ const LlenarDatos = () => {
             dataProductos={dataInsercion}/>}
 
         {openAgregarCliente && <AgregarCliente
-            closeModal={setOpenAgregarCliente}/>}
+            closeModal={setOpenAgregarCliente}
+            isOpen={openAgregarCliente}/>}
         </>
     )
 }
