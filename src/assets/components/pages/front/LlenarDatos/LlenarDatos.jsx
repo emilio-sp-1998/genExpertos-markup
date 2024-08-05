@@ -17,6 +17,7 @@ import { useState } from 'react';
 import logo from '../../../../../markup.ico'
 import logo2 from '../../../../../genomma-lab.ico'
 import logo3 from '../../../../../gloria.ico'
+import logoGen from '../../../../../genomma.png'
 import swal from 'sweetalert';
 import { FaTrash } from 'react-icons/fa';
 import {jsPDF} from 'jspdf';
@@ -28,6 +29,8 @@ const LlenarDatos = () => {
     const dispatch = useDispatch();
 
     const auth = useSelector((state) => state.auth);
+
+    const [distribuidorSeleccionado, setDistribuidorSeleccionado] = useState("");
 
     const columnsInsercion = [
         {
@@ -44,7 +47,7 @@ const LlenarDatos = () => {
             width: "280px",
         },
         {
-            name: "PVF",
+            name: `${distribuidorSeleccionado !== "genomma" ? "PVF" : "Costo"}`,
             selector: row => row.pvpsiniva
         },
         {
@@ -143,7 +146,6 @@ const LlenarDatos = () => {
     const [alertType, setAlertType] = useState(1);
     const [alertMessage, setAlertMessage] = useState("");
 
-    const [distribuidorSeleccionado, setDistribuidorSeleccionado] = useState("");
     const [farmacias, setFarmacias] = useState([]);
     const [pdvs, setPdvs] = useState([]);
     const [productos, setProductos] = useState([]);
@@ -1453,7 +1455,7 @@ const LlenarDatos = () => {
                 )}
 
                 <div className="flex-1 flex justify-center md:justify-start">
-                    <img src={logo} alt="Logo" className="w-50 h-auto"/>
+                    <img src={logoGen} alt="Logo" className="w-50 h-auto"/>
                 </div>
 
                 {auth.datosUsuario.RUC_CUENTA === '1790663973001' ? (
@@ -1462,7 +1464,7 @@ const LlenarDatos = () => {
                     </div>
                 ) : (
                     <div className="flex-1 flex justify-center md:justify-start">
-                        <img src={logo2} alt="Logo 2" className="w-50 h-auto"/>
+                        <img src={logo} alt="Logo 2" className="w-50 h-auto"/>
                     </div>
                 )}
                 
