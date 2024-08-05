@@ -903,19 +903,16 @@ const LlenarDatos = () => {
         // Agregar encabezado
             doc.setFontSize(10);
             doc.addImage(imgData, 'PNG', 20, 3, 80, 15)
-            doc.text('GENOMMA LAB', 14, 26);
-            doc.text('R.U.C 0992414499001', 14, 31);
+            doc.text('ATIMASA S.A.', 14, 26);
+            doc.text('R.U.C 0991331859001', 14, 31);
 
             // Información de la orden de compra
             doc.setFontSize(20);
             doc.text('ORDEN DE COMPRA #', 150, 15); // No se modifica
             doc.text(cod, 260, 15); // No se modifica
             doc.setFontSize(10);
-            doc.text('MATRIZ', 100, 22);
-            doc.text('Encargado/a', 90, 30);
-            doc.text('Veronica Navarrete', 120, 30);
-            doc.text('Teléfono:', 90, 34);
-            doc.text('098 0780 407', 120, 34);
+            doc.text('Quito, Av. 12 de Octubre y Lizardo Garcia', 90, 30);
+            doc.text('Teléfono: 04 2 590230', 90, 34);
             doc.text('Quito, 2024/07/23', 260, 32);
             // Obtener el ancho del documento
             const width = doc.internal.pageSize.getWidth();
@@ -926,34 +923,32 @@ const LlenarDatos = () => {
             // Dibujar una línea horizontal
             doc.line(10, 44, width - 10, 44);
             doc.text('Proveedor:', 14, 51); // Subido 10 unidades
-            doc.text('PRIMAX', 50, 51); // Subido 10 unidades
+            doc.text('GENOMMALAB ECUADOR S.A', 50, 51); // Subido 10 unidades
             doc.text('R.U.C:', 14, 56); // Subido 10 unidades
-            doc.text(ruc, 50, 56); // Subido 10 unidades
+            doc.text("0992414499001", 50, 56); // Subido 10 unidades
             doc.text('Direccion:', 14, 60)
-            doc.text(direccion, 50, 60); // Subido 10 unidades
+            doc.text("AV. JOSÉ S CASTILLO Y JUSTINO CORNEJO", 50, 60); // Subido 10 unidades
             doc.text('LOCAL:', 14, 72); // Subido 10 unidades
             doc.text(selectedFarmacia, 50, 72); // Subido 10 unidades
-            doc.text('CODIGO LOCAL:', 14, 77); // Subido 10 unidades
-            doc.text(selectedIdFarmacia, 50, 77); // Subido 10 unidades
+            doc.text('DIRECCIÓN LOCAL: ', 5, 77); // Subido 10 unidades
+            doc.text(direccion, 50, 77); // Subido 10 unidades
 
             // Información de contacto ajustada
-            doc.text('CONTACTO: Veronica Navarrete', 200, 51); // Subido 10 unidades
-            doc.text('Teléfono:', 200, 56); // Subido 10 unidades
-            doc.text('098 0780 407', 230, 56); // Subido 10 unidades
-            /* doc.text('FAX:', 200, 61); // Subido 10 unidades
-            doc.text('0992197358/0992197358', 230, 61); // Subido 10 unidades */
+            doc.text('CONTACTO: Stephanie Corral', 300, 51); // Subido 10 unidades
+            doc.text('Teléfono:', 300, 56); // Subido 10 unidades
+            doc.text('CORREO ELECTRÓNICO:', 300, 61); // Subido 10 unidades
 
             // Información de entrega ajustada
-            doc.text('FECHA PEDIDO:', 200, 71); // Subido 10 unidades
-            doc.text(fecha, 260, 71); // Subido 10 unidades
+            doc.text('FECHA PEDIDO:', 300, 71); // Subido 10 unidades
+            doc.text(fecha, 360, 71); // Subido 10 unidades
 
         // Datos de la tabla
-        const columns = ['Code', 'Descripción', 'UMEP', 'UMB', 'BONIF', 'Costo', 'Unidades', 'SubTotal Sin Descuento', 'Descuento', 'Valor Descuento', 'SubTotal', 'IVA', 'Total']
+        const columns = ['Codigo', 'Descripción', 'UMEP', 'UMB', 'Unidades', 'V/UNIT', 'SubTotal Sin Descuento', 'Descuento', 'Valor Descuento', 'SubTotal', 'IVA', 'Total']
 
         let data = []
 
         dataInsercion.forEach((item) => {
-            let insertData = [`${item.code}`, `${item.nombre}`, `12`, `UND`, `0.00`, `${item.pvpsiniva}`, `${item.unidades}`, `${item.solosubtotal}`,
+            let insertData = [`${item.code}`, `${item.nombre}`, `12`, `UND`, `${item.unidades}`, `${item.pvpsiniva}`, `${item.solosubtotal}`,
                 `${item.margen}`, `${item.valorDesc}`, `${item.subtotal}`, `${item.totaliva.toFixed(2)}`, `${item.total}`
             ]
             data.push(insertData)
@@ -1613,7 +1608,7 @@ const LlenarDatos = () => {
                     <button type='button' className='btn btn-primary' disabled={false} onClick={() => reset()}>Reset</button>
                 </div>
                 {/* <div className="form-group">
-                    <button type='button' className='btn btn-danger' disabled={dataInsercion.length === 0} onClick={() => generarPDF()}>Verificar</button>
+                    <button type='button' className='btn btn-danger' disabled={dataInsercion.length === 0} onClick={() => generarPDFPrimax("666").save("testpdf.pdf")}>Verificar</button>
                 </div> */}
             </div>
             <div className='container mt-5'>
