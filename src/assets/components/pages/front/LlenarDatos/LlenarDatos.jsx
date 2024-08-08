@@ -1409,7 +1409,7 @@ const LlenarDatos = () => {
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else{
-            arrayMails = ['emilio.segovia@markup.ws', 'luis.andrade@markup.ws']
+            arrayMails = ['emilio.segovia@markup.ws', 'luis.andrade@markup.ws', 'stephanie.corral@genommalab.com', 'juanfrancisco@markup.ws']
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
@@ -1461,11 +1461,21 @@ const LlenarDatos = () => {
                         <label htmlFor="distribuidor" className="block text-sm font-medium text-gray-700">Seleccionar distribuidor:</label>
                         <select className="form-select mt-1 block w-full p-2 border rounded" id="distribuidor" value={distribuidorSeleccionado} onChange={handleChange}>
                             <option value="">Seleccionar...</option>
-                            <option value="leterago">LETERAGO</option>
-                            <option value="quifatex">QUIFATEX</option>
-                            <option value="difare">DIFARE</option>
-                            {auth.datosUsuario.VALIDAR_DIST !== "GENEXPERTOS" && (
+                            {auth.datosUsuario.VALIDAR_DIST === "GENEXPERTOS" ? (
+                                <>
+                                    <option value="leterago">LETERAGO</option>
+                                    <option value="quifatex">QUIFATEX</option>
+                                    <option value="difare">DIFARE</option>
+                                </>
+                            ) : auth.datosUsuario.VALIDAR_DIST === "PRIMAX" ? (
                                 <option value="genomma">PRIMAX</option>
+                            ) : (
+                                <>
+                                    <option value="leterago">LETERAGO</option>
+                                    <option value="quifatex">QUIFATEX</option>
+                                    <option value="difare">DIFARE</option>
+                                    <option value="genomma">PRIMAX</option>
+                                </>
                             )}
                             {/* <option value="farmaenlace">FARMAENLACE</option> */}
                         </select>
