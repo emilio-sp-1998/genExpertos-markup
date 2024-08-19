@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import "./LlenarDatos.css"
 import { nombreFarmacia } from '../../../../redux/actions/authActions';
 import { obtenerFarmacia, obtenerVendedor, 
-    listarProductos, enviarMailFormulario, 
+    listarProductos, enviarMailFormulario, enviarMailFormularioMultiple, 
     insertarRegistro, enviarMailFormulario2, 
     obtenerUltimoRegistro, listarPDVs, obtenerPdv, 
     listarProductosPdv, actualizarStockGloria } from '../../../../redux/actions/pedidosActions';
@@ -1409,8 +1409,14 @@ const LlenarDatos = () => {
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else{
+            const datosLocalProducto = {
+                Local: 'Sana Sana',
+                CodigoLocal: '123',
+                RUC: '1723456277001',
+                Producto: 'Aspirina'
+            };
             arrayMails = ['emilio.segovia@markup.ws', 'luis.andrade@markup.ws', 'stephanie.corral@genommalab.com', 'juanfrancisco@markup.ws']
-            dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+            dispatch(enviarMailFormularioMultiple(asunto, arrayMails, [], cuerpo, datosLocalProducto, pdfBase64, `Ventas_${cod}`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })

@@ -292,6 +292,38 @@ export function enviarMailFormulario(asunto, correodest, correocc, cuerpo, adjun
   }
 }
 
+export function enviarMailFormularioMultiple(asunto, correodest, correocc, cuerpo, datosExcel, pdfBase64, nombreArchivo) {
+  try{
+    return async function (dispatch) {
+      let token = localStorage.getItem("token");
+      dispatch({ type: "ENVIAR_MAIL_MULTIPLE" });
+      try{
+        const res = await axios.post(
+          server + "/pedidos/enviarMailFormularioMultiple",
+          {asunto, correodest, correocc, cuerpo, datosExcel, pdfBase64, nombreArchivo},
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        dispatch({ type: "ENVIAR_MAIL_MULTIPLE_SUCCESS", payload: res.data });
+        return res;
+      }catch(e){
+        dispatch({ type: "ENVIAR_MAIL_MULTIPLE_FAIL", payload: {} });
+        let res = {};
+        if (!!e.response) {
+          res = e.response;
+        }
+        return res;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export function enviarMailFormulario2(asunto, correodest, cuerpo, adjunto, filename) {
   try{
     return async function (dispatch) {
