@@ -1410,10 +1410,14 @@ const LlenarDatos = () => {
             })
         }else{
             const datosLocalProducto = {
-                Local: 'Sana Sana',
-                CodigoLocal: '123',
-                RUC: '1723456277001',
-                Producto: 'Aspirina'
+                Distribuidor: 'ATIMASA S.A.',
+                'RUC Distribuidor': '0991331859001',
+                Proveedor: 'GENOMMALAB ECUADOR S.A.',
+                'RUC Proveedor': '0992414499001',
+                Direccion: 'AV. JOSÉ S CASTILLO Y JUSTINO CORNEJO',
+                Local: selectedFarmacia,
+                'Direccion Local': direccion,
+                'Fecha Pedido': fecha
             };
             arrayMails = ['emilio.segovia@markup.ws', 'luis.andrade@markup.ws', 'stephanie.corral@genommalab.com', 'juanfrancisco@markup.ws']
             dispatch(enviarMailFormularioMultiple(asunto, arrayMails, [], cuerpo, datosLocalProducto, pdfBase64, `Ventas_${cod}`)).then((res) => {

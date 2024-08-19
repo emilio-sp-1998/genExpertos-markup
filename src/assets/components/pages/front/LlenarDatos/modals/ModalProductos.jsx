@@ -253,7 +253,7 @@ export default function ModalProductos(
           </div>
           <div className="flex justify-end gap-4 mt-6">
               <button className="btn1 btn btn-danger p-2 bg-red-500 text-white rounded" onClick={() => { closeModal(false); setProductos({}); setCantidad(0); setPorcentaje(0) }}>CERRAR</button>
-              <button className='btn btn-success p-2 bg-green-500 text-white rounded' disabled={subtotal == 0 || bloquear || Object.keys(productos).length === 0} onClick={() => agregarProductoCola()}>AGREGAR</button>
+              <button className='btn btn-success p-2 bg-green-500 text-white rounded' disabled={((subtotal == 0 || !subtotal) || cantidad == 0) || bloquear || Object.keys(productos).length === 0} onClick={() => agregarProductoCola()}>AGREGAR</button>
           </div>
           {bloquear && (
               <div>
