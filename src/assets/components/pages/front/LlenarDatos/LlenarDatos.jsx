@@ -130,7 +130,7 @@ const LlenarDatos = () => {
         setTotal(total-elemento.subtotal)
         setSumaIva(sumaIva - parseFloat(elemento.totaliva))
         setDataInsercion(p => p.filter(prod => prod.id !== id))
-        if(elemento.marca === "SUEROX" && elemento.tipoProducto === "leterago"){
+        if(elemento.marca === "SUEROX" && (elemento.tipoProducto === "leterago" || elemento.tipoProducto === "leterago_franquicia")){
             setSumaSuerox(sumaSuerox-parseInt(elemento.unidades))
             setRestaSuerox(true)
         }
@@ -568,7 +568,7 @@ const LlenarDatos = () => {
             id: dataInsercion.length === 0 ? dataInsercion.length+1 : dataInsercion[dataInsercion.length-1].id+1,
             tipoProducto: distribuidorSeleccionado,
             code: producto.SAP,
-            idCode: distribuidorSeleccionado === "leterago" ? 
+            idCode: (distribuidorSeleccionado === "leterago" || distribuidorSeleccionado === "leterago_franquicia") ? 
                 producto.IDPROD_LETERAGO : distribuidorSeleccionado === "quifatex" ? 
                 producto.IDPROD_QUIFATEX : distribuidorSeleccionado === "difare" ? 
                 producto.IDPROD_DIFARE : distribuidorSeleccionado === "genomma" ? 
@@ -617,7 +617,7 @@ const LlenarDatos = () => {
     }
 
     useEffect(() => {
-        const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && elemento.tipoProducto === "leterago")
+        const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && (elemento.tipoProducto === "leterago" || elemento.tipoProducto === "leterago_franquicia"))
         let suma = 0
         sueroxProductos.forEach((item) => {
             if(!restaSuerox) {
@@ -631,7 +631,7 @@ const LlenarDatos = () => {
     }, [dataInsercion])
 
     useEffect(() => {
-        const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && elemento.tipoProducto === "leterago")
+        const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && (elemento.tipoProducto === "leterago" || elemento.tipoProducto === "leterago_franquicia"))
         if(sumaSuerox < 6){
             let totalCambio = parseFloat(total)
             let totalIVA = parseFloat(sumaIva)
@@ -1408,6 +1408,12 @@ const LlenarDatos = () => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
+        }else if(distribuidorSeleccionado === "leterago_franquicia"){
+            arrayMails = ['emilio.segovia@markup.ws']
+            dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
+                else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
+            })
         }else{
             const datosLocalProducto = {
                 Distribuidor: 'ATIMASA S.A.',
@@ -1482,6 +1488,7 @@ const LlenarDatos = () => {
                             ) : (
                                 <>
                                     <option value="leterago">LETERAGO</option>
+                                    <option value="leterago_franquicia">LETERAGO FRANQUICIA</option>
                                     <option value="quifatex">QUIFATEX</option>
                                     <option value="difare">DIFARE</option>
                                     <option value="genomma">PRIMAX</option>

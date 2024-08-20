@@ -183,6 +183,7 @@ export default function AgregarCliente(
                     <select className="form-select mt-1 block w-full p-2 border rounded" id="distribuidor" value={dis} onChange={handleChangeDistribuidor}>
                     <option value="">Seleccionar...</option>
                     <option value="leterago">LETERAGO</option>
+                    <option value="leterago_franquicia">LETERAGO FRANQUICIA</option>
                     <option value="quifatex">QUIFATEX</option>
                     <option value="difare">DIFARE</option>
                     </select>
