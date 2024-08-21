@@ -143,7 +143,7 @@ export default function ModalProductos(
             if(res.status === 200){
                 const data = res.data
                 console.log(distribuidorSeleccionado)
-                if (distribuidorSeleccionado === 'leterago' || distribuidorSeleccionado === 'leterago_franquicia') {
+                if (distribuidorSeleccionado === 'leterago') {
                   setBloquear(dataProductos.find(p => p.idCode === data.IDPROD_LETERAGO))
                   setTextoBloquear(dataProductos.find(p => p.idCode === data.IDPROD_LETERAGO) ? "Este Producto ya está insertado" : "")
                 }

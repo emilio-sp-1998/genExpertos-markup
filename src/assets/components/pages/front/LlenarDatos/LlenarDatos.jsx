@@ -130,7 +130,7 @@ const LlenarDatos = () => {
         setTotal(total-elemento.subtotal)
         setSumaIva(sumaIva - parseFloat(elemento.totaliva))
         setDataInsercion(p => p.filter(prod => prod.id !== id))
-        if(elemento.marca === "SUEROX" && (elemento.tipoProducto === "leterago" || elemento.tipoProducto === "leterago_franquicia")){
+        if(elemento.marca === "SUEROX" && elemento.tipoProducto === "leterago"){
             setSumaSuerox(sumaSuerox-parseInt(elemento.unidades))
             setRestaSuerox(true)
         }
@@ -355,7 +355,7 @@ const LlenarDatos = () => {
             if (res.status) {
                 if(res.status === 200){
                     const data = res.data
-                    setRuc(data.RUC.length === 13 ? data.RUC : "0"+data.RUC)
+                    if(data.RUC) setRuc(data.RUC.length === 13 ? data.RUC : "0"+data.RUC)
                     setDireccion(data.DIRECCION)
                     setProvincia(data.PROVINCIA)
                 }else if(res.status === 401){
@@ -429,6 +429,8 @@ const LlenarDatos = () => {
                     let agregarFarmacia = []
 
                     data.forEach((item) => {
+                        console.log(item)
+                        item.RUC = item.RUC ? item.RUC : ""
                         const json = {
                             idCliente: item.CLIENTE,
                             razon_social: item.CLIENTE ? item.CLIENTE +" - "+item.RAZON_SOCIAL+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC) :
@@ -568,9 +570,9 @@ const LlenarDatos = () => {
             id: dataInsercion.length === 0 ? dataInsercion.length+1 : dataInsercion[dataInsercion.length-1].id+1,
             tipoProducto: distribuidorSeleccionado,
             code: producto.SAP,
-            idCode: (distribuidorSeleccionado === "leterago" || distribuidorSeleccionado === "leterago_franquicia") ? 
+            idCode: distribuidorSeleccionado === "leterago" ? 
                 producto.IDPROD_LETERAGO : distribuidorSeleccionado === "quifatex" ? 
-                producto.IDPROD_QUIFATEX : distribuidorSeleccionado === "difare" ? 
+                producto.IDPROD_QUIFATEX : (distribuidorSeleccionado === "difare" || distribuidorSeleccionado === "difare_franquicia") ? 
                 producto.IDPROD_DIFARE : distribuidorSeleccionado === "genomma" ? 
                 producto.IDPROD_GENOMMA : producto.IDPROD_FARMAENLACE,
             nombre: producto.DESCRIPCION,
@@ -617,7 +619,7 @@ const LlenarDatos = () => {
     }
 
     useEffect(() => {
-        const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && (elemento.tipoProducto === "leterago" || elemento.tipoProducto === "leterago_franquicia"))
+        const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && elemento.tipoProducto === "leterago")
         let suma = 0
         sueroxProductos.forEach((item) => {
             if(!restaSuerox) {
@@ -631,7 +633,7 @@ const LlenarDatos = () => {
     }, [dataInsercion])
 
     useEffect(() => {
-        const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && (elemento.tipoProducto === "leterago" || elemento.tipoProducto === "leterago_franquicia"))
+        const sueroxProductos = dataInsercion.filter(elemento => elemento.marca === "SUEROX" && elemento.tipoProducto === "leterago")
         if(sumaSuerox < 6){
             let totalCambio = parseFloat(total)
             let totalIVA = parseFloat(sumaIva)
@@ -1408,7 +1410,7 @@ const LlenarDatos = () => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
-        }else if(distribuidorSeleccionado === "leterago_franquicia"){
+        }else if(distribuidorSeleccionado === "difare_franquicia"){
             arrayMails = ['emilio.segovia@markup.ws']
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
@@ -1485,12 +1487,16 @@ const LlenarDatos = () => {
                                 </>
                             ) : auth.datosUsuario.VALIDAR_DIST === "PRIMAX" ? (
                                 <option value="genomma">PRIMAX</option>
+                            ) : auth.datosUsuario.VALIDAR_DIST === "DIFARE_FRANQUICIA" ? (
+                                <>
+                                    <option value="difare_franquicia">DIFARE FRANQUICIA</option>
+                                </>
                             ) : (
                                 <>
                                     <option value="leterago">LETERAGO</option>
-                                    <option value="leterago_franquicia">LETERAGO FRANQUICIA</option>
                                     <option value="quifatex">QUIFATEX</option>
                                     <option value="difare">DIFARE</option>
+                                    <option value="difare_franquicia">DIFARE FRANQUICIA</option>
                                     <option value="genomma">PRIMAX</option>
                                 </>
                             )}
