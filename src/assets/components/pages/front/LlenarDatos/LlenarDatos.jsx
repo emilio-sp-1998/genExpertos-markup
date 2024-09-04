@@ -732,11 +732,11 @@ const LlenarDatos = () => {
                 console.log("Quitar Valor: "+ quitarValor.toFixed(2))
                 const index = dataInsercion.findIndex(p => p.idCode === item.idCode)
                 if (index !== -1) {
-                    dataInsercion[index].margen = "25%"
+                    dataInsercion[index].margen = "26%"
                     let valorConDolar = item.solosubtotal;
                     let valorSinDolar = valorConDolar.replace('$', ''); // Elimina el signo de dólar
                     let valorFloat = parseFloat(valorSinDolar).toFixed(2);
-                    let sub = (valorFloat - valorFloat*0.25).toFixed(2)
+                    let sub = (valorFloat - valorFloat*0.26).toFixed(2)
                     dataInsercion[index].subtotal = sub
                     dataInsercion[index].totaliva = sub*0.15
                     console.log("asdasdas: "+ sub)
