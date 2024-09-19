@@ -433,8 +433,8 @@ const LlenarDatos = () => {
                         item.RUC = item.RUC ? item.RUC : ""
                         const json = {
                             idCliente: item.CLIENTE,
-                            razon_social: item.CLIENTE ? item.CLIENTE +" - "+item.RAZON_SOCIAL+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC) :
-                                            item.RAZON_SOCIAL+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC)
+                            razon_social: item.CLIENTE ? item.CLIENTE +" - "+item.NOMBRE_PDV+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC) :
+                                            item.NOMBRE_PDV+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC)
                         }
                         agregarFarmacia.push(json)
                     })
