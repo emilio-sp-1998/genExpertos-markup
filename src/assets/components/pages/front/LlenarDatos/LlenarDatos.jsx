@@ -1522,9 +1522,9 @@ const LlenarDatos = () => {
                 <div className="flex-1 flex justify-center md:justify-end gap-4">
                     <button type="button" className="btn btn-danger px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded" onClick={() => logout()}>Logout</button>
                     
-                    {auth.datosUsuario.RUC_CUENTA !== '1790663973001' && (
+                    {/* {auth.datosUsuario.RUC_CUENTA !== '1790663973001' && (
                         <button type="button" className="btn btn-success px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded" onClick={() => setOpenAgregarCliente(true)}>Nuevo Cliente</button>
-                    )}
+                    )} */}
                 </div>
             </div>
 
