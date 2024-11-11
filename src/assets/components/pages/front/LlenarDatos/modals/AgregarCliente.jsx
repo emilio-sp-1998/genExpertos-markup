@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { agregarCliente, verificarClienteExistente, verificarRucClienteExistente } from '../../../../../redux/actions/pedidosActions';
+import { agregarCliente, verificarClienteExistente, verificarRucClienteExistente, listarCiudades } from '../../../../../redux/actions/pedidosActions';
 import swal from 'sweetalert';
 import "./AgregarCliente.css"
 
@@ -23,6 +23,12 @@ export default function AgregarCliente(
     const [provincia, setProvincia] = useState("");
     const [parroquia, setParroquia] = useState("");
     const [direccion, setDireccion] = useState("");
+
+    const [ciudades, setCiudades] = useState([]);
+    
+    const [selectedCiudad, setSelectedCiudad] = useState([]);
+    const [selectedIdCiudad, setSelectedIdCiudad] = useState(-1);
+    const [suggestionsCiudad, setSuggestionsCiudad] = useState([]);
 
     const [valuesForm, setValuesForm] = useState({});
 
@@ -105,6 +111,61 @@ export default function AgregarCliente(
         })
     }
 
+    useEffect(() => {
+        listarCiudadesFunc()
+    }, [])
+
+    const listarCiudadesFunc = () => {
+        dispatch(listarCiudades()).then((res) => {
+            if (res.status) {
+                if(res.status === 200){
+                    const data = res.data
+                    
+                    let agregarCiudad = []
+
+                    data.forEach((item) => {
+                        const json = {
+                            idCiudad: item.COD_CIUDAD,
+                            nombre_ciudad: item.CIUDAD
+                        }
+                        agregarCiudad.push(json)
+                    })
+                    console.log(agregarCiudad)
+                    setCiudades(agregarCiudad)
+                }else if(res.status === 401){
+                    navigate("/logout");
+                }else{
+                    setShowAlert(true);
+                    setAlertType(2);
+                    setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+                }
+            }else{
+                setShowAlert(true);
+                setAlertType(2);
+                setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
+            }
+        })
+    }
+
+    const onChangeHandlerCiudad = (ciudad) => {
+        let matches = []
+        if(ciudad.length>0){
+            matches = ciudades.filter((ciu) => {
+                const regex = new RegExp(`${ciudad}`, "gi")
+                return ciu.nombre_ciudad.match(regex)
+            })
+        }
+        matches = matches.slice(0, 10)
+        setSuggestionsCiudad(matches)
+        setSelectedCiudad(ciudad)
+    }
+
+    const onSuggestHandlerCiudad = (farmacia, id) => {
+        setSelectedCiudad(farmacia)
+        setSelectedIdCiudad(id)
+        setSuggestionsCiudad([])
+    }
+
     const mostrarAlerta = (bool, mensaje) => {
         if(bool){
             swal({
@@ -119,6 +180,7 @@ export default function AgregarCliente(
                 setCodigo("");
                 setRuc("");
                 setCiudad("");
+                setSelectedCiudad("");
                 setProvincia("");
                 setParroquia("");
                 setDireccion("");
@@ -138,7 +200,7 @@ export default function AgregarCliente(
             nombre: nombre,
             codigo: codigo,
             ruc: ruc,
-            ciudad: ciudad,
+            ciudad: selectedCiudad,
             provincia: provincia,
             parroquia: parroquia,
             direccion: direccion
@@ -152,6 +214,7 @@ export default function AgregarCliente(
         setCodigo("");
         setRuc("");
         setCiudad("");
+        setSelectedCiudad("");
         setProvincia("");
         setParroquia("");
         setDireccion("");
@@ -183,7 +246,7 @@ export default function AgregarCliente(
                     <select className="form-select mt-1 block w-full p-2 border rounded" id="distribuidor" value={dis} onChange={handleChangeDistribuidor}>
                     <option value="">Seleccionar...</option>
                     <option value="leterago">LETERAGO</option>
-                    <option value="leterago_franquicia">LETERAGO FRANQUICIA</option>
+                    {/* <option value="leterago_franquicia">LETERAGO FRANQUICIA</option> */}
                     <option value="quifatex">QUIFATEX</option>
                     <option value="difare">DIFARE</option>
                     </select>
@@ -207,6 +270,25 @@ export default function AgregarCliente(
                     <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700">CIUDAD CLIENTE:</label>
                     <input type="text" className="form-control mt-1 block w-full p-2 border rounded" value={ciudad} id="ciudad" disabled={!dis} name="ciudad" onChange={(e) => setCiudad(e.target.value)} />
                     {err.ciudad && <p className="text-sm text-red-600 mt-1">{err.ciudad}</p>}
+                </div>
+                <div>
+                    <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700">CIUDAD BUSCAR:</label>
+                    <input type='text' className='form-control mt-1 block w-full p-2 border rounded'
+                                    disabled={!dis}
+                                    onChange={e => onChangeHandlerCiudad(e.target.value)}
+                                    value={selectedCiudad} />
+                                {suggestionsCiudad && suggestionsCiudad.length > 0 && (
+                                    <div className="absolute z-10 w-full bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-y-auto">
+                                        {suggestionsCiudad.map((suggestion) => (
+                                            <div key={suggestion.idCiudad}
+                                                className='suggestion p-2 hover:bg-gray-200 cursor-pointer'
+                                                onClick={() => onSuggestHandlerCiudad(suggestion.nombre_ciudad, suggestion.idCiudad)}
+                                            >
+                                                {suggestion.nombre_ciudad}
+                                            </div>
+                                        ))}
+                                    </div>
+                    )}
                 </div>
                 <div>
                     <label htmlFor="provincia" className="block text-sm font-medium text-gray-700">PROVINCIA CLIENTE:</label>
