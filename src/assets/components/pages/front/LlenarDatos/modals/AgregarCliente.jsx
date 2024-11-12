@@ -62,14 +62,6 @@ export default function AgregarCliente(
             errors.ciudad = "Este campo es requerido!!"
         }
 
-        if(!values.provincia){
-            errors.provincia = "Este campo es requerido!!"
-        }
-
-        if(!values.parroquia){
-            errors.parroquia = "Este campo es requerido!!"
-        }
-
         if(!values.direccion){
             errors.direccion = "Este campo es requerido!!"
         }
@@ -268,11 +260,6 @@ export default function AgregarCliente(
                     {err.ruc && <p className="text-sm text-red-600 mt-1">{err.ruc}</p>}
                 </div>
                 <div>
-                    <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700">CIUDAD CLIENTE:</label>
-                    <input type="text" className="form-control mt-1 block w-full p-2 border rounded" value={ciudad} id="ciudad" disabled={!dis} name="ciudad" onChange={(e) => setCiudad(e.target.value)} />
-                    {err.ciudad && <p className="text-sm text-red-600 mt-1">{err.ciudad}</p>}
-                </div>
-                <div>
                     <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700">CIUDAD BUSCAR:</label>
                     <input type='text' className='form-control mt-1 block w-full p-2 border rounded'
                                     disabled={!dis}
@@ -290,16 +277,6 @@ export default function AgregarCliente(
                                         ))}
                                     </div>
                     )}
-                </div>
-                <div>
-                    <label htmlFor="provincia" className="block text-sm font-medium text-gray-700">PROVINCIA CLIENTE:</label>
-                    <input type="text" className="form-control mt-1 block w-full p-2 border rounded" value={provincia} id="provincia" disabled={!dis} name="provincia" onChange={(e) => setProvincia(e.target.value)} />
-                    {err.provincia && <p className="text-sm text-red-600 mt-1">{err.provincia}</p>}
-                </div>
-                <div>
-                    <label htmlFor="parroquia" className="block text-sm font-medium text-gray-700">PARROQUIA CLIENTE:</label>
-                    <input type="text" className="form-control mt-1 block w-full p-2 border rounded" value={parroquia} id="parroquia" disabled={!dis} name="parroquia" onChange={(e) => setParroquia(e.target.value)} />
-                    {err.parroquia && <p className="text-sm text-red-600 mt-1">{err.parroquia}</p>}
                 </div>
                 <div>
                     <label htmlFor="direccion" className="block text-sm font-medium text-gray-700">DIRECCION CLIENTE:</label>
