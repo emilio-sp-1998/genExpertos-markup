@@ -201,6 +201,7 @@ export default function AgregarCliente(
             codigo: codigo,
             ruc: ruc,
             ciudad: selectedCiudad,
+            ciudadId: selectedIdCiudad,
             provincia: provincia,
             parroquia: parroquia,
             direccion: direccion
