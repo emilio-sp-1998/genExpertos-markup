@@ -170,7 +170,7 @@ export default function AgregarCliente(
         if(bool){
             swal({
                 title: `AGREGADO`,
-                text: "El formulario ha sido enviado exitosamente!!",
+                text: "Espere mientras el Supervisor revise el Cliente para que le apruebe!!",
                 icon: "success",
                 buttons: "OK"
               }).then(() => {
