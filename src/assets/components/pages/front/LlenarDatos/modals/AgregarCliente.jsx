@@ -126,16 +126,8 @@ export default function AgregarCliente(
                     setCiudades(agregarCiudad)
                 }else if(res.status === 401){
                     navigate("/logout");
-                }else{
-                    setShowAlert(true);
-                    setAlertType(2);
-                    setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
-                }
-            }else{
-                setShowAlert(true);
-                setAlertType(2);
-                setAlertMessage("Ha ocurrido un error, inténtelo de nuevo.");
-            }
+                }else{console.log("Algo salió mal!!!")}
+            }else{console.log("Algo salió mal!!!")}
         })
     }
 
