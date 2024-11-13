@@ -66,7 +66,7 @@ export default function AgregarCliente(
             errors.direccion = "Este campo es requerido!!"
         }
 
-        if(!values.ciudad){
+        if(selectedIdCiudad === -1){
             errors.ciudad = "Este campo es requerido!!"
         }
 
