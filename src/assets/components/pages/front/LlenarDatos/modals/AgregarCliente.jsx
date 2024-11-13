@@ -146,6 +146,7 @@ export default function AgregarCliente(
         matches = matches.slice(0, 10)
         setSuggestionsCiudad(matches)
         setSelectedCiudad(ciudad)
+        setSelectedIdCiudad(-1)
     }
 
     const onSuggestHandlerCiudad = (farmacia, id) => {
