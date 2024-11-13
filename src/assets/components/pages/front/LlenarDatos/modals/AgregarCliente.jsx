@@ -66,6 +66,10 @@ export default function AgregarCliente(
             errors.direccion = "Este campo es requerido!!"
         }
 
+        if(!values.ciudad){
+            errors.ciudad = "Este campo es requerido!!"
+        }
+
         setErr(errors)
 
         if (Object.keys(errors).length === 0){
@@ -257,6 +261,7 @@ export default function AgregarCliente(
                                     disabled={!dis}
                                     onChange={e => onChangeHandlerCiudad(e.target.value)}
                                     value={selectedCiudad} />
+                                {err.ciudad && <p className="text-sm text-red-600 mt-1">{err.ciudad}</p>}
                                 {suggestionsCiudad && suggestionsCiudad.length > 0 && (
                                     <div className="absolute z-10 w-full bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-y-auto">
                                         {suggestionsCiudad.map((suggestion) => (
