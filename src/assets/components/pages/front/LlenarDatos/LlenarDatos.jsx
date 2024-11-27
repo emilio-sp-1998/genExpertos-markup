@@ -30,6 +30,8 @@ const LlenarDatos = () => {
 
     const auth = useSelector((state) => state.auth);
 
+    const {VALIDAR_DIST} = useSelector((state) => state.auth.datosUsuario)
+
     const [distribuidorSeleccionado, setDistribuidorSeleccionado] = useState("");
 
     const columnsInsercion = [
@@ -1694,7 +1696,8 @@ const LlenarDatos = () => {
 
         {openAgregarCliente && <AgregarCliente
             closeModal={setOpenAgregarCliente}
-            isOpen={openAgregarCliente}/>}
+            isOpen={openAgregarCliente}
+            validarDist={VALIDAR_DIST}/>}
         </>
     )
 }

@@ -8,7 +8,8 @@ import "./AgregarCliente.css"
 export default function AgregarCliente(
     {
         closeModal,
-        isOpen
+        isOpen,
+        validarDist
     }
 ) {
     const dispatch = useDispatch();
@@ -235,10 +236,27 @@ export default function AgregarCliente(
                     <label htmlFor="distribuidor" className="block text-sm font-medium text-gray-700">Seleccionar distribuidor:</label>
                     <select className="form-select mt-1 block w-full p-2 border rounded" id="distribuidor" value={dis} onChange={handleChangeDistribuidor}>
                     <option value="">Seleccionar...</option>
-                    <option value="leterago">LETERAGO</option>
-                    {/* <option value="leterago_franquicia">LETERAGO FRANQUICIA</option> */}
-                    <option value="quifatex">QUIFATEX</option>
-                    <option value="difare">DIFARE</option>
+                    {validarDist === "GENEXPERTOS" ? (
+                                <>
+                                    <option value="leterago">LETERAGO</option>
+                                    <option value="quifatex">QUIFATEX</option>
+                                    <option value="difare">DIFARE</option>
+                                </>
+                            ) : validarDist === "PRIMAX" ? (
+                                <option value="genomma">PRIMAX</option>
+                            ) : validarDist === "DIFARE_FRANQUICIA" ? (
+                                <>
+                                    <option value="difare_franquicia">DIFARE FRANQUICIA</option>
+                                </>
+                            ) : (
+                                <>
+                                    <option value="leterago">LETERAGO</option>
+                                    <option value="quifatex">QUIFATEX</option>
+                                    <option value="difare">DIFARE</option>
+                                    <option value="difare_franquicia">DIFARE FRANQUICIA</option>
+                                    <option value="genomma">PRIMAX</option>
+                                </>
+                            )}
                     </select>
                 </div>
                 <div>
