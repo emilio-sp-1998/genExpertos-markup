@@ -583,7 +583,7 @@ const LlenarDatos = () => {
             totaliva: subtotal*producto.IVA,
             solosubtotal: "$"+soloSubTotal,
             pvp: "$"+producto.PVP_CON_IVA,
-            pvpsiniva: "$"+producto.PVP_SIN_IVA,
+            pvpsiniva: "$"+producto.PVP_SIN_IVA.toFixed(2),
             subtotal: subtotal,
             valorDesc: (soloSubTotal*porcentaje).toFixed(2),
             total: (parseFloat(subtotal)+t).toFixed(2),

@@ -247,7 +247,7 @@ export default function ModalProductos(
               <div className="form-group">
                   <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">PVP (SIN IVA):</label>
                   <input type="text" className="form-control mt-1 block w-full text-center p-2 border rounded" id="pvp" name="pvp"
-                      value={Object.keys(productos).length !== 0 ? "$" + productos.PVP_SIN_IVA : ""} disabled={true} />
+                      value={Object.keys(productos).length !== 0 ? "$" + productos.PVP_SIN_IVA.toFixed(2) : ""} disabled={true} />
               </div>
               <div className="form-group">
                   <label htmlFor="fecha" className="block text-sm font-medium text-gray-700">Subtotal:</label>
