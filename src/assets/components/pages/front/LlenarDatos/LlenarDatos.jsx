@@ -1507,6 +1507,8 @@ const LlenarDatos = () => {
                                 <option value="genomma">PRIMAX</option>
                             ) : auth.datosUsuario.VALIDAR_DIST === "DIFARE_FRANQUICIA" ? (
                                 <>
+                                    <option value="leterago">LETERAGO FRANQUICIA</option>
+                                    <option value="quifatex">QUIFATEX FRANQUICIA</option>
                                     <option value="difare_franquicia">DIFARE FRANQUICIA</option>
                                 </>
                             ) : (
