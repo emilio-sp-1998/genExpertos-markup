@@ -1392,22 +1392,34 @@ const LlenarDatos = () => {
         const pdfBase64 = pdf.output();
         let arrayMails = []
         if(distribuidorSeleccionado === "leterago"){
-            arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
-                'operaciones@innovaservgroup.com', 'krey@leterago.com.ec']
+            if(auth.datosUsuario.ID_USER === "USR-4"){
+                arrayMails = ['emilio.segovia@markup.ws']
+            }else{
+                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                    'operaciones@innovaservgroup.com', 'krey@leterago.com.ec']
+            }
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else if (distribuidorSeleccionado === "quifatex"){
-            arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
-                'transferencias@quifatex.com', 'wrahian.marin@genommalab.com']
+            if(auth.datosUsuario.ID_USER === "USR-4"){
+                arrayMails = ['emilio.segovia@markup.ws']
+            }else{
+                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                    'transferencias@quifatex.com', 'wrahian.marin@genommalab.com']
+            }
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
         }else if(distribuidorSeleccionado === "difare"){
-            arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
-                (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? ('ccenter@grupodifare.com', 'andrea.jordan@genommalab.com') : 'andrea.jordan@genommalab.com', 'wrahian.marin@genommalab.com']
+            if(auth.datosUsuario.ID_USER === "USR-4"){
+                arrayMails = ['emilio.segovia@markup.ws']
+            }else{
+                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                    (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? ('ccenter@grupodifare.com', 'andrea.jordan@genommalab.com') : 'andrea.jordan@genommalab.com', 'wrahian.marin@genommalab.com']
+            }
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
@@ -1429,7 +1441,11 @@ const LlenarDatos = () => {
                 'Direccion Local': direccion,
                 'Fecha Pedido': fecha
             };
-            arrayMails = ['emilio.segovia@markup.ws', 'luis.andrade@markup.ws', 'stephanie.corral@genommalab.com', 'juanfrancisco@markup.ws']
+            if(auth.datosUsuario.ID_USER === "USR-4"){
+                arrayMails = ['emilio.segovia@markup.ws']
+            }else{
+                arrayMails = ['emilio.segovia@markup.ws', 'luis.andrade@markup.ws', 'stephanie.corral@genommalab.com', 'juanfrancisco@markup.ws']
+            }
             dispatch(enviarMailFormularioMultiple(asunto, arrayMails, [], cuerpo, datosLocalProducto, pdfBase64, `Ventas_${cod}`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
