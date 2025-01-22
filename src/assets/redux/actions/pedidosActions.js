@@ -99,7 +99,7 @@ export function listarProductosPdv(cuenta_comercial) {
   }
 }
 
-export function obtenerFarmacia(local, idCliente) {
+export function obtenerFarmacia(local, idCliente, idMkTrade) {
     try{
       return async function (dispatch) {
         let token = localStorage.getItem("token");
@@ -108,7 +108,7 @@ export function obtenerFarmacia(local, idCliente) {
         try{
           const res = await axios.post(
             server + "/pedidos/obtenerFarmacia",
-            {local, idCliente},
+            {local, idCliente, idMkTrade},
             {
               headers: {
                 Authorization: "Bearer " + token,
@@ -356,7 +356,7 @@ export function enviarMailFormulario2(asunto, correodest, cuerpo, adjunto, filen
   }
 }
 
-export function insertarRegistro(local_farmacia, cod_local, vendedor, productos, iva, subtotal_reg, total_reg, observacion, ruc_cuenta) {
+export function insertarRegistro(local_farmacia, cod_local, vendedor, productos, iva, subtotal_reg, total_reg, observacion, ruc_cuenta, idMktrade) {
   try{
     return async function (dispatch) {
       let token = localStorage.getItem("token");
@@ -364,7 +364,7 @@ export function insertarRegistro(local_farmacia, cod_local, vendedor, productos,
       try{
         const res = await axios.post(
           server + "/pedidos/insertarRegistro",
-          {local_farmacia, cod_local, vendedor, productos, iva, subtotal_reg, total_reg, observacion, ruc_cuenta},
+          {local_farmacia, cod_local, vendedor, productos, iva, subtotal_reg, total_reg, observacion, ruc_cuenta, idMktrade},
           {
             headers: {
               Authorization: "Bearer " + token,

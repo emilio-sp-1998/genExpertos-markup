@@ -173,6 +173,7 @@ const LlenarDatos = () => {
     const [productos, setProductos] = useState([]);
     const [selectedFarmacia, setSelectedFarmacia] = useState('');
     const [selectedIdFarmacia, setSelectedIdFarmacia] = useState(-1);
+    const [selectedIdMkTradeFarmacia, setSelectedIdMkTradeFarmacia] = useState(-1)
     const [suggestionsFarmacias, setSuggestionsFarmacias] = useState([]);
 
     const [selectedPdv, setSelectedPdv] = useState('');
@@ -219,6 +220,7 @@ const LlenarDatos = () => {
     const handleChange = (event) => {
         setDistribuidorSeleccionado(event.target.value);
         setSelectedFarmacia('')
+        setSelectedIdMkTradeFarmacia(-1)
         setSelectedIdFarmacia(-1)
         setRuc('')
         setDireccion('')
@@ -247,10 +249,10 @@ const LlenarDatos = () => {
     }, [distribuidorSeleccionado, fecha])
 
     useEffect(() => {
-        if(selectedIdFarmacia !== -1){
+        if(selectedIdMkTradeFarmacia !== -1){
             obtenerFarmaciaFunc();
         }
-    }, [selectedIdFarmacia])
+    }, [selectedIdMkTradeFarmacia])
 
     useEffect(() => {
         if(selectedIdPdv !== -1){
@@ -353,7 +355,7 @@ const LlenarDatos = () => {
     }
 
     const obtenerFarmaciaFunc = () => {
-        dispatch(obtenerFarmacia(distribuidorSeleccionado, selectedIdFarmacia)).then((res) => {
+        dispatch(obtenerFarmacia(distribuidorSeleccionado, selectedIdFarmacia, selectedIdMkTradeFarmacia)).then((res) => {
             if (res.status) {
                 if(res.status === 200){
                     const data = res.data
@@ -435,6 +437,7 @@ const LlenarDatos = () => {
                         item.RUC = item.RUC ? item.RUC : ""
                         const json = {
                             idCliente: item.CLIENTE,
+                            idMkTrade: item.ID_MKTRADE,
                             razon_social: item.CLIENTE ? item.CLIENTE +" - "+item.NOMBRE_PDV+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC) :
                                             item.NOMBRE_PDV+" - "+(item.RUC.length === 13 ? item.RUC : "0"+item.RUC)
                         }
@@ -500,7 +503,7 @@ const LlenarDatos = () => {
 
     const insertarRegistroFunc = () => {
         dispatch(insertarRegistro(distribuidorSeleccionado, auth.datosUsuario.RUC_CUENTA != "1790663973001" ? selectedIdFarmacia : selectedIdPdv2, vendedor, dataInsercion, sumaIva.toFixed(2), 
-            total.toFixed(2), ((parseFloat(total)+parseFloat(sumaIva)).toFixed(2)), observacion, auth.datosUsuario.RUC_CUENTA)).then((res) => {
+            total.toFixed(2), ((parseFloat(total)+parseFloat(sumaIva)).toFixed(2)), observacion, auth.datosUsuario.RUC_CUENTA, selectedIdMkTradeFarmacia)).then((res) => {
             if(res.status){
                 if(res.status === 200){
                     console.log("GOOD!!")
@@ -511,6 +514,7 @@ const LlenarDatos = () => {
                     else enviarCorreoOtro(res.data.code)
                     setSelectedFarmacia('')
                     setSelectedIdFarmacia(-1)
+                    setSelectedIdMkTradeFarmacia(-1)
                     setRuc('')
                     setDireccion('')
                     setProvincia('')
@@ -552,9 +556,10 @@ const LlenarDatos = () => {
         setSelectedPdv(pdv)
     }
 
-    const onSuggestHandlerFarmacia = (farmacia, id) => {
+    const onSuggestHandlerFarmacia = (farmacia, id, idMkTrade) => {
         setSelectedFarmacia(farmacia)
         setSelectedIdFarmacia(id)
+        setSelectedIdMkTradeFarmacia(idMkTrade)
         setSuggestionsFarmacias([])
     }
 
@@ -1199,6 +1204,7 @@ const LlenarDatos = () => {
         setDataInsercion([])
         setSelectedFarmacia('')
         setSelectedIdFarmacia(-1)
+        setSelectedIdMkTradeFarmacia(-1)
         setRuc('')
         setDireccion('')
         setProvincia('')
@@ -1395,8 +1401,8 @@ const LlenarDatos = () => {
             if(auth.datosUsuario.ID_USER === "USR-4"){
                 arrayMails = ['emilio.segovia@markup.ws']
             }else{
-                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
-                    'operaciones@innovaservgroup.com', 'krey@leterago.com.ec']
+                arrayMails = ['emilio.segovia@markup.ws'/* , 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                    'operaciones@innovaservgroup.com', 'krey@leterago.com.ec' */]
             }
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
@@ -1406,8 +1412,8 @@ const LlenarDatos = () => {
             if(auth.datosUsuario.ID_USER === "USR-4"){
                 arrayMails = ['emilio.segovia@markup.ws']
             }else{
-                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
-                    'transferencias@quifatex.com', 'wrahian.marin@genommalab.com']
+                arrayMails = ['emilio.segovia@markup.ws'/* , 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                    'transferencias@quifatex.com', 'wrahian.marin@genommalab.com' */]
             }
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
@@ -1417,8 +1423,8 @@ const LlenarDatos = () => {
             if(auth.datosUsuario.ID_USER === "USR-4"){
                 arrayMails = ['emilio.segovia@markup.ws']
             }else{
-                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
-                    (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? ('ccenter@grupodifare.com', 'andrea.jordan@genommalab.com') : 'andrea.jordan@genommalab.com', 'wrahian.marin@genommalab.com']
+                arrayMails = ['emilio.segovia@markup.ws'/* , 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                    (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? ('ccenter@grupodifare.com', 'andrea.jordan@genommalab.com') : 'andrea.jordan@genommalab.com', 'wrahian.marin@genommalab.com' */]
             }
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
@@ -1572,7 +1578,7 @@ const LlenarDatos = () => {
                                         {suggestionsFarmacias.map((suggestion) => (
                                             <div key={suggestion.idCliente}
                                                 className='suggestion p-2 hover:bg-gray-200 cursor-pointer'
-                                                onClick={() => onSuggestHandlerFarmacia(suggestion.razon_social, suggestion.idCliente)}
+                                                onClick={() => onSuggestHandlerFarmacia(suggestion.razon_social, suggestion.idCliente, suggestion.idMkTrade)}
                                             >
                                                 {suggestion.razon_social}
                                             </div>
@@ -1649,7 +1655,7 @@ const LlenarDatos = () => {
             </div>
             <div className='buttons-div'>
                 <div className="form-group">
-                    <button type='button' className='btn btn-success' disabled={selectedIdFarmacia === -1 && selectedIdPdv === -1}
+                    <button type='button' className='btn btn-success' disabled={selectedIdMkTradeFarmacia === -1 && selectedIdPdv === -1}
                         onClick={() => setOpenModal(true)}>Agregar Producto</button>
                 </div>
                 {/* <div className="form-group">
