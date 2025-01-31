@@ -577,7 +577,7 @@ const LlenarDatos = () => {
             id: dataInsercion.length === 0 ? dataInsercion.length+1 : dataInsercion[dataInsercion.length-1].id+1,
             tipoProducto: distribuidorSeleccionado,
             code: producto.SAP,
-            idCode: distribuidorSeleccionado === "leterago" ? 
+            idCode: (distribuidorSeleccionado === "leterago" || distribuidorSeleccionado === "ecuaquimica") ? 
                 producto.IDPROD_LETERAGO : distribuidorSeleccionado === "quifatex" ? 
                 producto.IDPROD_QUIFATEX : (distribuidorSeleccionado === "difare" || distribuidorSeleccionado === "difare_franquicia") ? 
                 producto.IDPROD_DIFARE : distribuidorSeleccionado === "genomma" ? 
@@ -813,11 +813,11 @@ const LlenarDatos = () => {
             doc.text('R.U.C:', 14, 56); // Subido 10 unidades
             doc.text(ruc, 50, 56); // Subido 10 unidades
             doc.text('Direccion:', 14, 60)
-            doc.text(direccion, 50, 60); // Subido 10 unidades
+            doc.text(direccion ? direccion : '', 50, 60); // Subido 10 unidades
             doc.text('FARMACIA:', 14, 72); // Subido 10 unidades
             doc.text(selectedFarmacia, 50, 72); // Subido 10 unidades
             doc.text('CODIGO FARMACIA:', 14, 77); // Subido 10 unidades
-            doc.text(selectedIdFarmacia, 50, 77); // Subido 10 unidades
+            doc.text(selectedIdFarmacia ? selectedIdFarmacia : '', 50, 77); // Subido 10 unidades
 
             // Información de contacto ajustada
             doc.text('CONTACTO: Veronica Navarrete', 200, 51); // Subido 10 unidades
@@ -1401,8 +1401,8 @@ const LlenarDatos = () => {
             if(auth.datosUsuario.ID_USER === "USR-4"){
                 arrayMails = ['emilio.segovia@markup.ws']
             }else{
-                arrayMails = ['emilio.segovia@markup.ws'/* , 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
-                    'operaciones@innovaservgroup.com', 'krey@leterago.com.ec' */]
+                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                    'operaciones@innovaservgroup.com', 'krey@leterago.com.ec']
             }
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
@@ -1412,8 +1412,8 @@ const LlenarDatos = () => {
             if(auth.datosUsuario.ID_USER === "USR-4"){
                 arrayMails = ['emilio.segovia@markup.ws']
             }else{
-                arrayMails = ['emilio.segovia@markup.ws'/* , 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
-                    'transferencias@quifatex.com', 'wrahian.marin@genommalab.com' */]
+                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                    'transferencias@quifatex.com', 'wrahian.marin@genommalab.com']
             }
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
@@ -1423,8 +1423,8 @@ const LlenarDatos = () => {
             if(auth.datosUsuario.ID_USER === "USR-4"){
                 arrayMails = ['emilio.segovia@markup.ws']
             }else{
-                arrayMails = ['emilio.segovia@markup.ws'/* , 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
-                    (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? ('ccenter@grupodifare.com', 'andrea.jordan@genommalab.com') : 'andrea.jordan@genommalab.com', 'wrahian.marin@genommalab.com' */]
+                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'leonardo@markup.ws',
+                    (parseFloat(total)+parseFloat(sumaIva)).toFixed(2) >= 80 ? ('ccenter@grupodifare.com', 'andrea.jordan@genommalab.com') : 'andrea.jordan@genommalab.com', 'wrahian.marin@genommalab.com']
             }
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
@@ -1432,6 +1432,16 @@ const LlenarDatos = () => {
             })
         }else if(distribuidorSeleccionado === "difare_franquicia"){
             arrayMails = ['emilio.segovia@markup.ws']
+            dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
+                else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
+            })
+        }else if(distribuidorSeleccionado === "ecuaquimica"){
+            if(auth.datosUsuario.ID_USER === "USR-4"){
+                arrayMails = ['emilio.segovia@markup.ws']
+            }else{
+                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws']
+            }
             dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
@@ -1508,6 +1518,7 @@ const LlenarDatos = () => {
                                     <option value="leterago">LETERAGO</option>
                                     <option value="quifatex">QUIFATEX</option>
                                     <option value="difare">DIFARE</option>
+                                    <option value="ecuaquimica">ECUAQUIMICA</option>
                                 </>
                             ) : auth.datosUsuario.VALIDAR_DIST === "PRIMAX" ? (
                                 <option value="genomma">PRIMAX</option>
@@ -1522,6 +1533,7 @@ const LlenarDatos = () => {
                                     <option value="difare">DIFARE</option>
                                     <option value="difare_franquicia">DIFARE FRANQUICIA</option>
                                     <option value="genomma">PRIMAX</option>
+                                    <option value="ecuaquimica">ECUAQUIMICA</option>
                                 </>
                             )}
                             {/* <option value="farmaenlace">FARMAENLACE</option> */}
