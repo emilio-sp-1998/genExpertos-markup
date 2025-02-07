@@ -580,7 +580,7 @@ const LlenarDatos = () => {
             idCode: (distribuidorSeleccionado === "leterago" || distribuidorSeleccionado === "ecuaquimica") ? 
                 producto.IDPROD_LETERAGO : distribuidorSeleccionado === "quifatex" ? 
                 producto.IDPROD_QUIFATEX : (distribuidorSeleccionado === "difare" || distribuidorSeleccionado === "difare_franquicia") ? 
-                producto.IDPROD_DIFARE : distribuidorSeleccionado === "genomma" ? 
+                producto.IDPROD_DIFARE : (distribuidorSeleccionado === "listo" || distribuidorSeleccionado === "terpel") ? 
                 producto.IDPROD_GENOMMA : producto.IDPROD_FARMAENLACE,
             nombre: producto.DESCRIPCION,
             unidades: cantidad,
@@ -1446,6 +1446,16 @@ const LlenarDatos = () => {
                 if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
                 else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
             })
+        }else if(distribuidorSeleccionado === "listo" || distribuidorSeleccionado === "terpel") {
+            if(auth.datosUsuario.ID_USER === "USR-4"){
+                arrayMails = ['emilio.segovia@markup.ws']
+            }else{
+                arrayMails = ['emilio.segovia@markup.ws', 'veronica.navarrete@markup.ws', 'stephanie.corral@genommalab.com', 'pamela.altamirano@genommalab.com', 'francisco.avila@genommalab.com']
+            }
+            dispatch(enviarMailFormulario(asunto, arrayMails, [], cuerpo, pdfBase64, `Ventas_${cod}.pdf`)).then((res) => {
+                if (!!res.status) if(res.status === 200) {mostrarAlerta(true, "xd", cod)} else {mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")}
+                else mostrarAlerta(false, "Hubo un inconveniente al enviar al correo el pedido!!")
+            })
         }else{
             const datosLocalProducto = {
                 Distribuidor: 'ATIMASA S.A.',
@@ -1519,6 +1529,8 @@ const LlenarDatos = () => {
                                     <option value="quifatex">QUIFATEX</option>
                                     <option value="difare">DIFARE</option>
                                     <option value="ecuaquimica">ECUAQUIMICA</option>
+                                    <option value="terpel">TERPEL</option>
+                                    <option value="listo">LISTO</option>
                                 </>
                             ) : auth.datosUsuario.VALIDAR_DIST === "PRIMAX" ? (
                                 <option value="genomma">PRIMAX</option>
@@ -1534,6 +1546,8 @@ const LlenarDatos = () => {
                                     <option value="difare_franquicia">DIFARE FRANQUICIA</option>
                                     <option value="genomma">PRIMAX</option>
                                     <option value="ecuaquimica">ECUAQUIMICA</option>
+                                    <option value="terpel">TERPEL</option>
+                                    <option value="listo">LISTO</option>
                                 </>
                             )}
                             {/* <option value="farmaenlace">FARMAENLACE</option> */}

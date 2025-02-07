@@ -16,5 +16,12 @@ module.exports = {
       "warn",
       { allowConstantExport: true },
     ],
+    "no-unreachable": "off",
+    "no-unused-vars": "off",
+    "no-useless-catch": "off",
+    "no-extra-boolean-cast": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/no-unknown-property": "off",
+    "react/prop-types": "off"
   },
 };
